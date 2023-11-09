@@ -10,6 +10,8 @@ DamageAction::DamageAction(Actor *actor, Actor *target): TargetedAction(actor, t
 
 StudyAction::StudyAction(Actor *actor): Action(actor){}
 
+HealAction::HealAction(Actor *actor, Actor *target) : TargetedAction(actor, target) {}
+
 void DamageAction::execute() {
     target->damage(actor->getSkill("STR"));
 }
@@ -20,4 +22,8 @@ void WorkOnProjectAction::execute() {
 
 void StudyAction::execute() {
     actor->study(actor->getSkill("WIS"));
+}
+
+void HealAction::execute() {
+    target->heal(actor->getSkill("WIS"));
 }

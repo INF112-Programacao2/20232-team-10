@@ -5,12 +5,13 @@
 
 class Player : public Actor {
     private:
+        static unsigned int player_count;
         int id;
         unsigned int project_bar;
         unsigned int study_bar;
 
     public:
-        Player(int id);
+        Player(std::string name, int atributes[6]);
         virtual void workOnProject(int x) override;
         virtual void study(int x) override;
 };

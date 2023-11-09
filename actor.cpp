@@ -2,7 +2,15 @@
 
 #include <string>
 
-Actor::Actor(std::string name, int hp_max) : name(name), hp_max(hp_max), hp(hp_max){};
+Actor::Actor(std::string name, int atributes[6]) {
+    this->name = name;
+    this->skill["STR"] = atributes[0];
+    this->skill["DEX"] = atributes[1];
+    this->skill["CON"] = atributes[2];
+    this->skill["INT"] = atributes[3];
+    this->skill["WIS"] = atributes[4];
+    this->skill["CHA"] = atributes[5];
+};
 
 void Actor::heal(int x) {
     this->hp += x;

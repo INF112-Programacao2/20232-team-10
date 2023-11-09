@@ -14,13 +14,28 @@ void Engine::playerTurn(Player *player) {
             break;
 
         case 2:
-            int coleguinha;
+            int target;
             std::cout << "Qual coleguinha?\n";
-            std::cin >> coleguinha;
+            std::cin >> target;
 
-            action = new DamageAction(player, players[coleguinha]);
+            action = new DamageAction(player, this->players[target]);
             break;
+        case 3:
+            action = new StudyAction(player);
+        case 4:
+            int target;
+            std::cin >> target;
+
+            action = new HealAction(player, this->players[target]);
         default:
             break;
+    }
+    this->turn_actions.push_back(action);
+}
+
+void Engine::results() {
+    for(int i=0; i<turn_actions.size(); i++) {
+        turn_actions[i]->execute();
+        delete turn_actions[i];
     }
 }

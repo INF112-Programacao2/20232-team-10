@@ -39,6 +39,10 @@ class DamageAction : public TargetedAction {
         virtual void execute() override;
 };
 
-
+class HealAction : public TargetedAction {
+    public:
+        HealAction(Actor *actor, Actor *target);
+        virtual void execute() override;
+};
 
 #endif
