@@ -9,6 +9,7 @@ class Player : public Actor {
         int id;
         unsigned int project_bar;
         unsigned int study_bar;
+        // Place current_place;
 
     public:
         Player(std::string name, int atributes[6]);

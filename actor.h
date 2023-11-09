@@ -18,6 +18,7 @@ class Actor {
         int getSkill(std::string s);
         virtual void workOnProject(int x) = 0;
         virtual void study(int x) = 0;
+        //virtual void travelTo(Place destination);
 };
 
 #endif
