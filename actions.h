@@ -6,7 +6,7 @@
 
 class Action {
     protected:
-        Actor *_actor;
+        Actor *actor;
 
     public:
         Action(Actor *actor);
@@ -15,7 +15,7 @@ class Action {
 
 class TargetedAction : public Action {
     protected:
-        Actor *_target;
+        Actor *target;
 
     public:
         TargetedAction(Actor *actor, Actor *target);

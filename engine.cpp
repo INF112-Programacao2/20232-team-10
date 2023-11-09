@@ -1,6 +1,6 @@
 #include "engine.h"
 
-void Engine::player_turn(Player *player) {
+void Engine::playerTurn(Player *player) {
     Action *action;
     std::cout << "O que voce faz?\n";
     std::cout << "1- Trabalho no meu projeto\n";
@@ -18,7 +18,7 @@ void Engine::player_turn(Player *player) {
             std::cout << "Qual coleguinha?\n";
             std::cin >> coleguinha;
 
-            action = new DamageAction(player, _players[coleguinha]);
+            action = new DamageAction(player, players[coleguinha]);
             break;
         default:
             break;

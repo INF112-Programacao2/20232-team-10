@@ -15,7 +15,8 @@ class Actor {
         void heal(int x);
         void damage(int x);
         void die();
-        virtual void work_on_project(int x) = 0;
+        int getSkill(std::string s);
+        virtual void workOnProject(int x) = 0;
         virtual void study(int x) = 0;
 };
 

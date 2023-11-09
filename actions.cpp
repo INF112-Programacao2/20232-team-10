@@ -1,8 +1,8 @@
 #include "actions.h"
 
-Action::Action(Actor *actor): _actor(actor){}
+Action::Action(Actor *actor): actor(actor){}
 
-TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), _target(target){}
+TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), target(target){}
 
 WorkOnProjectAction::WorkOnProjectAction(Actor *actor): Action(actor){}
 
@@ -11,13 +11,13 @@ DamageAction::DamageAction(Actor *actor, Actor *target): TargetedAction(actor, t
 StudyAction::StudyAction(Actor *actor): Action(actor){}
 
 void DamageAction::execute() {
-    _target->damage(_actor->get_STR());
+    target->damage(actor->getSkill("STR"));
 }
 
 void WorkOnProjectAction::execute() {
-    _actor->work_on_project(_actor->get_INT());
+    actor->workOnProject(actor->getSkill("INT"));
 }
 
 void StudyAction::execute() {
-    _actor->study(_actor->get_WIS());
+    actor->study(actor->getSkill("WIS"));
 }
