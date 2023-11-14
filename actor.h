@@ -11,6 +11,7 @@ class Actor {
         std::map <std::string, int> skill;
 
     public:
+        Actor(std::string name);
         Actor(std::string name, int atributes[6]);
         void heal(int x);
         void damage(int x);

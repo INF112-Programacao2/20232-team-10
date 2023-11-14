@@ -2,6 +2,10 @@
 
 #include <string>
 
+Actor::Actor(std::string name){
+    this->name = name;
+}
+
 Actor::Actor(std::string name, int atributes[6]) {
     this->name = name;
     this->skill["STR"] = atributes[0];
