@@ -1,6 +1,10 @@
 #include "engine.h"
 
 void Engine::game(){
+    for (int i = 0; i < players.size(); i++){
+        playerTurn2(players[i]);
+    }
+    results();
 }
 
 void Engine::PlayerTurn1(Player *player) {
@@ -24,6 +28,7 @@ void Engine::playerTurn2(Player *player) {
     std::cout << "3- Estudo para a prova\n";
     std::cout << "4- Tento curar meu coleguinha\n";
     int action_num;
+    int target;
     std::cin >> action_num;
 
     switch (action_num) {
@@ -32,7 +37,6 @@ void Engine::playerTurn2(Player *player) {
             break;
 
         case 2:
-            int target;
             std::cin >> target;
 
             action = new DamageAction(player, this->players[target]);
@@ -40,7 +44,6 @@ void Engine::playerTurn2(Player *player) {
         case 3:
             action = new StudyAction(player);
         case 4:
-            int target;
             std::cin >> target;
 
             action = new HealAction(player, this->players[target]);
@@ -55,4 +58,21 @@ void Engine::results() {
         turn_actions[i]->execute();
         delete turn_actions[i];
     }
+}
+
+void Engine::createPlayer(std::string name, int atributes[6]){
+    Player *player = new Player(name, atributes);
+    players.push_back(player);
+}
+
+void Engine::characterCreator(){
+    std::string name;
+    int atributes[6];
+    std::cout << "Nome: ";
+    std::cin >> name;
+    std::cout << "Skills:";
+    for (int i = 0; i < 6; i++){
+        std::cin >> atributes[i]; 
+    }
+    createPlayer(name, atributes);
 }

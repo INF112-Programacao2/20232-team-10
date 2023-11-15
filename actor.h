@@ -9,6 +9,7 @@ class Actor {
         int hp;
         int hp_max;
         std::map <std::string, int> skill;
+        bool alive;
 
     public:
         Actor(std::string name);
@@ -16,6 +17,7 @@ class Actor {
         void heal(int x);
         void damage(int x);
         void die();
+        std::string getName();
         int getSkill(std::string s);
         virtual void workOnProject(int x) = 0;
         virtual void study(int x) = 0;

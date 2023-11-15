@@ -23,6 +23,8 @@ class Engine {
         void playerTurn3(Player *player);
         void playerTurn4(Player *player);
         void results();
+        void createPlayer(std::string name, int atributes[6]);
+        void characterCreator();
 };
 
 #endif
