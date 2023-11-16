@@ -3,24 +3,24 @@
 #include <string>
 #include <map>
 
-class Actor {
+class Actor {                               //Classe geral para todos os atores do jogo (jogador, vilao, NPC, etc)
     protected:
-        std::string name;
-        int hp;
-        int hp_max;
-        std::map <std::string, int> skill;
-        bool alive;
+        std::string name;                   //Nome
+        int hp;                             //Quantidade de vida
+        int hp_max;                         //Quantidade de vida maxima
+        std::map <std::string, int> skill;  //Map para os nomes da skill e seu respectivo valor
+        bool alive;                         //Bool para estado de vida
 
     public:
-        Actor(std::string name);
+        Actor(std::string name);                    //Construtor
         Actor(std::string name, int atributes[6]);
-        void heal(int x);
-        void damage(int x);
-        void die();
-        std::string getName();
+        void heal(int x);                           //Funcao para curar
+        void damage(int x);                         //Funcao para causar dano
+        void die();                                 //Funcao para morte
+        std::string getName();          
         int getSkill(std::string s);
-        virtual void workOnProject(int x) = 0;
-        virtual void study(int x) = 0;
+        virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
+        virtual void study(int x) = 0;              //Funcao para estudar
         //virtual void travelTo(Place destination);
 };
 

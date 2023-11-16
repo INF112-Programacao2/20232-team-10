@@ -4,42 +4,42 @@
 #include "actor.h"
 #include "player.h"
 
-class Action {
+class Action {                          //Classe para acoes sem alvo
     protected:
-        Actor *actor;
+        Actor *actor;                   //Quem vai executar a acao
 
     public:
-        Action(Actor *actor);
-        virtual void execute() = 0;
+        Action(Actor *actor);           //Construtor
+        virtual void execute() = 0;     //Funcao para execucao da acao
 };
 
-class TargetedAction : public Action {
+class TargetedAction : public Action {                  //Classe para acoes com alvo (classe filha da classe Action)
     protected:
-        Actor *target;
+        Actor *target;                                  //Alvo da acao
 
     public:
-        TargetedAction(Actor *actor, Actor *target);
+        TargetedAction(Actor *actor, Actor *target);    //Construtor
 };
 
-class WorkOnProjectAction : public Action {
+class WorkOnProjectAction : public Action {     //Classe para a acao de trabalhar no projeto (herda da classe Action, pois nao possui alvo)
     public:
-        WorkOnProjectAction(Actor *actor);
+        WorkOnProjectAction(Actor *actor);      //Construtor
+        virtual void execute() override;        //Funcao para execucacao da acao
+};
+
+class StudyAction : public Action {             //Classe para a acao de estudar
+    public:
+        StudyAction(Actor *actor);              
         virtual void execute() override;
 };
 
-class StudyAction : public Action {
+class DamageAction : public TargetedAction {        //Classe para a acao de causar dano (herda da classe TargetedAction, pois possui alvo)
     public:
-        StudyAction(Actor *actor);
-        virtual void execute() override;
+        DamageAction(Actor *actor, Actor *target);  
+        virtual void execute() override;            
 };
 
-class DamageAction : public TargetedAction {
-    public:
-        DamageAction(Actor *actor, Actor *target);
-        virtual void execute() override;
-};
-
-class HealAction : public TargetedAction {
+class HealAction : public TargetedAction {          //Classe para a acao de curar
     public:
         HealAction(Actor *actor, Actor *target);
         virtual void execute() override;
