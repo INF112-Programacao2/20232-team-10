@@ -7,6 +7,88 @@ void Engine::game(){
     results();
 }
 
+void Engine::pass_screen() {
+
+    tgui::Theme theme{"../../themes/Black.txt"};
+
+    //Botao de proximo turno
+    auto nextTurnButton = tgui::Button::create();
+    nextTurnButton->setRenderer(theme.getRenderer("Button"));
+    nextTurnButton->setPosition(200, 230);
+    nextTurnButton->setSize(400, 140);
+    nextTurnButton->setText("TURN");
+    nextTurnButton->setTextSize(25);
+    gui.add(nextTurnButton);
+
+ //Geracao do window para o Pass Screen (tela intermediaria entre turnos)
+    while(true) {
+        sf::Event pass_screen;
+        while(window.pollEvent(pass_screen)) {
+            gui.handleEvent(pass_screen);
+            if(pass_screen.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+}
+
+void Engine::main_menu() {
+    tgui::Theme theme{"../../themes/Black.txt"};
+
+    //Botao de novo jogo
+    auto newGameButton = tgui::Button::create();
+    newGameButton->setRenderer(theme.getRenderer("Button"));
+    newGameButton->setPosition(540, 180);
+    newGameButton->setSize(200, 70);
+    newGameButton->setText("NOVO JOGO");
+    newGameButton->setTextSize(19);
+    gui.add(newGameButton);
+
+    //Botao de carregar jogo
+    auto loadGameButton = tgui::Button::create();
+    loadGameButton->setRenderer(theme.getRenderer("Button"));
+    loadGameButton->setPosition(540, 250);
+    loadGameButton->setSize(200, 70);
+    loadGameButton->setText("CARREGAR JOGO");
+    loadGameButton->setTextSize(19);
+    gui.add(loadGameButton);
+
+    //Botao de criar personagem
+    auto createCharacterButton = tgui::Button::create();
+    createCharacterButton->setRenderer(theme.getRenderer("Button"));
+    createCharacterButton->setPosition(540, 320);
+    createCharacterButton->setSize(200, 70);
+    createCharacterButton->setText("CRIAR PERSONAGEM");
+    createCharacterButton->setTextSize(19);
+    gui.add(createCharacterButton);
+
+    //Botao de sair
+    auto exitButton = tgui::Button::create();
+    exitButton->setRenderer(theme.getRenderer("Button"));
+    exitButton->setPosition(540, 390);
+    exitButton->setSize(200, 70);
+    exitButton->setText("SAIR");
+    exitButton->setTextSize(19);
+    gui.add(exitButton);
+
+    //Geracao do window para o Main Menu
+    while (true) {
+        sf::Event main_menu;
+        while(window.pollEvent(main_menu)) {
+            gui.handleEvent(main_menu);
+            if(main_menu.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+}
+
 void Engine::PlayerTurn1(Player *player) {
     /*
     int destination;
@@ -25,6 +107,7 @@ void Engine::playerTurn2(Player *player) {
     //***// Interface Game Menu //***//
 
     tgui::Theme theme{"../../themes/Black.txt"};
+    tgui::Scrollbar::Policy Never;
 
     //Area de dados do jogador
     auto statsArea = tgui::TextArea::create();
@@ -34,7 +117,6 @@ void Engine::playerTurn2(Player *player) {
     statsArea->setSize(470, 100);
     statsArea->setText("");
     statsArea->setTextSize(16);
-    tgui::Scrollbar::Policy Never;
     statsArea->setHorizontalScrollbarPolicy(Never);
     gui.add(statsArea);
 
@@ -82,7 +164,6 @@ void Engine::playerTurn2(Player *player) {
     acao->setSize(90, 35);
     acao->setText("AÇÃO: ");
     acao->setTextSize(25);
-    tgui::Scrollbar::Policy Never;
     acao->setHorizontalScrollbarPolicy(Never);
     gui.add(acao);
 
@@ -104,7 +185,6 @@ void Engine::playerTurn2(Player *player) {
     TextArea1->setSize(400, 200);
     TextArea1->setText("");
     TextArea1->setTextSize(15);
-    tgui::Scrollbar::Policy Never;
     TextArea1->setHorizontalScrollbarPolicy(Never);
     gui.add(TextArea1);
     
@@ -154,7 +234,6 @@ void Engine::playerTurn2(Player *player) {
     TextArea2->setSize(90, 21);
     TextArea2->setText("ALVO: ");
     TextArea2->setTextSize(18);
-    tgui::Scrollbar::Policy Never;
     TextArea2->setHorizontalScrollbarPolicy(Never);
     gui.add(TextArea2);
 
@@ -164,34 +243,6 @@ void Engine::playerTurn2(Player *player) {
         while (window.pollEvent(game_menu)){
             gui.handleEvent(game_menu);
             if (game_menu.type == sf::Event::Closed){
-                window.close();
-            }
-        }
-        window.clear();
-        gui.draw();
-        window.display();
-    }
-
-    //Geracao do window para o Main Menu
-    while (true) {
-        sf::Event main_menu;
-        while(window.pollEvent(main_menu)) {
-            gui.handleEvent(main_menu);
-            if(main_menu.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
-        window.clear();
-        gui.draw();
-        window.display();
-    }
-
-    //Geracao do window para o Pass Screen (tela intermediaria entre turnos)
-    while(true) {
-        sf::Event pass_screen;
-        while(window.pollEvent(pass_screen)) {
-            gui.handleEvent(pass_screen);
-            if(pass_screen.type == sf::Event::Closed) {
                 window.close();
             }
         }
