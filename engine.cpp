@@ -21,12 +21,34 @@ void Engine::PlayerTurn1(Player *player) {
 }
 
 void Engine::playerTurn2(Player *player) {
-    Action *action;
-    std::cout << "O que voce faz?\n";
-    std::cout << "1- Trabalho no meu projeto\n";
-    std::cout << "2- Tento assassinar meu coleguinha\n";
-    std::cout << "3- Estudo para a prova\n";
-    std::cout << "4- Tento curar meu coleguinha\n";
+    tgui::Theme theme{"../../themes/Black.txt"};
+    auto projectBar = tgui::ProgressBar::create();
+    projectBar->setRenderer(theme.getRenderer("ProgressBar"));
+    projectBar->setPosition(520, 10);
+    projectBar->setSize(200, 30);
+    projectBar->setValue(50);
+    projectBar->setMaximum(100);
+    projectBar->setMinimum(0);
+    projectBar->setText("TRABALHO");
+    gui.add(projectBar);
+    while (true){
+        sf::Event event;
+        while (window.pollEvent(event)){
+            gui.handleEvent(event);
+
+            if (event.type == sf::Event::Closed){
+                window.close();
+            }
+        }
+        window.clear();
+
+        gui.draw();
+
+        window.display();
+    }
+}
+/*    Action *action;
+    
     int action_num;
     int target;
     std::cin >> action_num;
@@ -51,7 +73,7 @@ void Engine::playerTurn2(Player *player) {
             break;
     }
     this->turn_actions.push_back(action);
-}
+*/
 
 void Engine::results() {
     for(int i=0; i<turn_actions.size(); i++) {

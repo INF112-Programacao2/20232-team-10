@@ -21,7 +21,7 @@ class Actor {                               //Classe geral para todos os atores 
         int getSkill(std::string s);
         virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
         virtual void study(int x) = 0;              //Funcao para estudar
-        //virtual void travelTo(Place destination);
+        //virtual void travelTo(Place *destination);
 };
 
 #endif

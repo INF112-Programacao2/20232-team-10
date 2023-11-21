@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <TGUI/TGUI.hpp>
+#include <TGUI/Backend/SFML-Graphics.hpp>
 
 #include "actions.h"
 #include "actor.h"
@@ -16,12 +18,12 @@ class Engine {
         unsigned int time = 0;
 
     public:
+        sf::RenderWindow window{{800, 600}, "CCPanico"};
+        tgui::Gui gui{window};
         void game();                                    // A FUNÇÃO!!!!!
-        void day();
         void PlayerTurn1(Player *player);
         void playerTurn2(Player *player);
         void playerTurn3(Player *player);
-        void playerTurn4(Player *player);
         void results();
         void createPlayer(std::string name, int atributes[6]);
         void characterCreator();

@@ -4,7 +4,13 @@
 //Construtores para as classes de acoes
 Action::Action(Actor *actor): actor(actor){}
 
-TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), target(target){}
+bool Action::possible(){
+    return true;
+}
+
+TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), target(target){
+    resultsText = actor->getName() + " atacou " + target->getName() + "\n";
+}
 
 WorkOnProjectAction::WorkOnProjectAction(Actor *actor): Action(actor){}
 
@@ -21,9 +27,17 @@ void DamageAction::execute() {
     std::cout << actor->getName() << " deu " << damagequant << " de dano em " << target->getName() << "\n";     
 }
 
+bool DamageAction::possible(){
+    return true;
+}
+
 void WorkOnProjectAction::execute() {
     actor->workOnProject(actor->getSkill("INT"));                       //Chama a funcao de trabalhor no projeto da classe Actor, com os pontos de INT do jogador como parametro
     std::cout << actor->getName() << " trabalhou no seu projeto.\n";    
+}
+
+bool WorkOnProjectAction::possible(){
+    return true;
 }
 
 void StudyAction::execute() {
