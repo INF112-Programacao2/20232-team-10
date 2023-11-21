@@ -158,23 +158,50 @@ void Engine::playerTurn2(Player *player) {
     TextArea2->setHorizontalScrollbarPolicy(Never);
     gui.add(TextArea2);
 
-
+    //Geracao do window para o Game Menu
     while (true){
-        sf::Event event;
-        while (window.pollEvent(event)){
-            gui.handleEvent(event);
-
-            if (event.type == sf::Event::Closed){
+        sf::Event game_menu;
+        while (window.pollEvent(game_menu)){
+            gui.handleEvent(game_menu);
+            if (game_menu.type == sf::Event::Closed){
                 window.close();
             }
         }
         window.clear();
-
         gui.draw();
+        window.display();
+    }
 
+    //Geracao do window para o Main Menu
+    while (true) {
+        sf::Event main_menu;
+        while(window.pollEvent(main_menu)) {
+            gui.handleEvent(main_menu);
+            if(main_menu.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+
+    //Geracao do window para o Pass Screen (tela intermediaria entre turnos)
+    while(true) {
+        sf::Event pass_screen;
+        while(window.pollEvent(pass_screen)) {
+            gui.handleEvent(pass_screen);
+            if(pass_screen.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
         window.display();
     }
 }
+
+
 /*    Action *action;
     
     int action_num;
