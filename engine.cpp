@@ -21,16 +21,144 @@ void Engine::PlayerTurn1(Player *player) {
 }
 
 void Engine::playerTurn2(Player *player) {
+
+    //***// Interface Game Menu //***//
+
     tgui::Theme theme{"../../themes/Black.txt"};
+
+    //Area de dados do jogador
+    auto statsArea = tgui::TextArea::create();
+    statsArea->setRenderer(theme.getRenderer("TextArea"));
+    statsArea->setPosition(30, 10);
+    statsArea->setMaximumCharacters(0);
+    statsArea->setSize(470, 100);
+    statsArea->setText("");
+    statsArea->setTextSize(16);
+    tgui::Scrollbar::Policy Never;
+    statsArea->setHorizontalScrollbarPolicy(Never);
+    gui.add(statsArea);
+
+    //Barra de progresso para o trabalho
     auto projectBar = tgui::ProgressBar::create();
     projectBar->setRenderer(theme.getRenderer("ProgressBar"));
     projectBar->setPosition(520, 10);
     projectBar->setSize(200, 30);
-    projectBar->setValue(50);
+    projectBar->setValue(0);            //Recebe o valor do Player project_bar (unsigned int) 
     projectBar->setMaximum(100);
     projectBar->setMinimum(0);
+    projectBar->setTextSize(15);
     projectBar->setText("TRABALHO");
     gui.add(projectBar);
+
+    //Barra de progresso para estudo
+    auto studyBar = tgui::ProgressBar::create();
+    studyBar->setRenderer(theme.getRenderer("ProgressBar"));
+    studyBar->setPosition(520, 50);
+    studyBar->setSize(200, 30);
+    studyBar->setValue(0);              //Recebe o valor do Player study_bar (unsigned int)
+    studyBar->setMaximum(100);
+    studyBar->setMinimum(0);
+    studyBar->setText("ESTUDO");
+    studyBar->setTextSize(15);
+    gui.add(studyBar);
+
+    //Barra de tempo
+    auto tempo = tgui::ProgressBar::create();
+    tempo->setRenderer(theme.getRenderer("ProgressBar"));
+    tempo->setPosition(600, 570);
+    tempo->setSize(200, 30);
+    tempo->setValue(0);                 //Recebe o valor do clock do turno
+    tempo->setMaximum(100);
+    tempo->setMinimum(0);
+    tempo->setText("TEMPO");        
+    tempo->setTextSize(15);
+    gui.add(tempo);
+
+    //Acao: 
+    auto acao = tgui::TextArea::create();
+    acao->setRenderer(theme.getRenderer("TextArea"));
+    acao->setPosition(230, 430);
+    acao->setMaximumCharacters(0);
+    acao->setSize(90, 35);
+    acao->setText("AÇÃO: ");
+    acao->setTextSize(25);
+    tgui::Scrollbar::Policy Never;
+    acao->setHorizontalScrollbarPolicy(Never);
+    gui.add(acao);
+
+    //ComboBox1
+    auto comboBox1 = tgui::ComboBox::create();
+    comboBox1->setChangeItemOnScroll(true);
+    comboBox1->setItemsToDisplay(0);
+    comboBox1->setMaximumItems(0);
+    comboBox1->setPosition(320, 430);
+    comboBox1->setSize(250, 35);
+    comboBox1->setTextSize(15);
+    gui.add(comboBox1);
+
+    //TextArea1
+    auto TextArea1 = tgui::TextArea::create();
+    TextArea1->setRenderer(theme.getRenderer("TextArea"));
+    TextArea1->setPosition(200, 190);
+    TextArea1->setMaximumCharacters(0);
+    TextArea1->setSize(400, 200);
+    TextArea1->setText("");
+    TextArea1->setTextSize(15);
+    tgui::Scrollbar::Policy Never;
+    TextArea1->setHorizontalScrollbarPolicy(Never);
+    gui.add(TextArea1);
+    
+    //Botao de saude
+    auto healthButton = tgui::Button::create();
+    healthButton->setRenderer(theme.getRenderer("Button"));
+    healthButton->setPosition(200, 140);
+    healthButton->setSize(120, 35);
+    healthButton->setText("SAÚDE");
+    healthButton->setTextSize(18);
+    gui.add(healthButton);
+
+    //Botao de habilidades
+    auto skillButton = tgui::Button::create();
+    skillButton->setRenderer(theme.getRenderer("Button"));
+    skillButton->setPosition(480, 140);
+    skillButton->setSize(120, 35);
+    skillButton->setText("HABILIDADES");
+    skillButton->setTextSize(18);
+    gui.add(skillButton);
+
+    //Botao de jogadores
+    auto playersButton = tgui::Button::create();
+    playersButton->setRenderer(theme.getRenderer("Button"));
+    playersButton->setPosition(340, 140);
+    playersButton->setSize(120, 35);
+    playersButton->setText("JOGADORES");
+    playersButton->setTextSize(18);
+    gui.add(playersButton);
+
+    //ComboBox2
+    auto comboBox2 = tgui::ComboBox::create();
+    comboBox2->setRenderer(theme.getRenderer("ComboBox"));
+    comboBox2->setChangeItemOnScroll(false);
+    comboBox2->setItemsToDisplay(0);
+    comboBox2->setMaximumItems(0);
+    comboBox2->setPosition(320, 500);
+    comboBox2->setSize(250, 21);
+    comboBox2->setTextSize(13);
+    gui.add(comboBox2);
+
+    //TextArea2
+    auto TextArea2 = tgui::TextArea::create();
+    TextArea2->setRenderer(theme.getRenderer("TextArea"));
+    TextArea2->setPosition(230, 500);
+    TextArea2->setMaximumCharacters(0);
+    TextArea2->setSize(90, 21);
+    TextArea2->setText("ALVO: ");
+    TextArea2->setTextSize(18);
+    tgui::Scrollbar::Policy Never;
+    TextArea2->setHorizontalScrollbarPolicy(Never);
+    gui.add(TextArea2);
+
+
     while (true){
         sf::Event event;
         while (window.pollEvent(event)){
