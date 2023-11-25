@@ -19,7 +19,6 @@ unsigned int Player::getProjectBar(){
     return project_bar;
 }
 
-
 unsigned int Player::getStudyBar(){
     return study_bar;
 }

@@ -53,3 +53,7 @@ void Actor::die() {         //Funcao para morte do jogador
 int Actor::getSkill(std::string s){
     return this->skill[s];
 }
+
+int Actor::get_hp(){
+    return hp;
+}

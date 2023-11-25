@@ -19,6 +19,7 @@ class Actor {                               //Classe geral para todos os atores 
         void die();                                 //Funcao para morte
         std::string getName();          
         int getSkill(std::string s);
+        int get_hp();
         virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
         virtual void study(int x) = 0;              //Funcao para estudar
         //virtual void travelTo(Place *destination);

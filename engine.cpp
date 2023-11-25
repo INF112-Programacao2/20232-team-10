@@ -226,6 +226,9 @@ void Engine::playerTurn2(Player *player) {
     healthButton->setSize(120, 35);
     healthButton->setText("SAÚDE");
     healthButton->setTextSize(18);
+    healthButton->onClick([&]{
+        TextArea1->setText(std::to_string(player->get_hp()));
+    });
     gui.add(healthButton);
 
     //Botao de habilidades
@@ -235,6 +238,9 @@ void Engine::playerTurn2(Player *player) {
     skillButton->setSize(120, 35);
     skillButton->setText("HABILIDADES");
     skillButton->setTextSize(18);
+    skillButton->onClick([&]{ 
+        TextArea1->setText("Skills: \nFOR: " + std::to_string(player->getSkill("STR")) + "\nDES: " + std::to_string(player->getSkill("DEX")) + "\nCON: " + std::to_string(player->getSkill("CON")) + "\nINT: " + std::to_string(player->getSkill("INT")) + "\nSAB: " + std::to_string(player->getSkill("WIS")) + "\nCAR: " + std::to_string(player->getSkill("CHA"))); 
+    });
     gui.add(skillButton);
 
     //Botao de jogadores
@@ -244,6 +250,15 @@ void Engine::playerTurn2(Player *player) {
     playersButton->setSize(120, 35);
     playersButton->setText("JOGADORES");
     playersButton->setTextSize(18);
+    playersButton->onClick([&]{ 
+        TextArea1->setText("");
+        for (int i = 0; i < players.size(); i++){
+            if (players[i] == player){
+                continue;
+            }
+            TextArea1->addText(players[i]->getName() + '\n');
+        }
+    });
     gui.add(playersButton);
 
     //ComboBox2
@@ -273,10 +288,10 @@ void Engine::playerTurn2(Player *player) {
 
     //Geracao do window para o Game Menu
     while (true){
-        sf::Event game_menu;
-        while (window.pollEvent(game_menu)){
-            gui.handleEvent(game_menu);
-            if (game_menu.type == sf::Event::Closed){
+        sf::Event event;
+        while (window.pollEvent(event)){
+            gui.handleEvent(event);
+            if (event.type == sf::Event::Closed){
                 window.close();
             }
         }
