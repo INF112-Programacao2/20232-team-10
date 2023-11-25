@@ -1,5 +1,7 @@
 #include "engine.h"
 
+#include <iostream>
+
 void Engine::game(){
     for (int i = 0; i < players.size(); i++){
         playerTurn2(players[i]);
@@ -33,6 +35,7 @@ void Engine::pass_screen() {
         gui.draw();
         window.display();
     }
+    gui.removeAllWidgets();
 }
 
 void Engine::main_menu() {
@@ -87,9 +90,32 @@ void Engine::main_menu() {
         gui.draw();
         window.display();
     }
+    gui.removeAllWidgets();
 }
 
-void Engine::PlayerTurn1(Player *player) {
+/*
+void Engine::characterCreator(){
+    int points = 12;
+    std::string nome;
+    int atributos[6];
+
+    tgui::Theme theme{"../../themes/Black.txt"};
+    tgui::Scrollbar::Policy Never;
+
+    auto title = tgui::TextArea::create();
+    title->setRenderer(theme.getRenderer("TextArea"));
+    title->setPosition(30, 10);
+    title->setMaximumCharacters(0);
+    title->setSize(470, 100);
+    title->setText("");
+    title->setTextSize(16);
+    title->setHorizontalScrollbarPolicy(Never);
+    gui.add(title);
+
+}
+*/
+
+void Engine::playerTurn1(Player *player) {
     /*
     int destination;
 
@@ -106,7 +132,7 @@ void Engine::playerTurn2(Player *player) {
 
     //***// Interface Game Menu //***//
 
-    tgui::Theme theme{"../../themes/Black.txt"};
+    tgui::Theme theme{"./Black.txt"};
     tgui::Scrollbar::Policy Never;
 
     //Area de dados do jogador
@@ -118,6 +144,7 @@ void Engine::playerTurn2(Player *player) {
     statsArea->setText("");
     statsArea->setTextSize(16);
     statsArea->setHorizontalScrollbarPolicy(Never);
+    statsArea->setReadOnly(true);
     gui.add(statsArea);
 
     //Barra de progresso para o trabalho
@@ -125,7 +152,7 @@ void Engine::playerTurn2(Player *player) {
     projectBar->setRenderer(theme.getRenderer("ProgressBar"));
     projectBar->setPosition(520, 10);
     projectBar->setSize(200, 30);
-    projectBar->setValue(0);            //Recebe o valor do Player project_bar (unsigned int) 
+    projectBar->setValue(player->getProjectBar());            //Recebe o valor do Player project_bar (unsigned int) 
     projectBar->setMaximum(100);
     projectBar->setMinimum(0);
     projectBar->setTextSize(15);
@@ -137,7 +164,7 @@ void Engine::playerTurn2(Player *player) {
     studyBar->setRenderer(theme.getRenderer("ProgressBar"));
     studyBar->setPosition(520, 50);
     studyBar->setSize(200, 30);
-    studyBar->setValue(0);              //Recebe o valor do Player study_bar (unsigned int)
+    studyBar->setValue(player->getStudyBar());              //Recebe o valor do Player study_bar (unsigned int)
     studyBar->setMaximum(100);
     studyBar->setMinimum(0);
     studyBar->setText("ESTUDO");
@@ -162,8 +189,8 @@ void Engine::playerTurn2(Player *player) {
     acao->setPosition(230, 430);
     acao->setMaximumCharacters(0);
     acao->setSize(90, 35);
-    acao->setText("AÇÃO: ");
-    acao->setTextSize(25);
+    acao->setText("AÇÃO:");
+    acao->setTextSize(20);
     acao->setHorizontalScrollbarPolicy(Never);
     gui.add(acao);
 
@@ -175,6 +202,9 @@ void Engine::playerTurn2(Player *player) {
     comboBox1->setPosition(320, 430);
     comboBox1->setSize(250, 35);
     comboBox1->setTextSize(15);
+    for (int i = 0; i < Action::game_actions.size(); i++){
+        comboBox1->addItem(Action::game_actions[i]->getDescription(), Action::game_actions[i]->getDescription());
+    }
     gui.add(comboBox1);
 
     //TextArea1
@@ -186,6 +216,7 @@ void Engine::playerTurn2(Player *player) {
     TextArea1->setText("");
     TextArea1->setTextSize(15);
     TextArea1->setHorizontalScrollbarPolicy(Never);
+    TextArea1->setReadOnly(true);
     gui.add(TextArea1);
     
     //Botao de saude
@@ -222,8 +253,11 @@ void Engine::playerTurn2(Player *player) {
     comboBox2->setItemsToDisplay(0);
     comboBox2->setMaximumItems(0);
     comboBox2->setPosition(320, 500);
-    comboBox2->setSize(250, 21);
+    comboBox2->setSize(250, 30);
     comboBox2->setTextSize(13);
+    for (int i = 0; i < players.size(); i++){
+        comboBox2->addItem(players[i]->getName(), players[i]->getName());
+    }
     gui.add(comboBox2);
 
     //TextArea2
@@ -231,7 +265,7 @@ void Engine::playerTurn2(Player *player) {
     TextArea2->setRenderer(theme.getRenderer("TextArea"));
     TextArea2->setPosition(230, 500);
     TextArea2->setMaximumCharacters(0);
-    TextArea2->setSize(90, 21);
+    TextArea2->setSize(90, 30);
     TextArea2->setText("ALVO: ");
     TextArea2->setTextSize(18);
     TextArea2->setHorizontalScrollbarPolicy(Never);
@@ -250,6 +284,7 @@ void Engine::playerTurn2(Player *player) {
         gui.draw();
         window.display();
     }
+    gui.removeAllWidgets();
 }
 
 
@@ -291,16 +326,4 @@ void Engine::results() {
 void Engine::createPlayer(std::string name, int atributes[6]){
     Player *player = new Player(name, atributes);
     players.push_back(player);
-}
-
-void Engine::characterCreator(){
-    std::string name;
-    int atributes[6];
-    std::cout << "Nome: ";
-    std::cin >> name;
-    std::cout << "Skills:";
-    for (int i = 0; i < 6; i++){
-        std::cin >> atributes[i]; 
-    }
-    createPlayer(name, atributes);
 }

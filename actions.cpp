@@ -2,15 +2,12 @@
 #include <iostream>
 
 //Construtores para as classes de acoes
+
+std::vector<Action*> Action::game_actions;
+
 Action::Action(Actor *actor): actor(actor){}
 
-bool Action::possible(){
-    return true;
-}
-
-TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), target(target){
-    resultsText = actor->getName() + " atacou " + target->getName() + "\n";
-}
+TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), target(target){}
 
 WorkOnProjectAction::WorkOnProjectAction(Actor *actor): Action(actor){}
 
@@ -20,11 +17,41 @@ StudyAction::StudyAction(Actor *actor): Action(actor){}
 
 HealAction::HealAction(Actor *actor, Actor *target) : TargetedAction(actor, target) {}
 
+bool Action::possible(){
+    return true;
+}
+
+std::string Action::getDescription(){
+    return "Action";
+}
+
+std::string TargetedAction::getDescription(){
+    return "Targeted Action";
+}
+
+std::string WorkOnProjectAction::getDescription(){
+    return "Trabalhar no projeto";
+}
+
+std::string StudyAction::getDescription(){
+    return "Estudar";
+}
+
+std::string DamageAction::getDescription(){
+    return "Atacar alvo";
+}
+
+std::string HealAction::getDescription(){
+    return "Curar alvo";
+}
+
+
+
 //Funcoes de execucao para as respectivas acoes
 void DamageAction::execute() {              
     int damagequant = actor->getSkill("STR") - target->getSkill("CON");                                         //Quantidade de dano = pontos de STR do actor - pontos de CON do alvo
     target->damage(damagequant);                                                                                //Chama a funcao de causar dano da classe Actor
-    std::cout << actor->getName() << " deu " << damagequant << " de dano em " << target->getName() << "\n";     
+    resultsText = actor->getName() + " deu " + std::to_string(damagequant) + " de dano em " + target->getName() + "\n";     
 }
 
 bool DamageAction::possible(){
@@ -48,4 +75,15 @@ void StudyAction::execute() {
 void HealAction::execute() {
     target->heal(actor->getSkill("WIS"));                                           //Chama a funcao de curar da classe Actor, com os pontos de WIS do jogador como parametro
     std::cout << actor->getName() << " curou " << target->getName() << "\n";
+}
+
+void Action::instantiate_actions(){
+    DamageAction* damage_action = new DamageAction(nullptr, nullptr);
+    WorkOnProjectAction* work_on_project_action = new WorkOnProjectAction(nullptr);
+    StudyAction* study_action = new StudyAction(nullptr);
+    HealAction* heal_action = new HealAction(nullptr, nullptr);
+    game_actions.push_back(damage_action);
+    game_actions.push_back(work_on_project_action);
+    game_actions.push_back(study_action);
+    game_actions.push_back(heal_action);
 }

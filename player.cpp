@@ -14,3 +14,12 @@ void Player::workOnProject(int x) {
 void Player::study(int x) {
     study_bar += 5 + x;
 }
+
+unsigned int Player::getProjectBar(){
+    return project_bar;
+}
+
+
+unsigned int Player::getStudyBar(){
+    return study_bar;
+}
