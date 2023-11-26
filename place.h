@@ -4,14 +4,15 @@
 #include <vector>
 #include "actor.h"
 #include "player.h"
+#include "actions.h"
 
 //Locais onde o usuário pode visitar;
-class LocalActions {
+class Place {
     private:
         std::string place;
 
     public:
-        static std::vector<LocalActions*> placeActions;   //Vector para armazenar os lugares
-        LocalActions(std::string place);         //Construtor
+         std::vector<Action*> placeActions;   //Vector para armazenar os lugares
+         Place(std::string place);         //Construtor
 };
 #endif
