@@ -8,7 +8,7 @@ Actor::Actor(std::string name){                 //Construtor
     for (int i = 0; i < SKILL_NUM; i++){    //Inicializacao do valores das skills com 0
         this->skill[i] = 0;
     }
-    this->hp_max = 10 + this->skill[ENDURANCE];     //Maximo de vida = 10 + pontos de CON
+    this->hp_max = 10 + this->skill[ENDURANCE];     //Maximo de vida = 10 + pontos de Resistencia
     this->hp = this->hp_max;                    //Inicializando a vida do jogador como maximo
 }
 
@@ -18,6 +18,8 @@ Actor::Actor(std::string name, int atributes[6]) {
     for (int i = 0; i < SKILL_NUM; i++){    //Atualiza os valores da skills para a quantidade de pontos escolhida pelo jogador
         this->skill[i] = atributes[i];
     }
+    this->hp_max = 10 + this->skill[ENDURANCE];     //Maximo de vida = 10 + pontos de Resistencia
+    this->hp = this->hp_max; 
 };
 
 void Actor::heal(int x) {               //Funcao para curar

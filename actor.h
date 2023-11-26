@@ -4,7 +4,7 @@
 
 const unsigned int SKILL_NUM = 6;   // Número de skills no jogo
 
-const std::string skill_name[SKILL_NUM] = {
+const std::string skill_name[SKILL_NUM] = {     // Nomes das skills
     "Atletismo",
     "Agilidade",
     "Resistencia",
