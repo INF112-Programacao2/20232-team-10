@@ -25,6 +25,7 @@ class Engine {
         void playerTurn2(Player *player);
         void playerTurn3(Player *player);
         void pass_screen(Player *player);
+        void character_creator_screen();
         void main_menu();
         void results();
         void createPlayer(std::string name, int atributes[6]);

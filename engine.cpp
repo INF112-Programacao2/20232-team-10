@@ -326,6 +326,194 @@ void Engine::playerTurn2(Player *player) {
     gui.removeAllWidgets();
 }
 
+void Engine::character_creator_screen() {
+    tgui::Theme theme{"./Black.txt"};
+    tgui::Scrollbar::Policy Never;
+
+    //Titulo
+    auto title = tgui::TextArea::create();
+    title->setRenderer(theme.getRenderer("TextArea"));
+    title->setPosition(230, 20);
+    title->setMaximumCharacters(0);
+    title->setSize(340, 40);
+    title->setText("CRIADOR DE PERSONAGEM");
+    title->setTextSize(23);
+    title->setHorizontalScrollbarPolicy(Never);
+    gui.add(title);
+
+    //Botao de atletismo
+    auto FitnessButton = tgui::SpinButton::create();
+    FitnessButton->setRenderer(theme.getRenderer("SpinButton"));
+    FitnessButton->setPosition(310, 180);
+    FitnessButton->setMaximum(10);
+    FitnessButton->setMinimum(0);
+    FitnessButton->setSize(20, 40);
+    FitnessButton->setStep(1);
+    FitnessButton->setValue(0);
+    gui.add(FitnessButton);
+
+    //Botao de agilidade
+    auto AgilityButton = tgui::SpinButton::create();
+    AgilityButton->setRenderer(theme.getRenderer("SpinButton"));
+    AgilityButton->setPosition(430, 180);
+    AgilityButton->setMaximum(10);
+    AgilityButton->setMinimum(0);
+    AgilityButton->setSize(20, 40);
+    AgilityButton->setStep(1);
+    AgilityButton->setValue(0);
+    gui.add(AgilityButton);
+
+    //Botao de resistencia
+    auto EnduranceButton = tgui::SpinButton::create();
+    EnduranceButton->setRenderer(theme.getRenderer("SpinButton"));
+    EnduranceButton->setPosition(550, 180);
+    EnduranceButton->setMaximum(10);
+    EnduranceButton->setMinimum(0);
+    EnduranceButton->setSize(20, 40);
+    EnduranceButton->setStep(1);
+    EnduranceButton->setValue(0);
+    gui.add(EnduranceButton);
+
+    //Botao de pensamento
+    auto ThinkingButton = tgui::SpinButton::create();
+    ThinkingButton->setRenderer(theme.getRenderer("SpinButton"));
+    ThinkingButton->setPosition(310, 280);
+    ThinkingButton->setMaximum(10);
+    ThinkingButton->setMinimum(0);
+    ThinkingButton->setSize(20, 40);
+    ThinkingButton->setStep(1);
+    ThinkingButton->setValue(0);
+    gui.add(ThinkingButton);
+
+    //Botao de primeiros socorros
+    auto FirstAidButton = tgui::SpinButton::create();
+    FirstAidButton->setRenderer(theme.getRenderer("SpinButton"));
+    FirstAidButton->setPosition(310, 280);
+    FirstAidButton->setMaximum(10);
+    FirstAidButton->setMinimum(0);
+    FirstAidButton->setSize(20, 40);
+    FirstAidButton->setStep(1);
+    FirstAidButton->setValue(0);
+    gui.add(FirstAidButton);
+
+    //Botao de carisma
+    auto CharismaButton = tgui::SpinButton::create();
+    CharismaButton->setRenderer(theme.getRenderer("SpinButton"));
+    CharismaButton->setPosition(550, 280);
+    CharismaButton->setMaximum(10);
+    CharismaButton->setMinimum(0);
+    CharismaButton->setSize(20, 40);
+    CharismaButton->setStep(1);
+    CharismaButton->setValue(0);
+    gui.add(CharismaButton);
+
+    //Atletismo Texto
+    auto FitnessArea = tgui::TextArea::create();
+    FitnessArea->setRenderer(theme.getRenderer("TextArea"));
+    FitnessArea->setPosition(230, 180);
+    FitnessArea->setMaximumCharacters(0);
+    FitnessArea->setSize(80, 40);
+    FitnessArea->setText("ATL: ");
+    FitnessArea->setTextSize(20);
+    FitnessArea->setHorizontalScrollbarPolicy(Never);
+    gui.add(FitnessArea);
+
+    //Agilidade Texto
+    auto AgilityArea = tgui::TextArea::create();
+    AgilityArea->setRenderer(theme.getRenderer("TextArea"));
+    AgilityArea->setPosition(350, 180);
+    AgilityArea->setMaximumCharacters(0);
+    AgilityArea->setSize(80, 40);
+    AgilityArea->setText("AGI: ");
+    AgilityArea->setTextSize(20);
+    AgilityArea->setHorizontalScrollbarPolicy(Never);
+    gui.add(AgilityArea);
+
+    //Resistencia Area
+    auto EnduranceArea = tgui::TextArea::create();
+    EnduranceArea->setRenderer(theme.getRenderer("TextArea"));
+    EnduranceArea->setPosition(470, 180);
+    EnduranceArea->setMaximumCharacters(0);
+    EnduranceArea->setSize(80, 40);
+    EnduranceArea->setText("RES: ");
+    EnduranceArea->setTextSize(20);
+    EnduranceArea->setHorizontalScrollbarPolicy(Never);
+    gui.add(EnduranceArea);
+
+    //Pensamento Area
+    auto ThinkingArea = tgui::TextArea::create();
+    ThinkingArea->setRenderer(theme.getRenderer("TextArea"));
+    ThinkingArea->setPosition(230, 280);
+    ThinkingArea->setMaximumCharacters(0);
+    ThinkingArea->setSize(80, 40);
+    ThinkingArea->setText("PEN: ");
+    ThinkingArea->setTextSize(20);
+    ThinkingArea->setHorizontalScrollbarPolicy(Never);
+    gui.add(ThinkingArea);
+
+    //Primeiros Socorros Area
+    auto FirstAidArea = tgui::TextArea::create();
+    FirstAidArea->setRenderer(theme.getRenderer("TextArea"));
+    FirstAidArea->setPosition(350, 280);
+    FirstAidArea->setMaximumCharacters(0);
+    FirstAidArea->setSize(80, 40);
+    FirstAidArea->setText("F/A: ");
+    FirstAidArea->setTextSize(20);
+    FirstAidArea->setHorizontalScrollbarPolicy(Never);
+    gui.add(FirstAidArea);
+
+    //Carisma Area
+    auto CharismaArea = tgui::TextArea::create();
+    CharismaArea->setRenderer(theme.getRenderer("TextArea"));
+    CharismaArea->setPosition(470, 280);
+    CharismaArea->setMaximumCharacters(0);
+    CharismaArea->setSize(80, 40);
+    CharismaArea->setText("CAR: ");
+    CharismaArea->setTextSize(20);
+    CharismaArea->setHorizontalScrollbarPolicy(Never);
+    gui.add(CharismaArea);
+
+    //EditBox1
+    tgui::EditBox::Alignment center;
+    auto EditBox1 = tgui::EditBox::create();
+    EditBox1->setAlignment(center);
+    EditBox1->setPosition(320, 70);
+    EditBox1->setSize(160, 50);
+    EditBox1->setText("NOME");
+    EditBox1->setTextSize(15);
+
+    //Botao de proximo
+    auto NextButton = tgui::Button::create();
+    NextButton->setPosition(630, 540);
+    NextButton->setSize(170, 59.5);
+    NextButton->setText("PROXIMO");
+    NextButton->setTextSize(20);
+
+    //Pontos restantes
+    auto RemainingPoints = tgui::TextArea::create();
+    RemainingPoints->setHorizontalScrollbarPolicy(Never);
+    RemainingPoints->setMaximumCharacters(0);
+    RemainingPoints->setPosition(270, 130);
+    RemainingPoints->setSize(260, 30);
+    RemainingPoints->setText("PONTOS RESTANTES: ");
+    RemainingPoints->setTextSize(18);
+    
+
+    while (true){
+        sf::Event event;
+        while (window.pollEvent(event)){
+            gui.handleEvent(event);
+            if (event.type == sf::Event::Closed){
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+    gui.removeAllWidgets();
+
+}
 
 /*    Action *action;
     
