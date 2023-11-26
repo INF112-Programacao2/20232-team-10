@@ -37,7 +37,6 @@ class Actor {                               //Classe geral para todos os atores 
         void damage(int x);                         //Funcao para causar dano
         void die();                                 //Funcao para morte
         std::string getName();          
-        static std::string getSkillName(unsigned int s);
         int getSkill(unsigned int s);
         int get_hp();
         virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
