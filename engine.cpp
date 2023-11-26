@@ -4,26 +4,32 @@
 
 void Engine::game(){
     for (int i = 0; i < players.size(); i++){
+        pass_screen(players[i]);
         playerTurn2(players[i]);
     }
     results();
 }
 
-void Engine::pass_screen() {
+void Engine::pass_screen(Player *player) {
 
-    tgui::Theme theme{"../../themes/Black.txt"};
+    tgui::Theme theme{"./Black.txt"};
+
+    bool stay = true;
 
     //Botao de proximo turno
     auto nextTurnButton = tgui::Button::create();
     nextTurnButton->setRenderer(theme.getRenderer("Button"));
     nextTurnButton->setPosition(200, 230);
     nextTurnButton->setSize(400, 140);
-    nextTurnButton->setText("TURN");
+    nextTurnButton->setText("Vez de " + player->getName());
     nextTurnButton->setTextSize(25);
+    nextTurnButton->onClick([&]{
+        stay = false;
+    });
     gui.add(nextTurnButton);
 
  //Geracao do window para o Pass Screen (tela intermediaria entre turnos)
-    while(true) {
+    while(stay) {
         sf::Event pass_screen;
         while(window.pollEvent(pass_screen)) {
             gui.handleEvent(pass_screen);
@@ -132,6 +138,10 @@ void Engine::playerTurn2(Player *player) {
 
     //***// Interface Game Menu //***//
 
+    sf::Clock clock;
+
+    int time = 60;
+
     tgui::Theme theme{"./Black.txt"};
     tgui::Scrollbar::Policy Never;
 
@@ -176,8 +186,8 @@ void Engine::playerTurn2(Player *player) {
     tempo->setRenderer(theme.getRenderer("ProgressBar"));
     tempo->setPosition(600, 570);
     tempo->setSize(200, 30);
-    tempo->setValue(0);                 //Recebe o valor do clock do turno
-    tempo->setMaximum(100);
+    tempo->setValue(time);                 //Recebe o valor do clock do turno
+    tempo->setMaximum(60);
     tempo->setMinimum(0);
     tempo->setText("TEMPO");        
     tempo->setTextSize(15);
@@ -298,9 +308,17 @@ void Engine::playerTurn2(Player *player) {
                 window.close();
             }
         }
+        if (clock.getElapsedTime() > sf::seconds(0.25)){
+            clock.restart();
+            time--;
+            tempo->setValue(time);
+        }
         window.clear();
         gui.draw();
         window.display();
+        if (time <= 0){
+            break;
+        }
     }
     gui.removeAllWidgets();
 }
