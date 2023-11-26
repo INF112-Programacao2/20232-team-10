@@ -239,7 +239,10 @@ void Engine::playerTurn2(Player *player) {
     skillButton->setText("HABILIDADES");
     skillButton->setTextSize(18);
     skillButton->onClick([&]{ 
-        TextArea1->setText("Skills: \nFOR: " + std::to_string(player->getSkill("STR")) + "\nDES: " + std::to_string(player->getSkill("DEX")) + "\nCON: " + std::to_string(player->getSkill("CON")) + "\nINT: " + std::to_string(player->getSkill("INT")) + "\nSAB: " + std::to_string(player->getSkill("WIS")) + "\nCAR: " + std::to_string(player->getSkill("CHA"))); 
+        TextArea1->setText("Skills: \n"); 
+        for (int i = 0; i < SKILL_NUM; i++){
+            TextArea1->addText(skill_name[i] + ": " + std::to_string(player->getSkill(i)) + '\n');
+        }
     });
     gui.add(skillButton);
 
