@@ -21,6 +21,14 @@ bool Action::possible(){
     return true;
 }
 
+bool Action::isTargeted(){
+    return false;
+}
+
+bool TargetedAction::isTargeted(){
+    return true;
+}
+
 std::string Action::getDescription(){
     return "Action";
 }

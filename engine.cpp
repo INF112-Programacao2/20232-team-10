@@ -155,6 +155,7 @@ void Engine::playerTurn2(Player *player) {
     statsArea->setTextSize(16);
     statsArea->setHorizontalScrollbarPolicy(Never);
     statsArea->setReadOnly(true);
+    statsArea->setText(player->getName());
     gui.add(statsArea);
 
     //Barra de progresso para o trabalho
@@ -213,7 +214,7 @@ void Engine::playerTurn2(Player *player) {
     comboBox1->setSize(250, 35);
     comboBox1->setTextSize(15);
     for (int i = 0; i < Action::game_actions.size(); i++){
-        comboBox1->addItem(Action::game_actions[i]->getDescription(), Action::game_actions[i]->getDescription());
+        comboBox1->addItem(Action::game_actions[i]->getDescription(), std::to_string(i));
     }
     gui.add(comboBox1);
 
@@ -284,7 +285,9 @@ void Engine::playerTurn2(Player *player) {
     comboBox2->setSize(250, 30);
     comboBox2->setTextSize(13);
     for (int i = 0; i < players.size(); i++){
-        comboBox2->addItem(players[i]->getName(), players[i]->getName());
+        if (i != player->get_id()){
+            comboBox2->addItem(players[i]->getName(), std::to_string(i));
+        }
     }
     gui.add(comboBox2);
 

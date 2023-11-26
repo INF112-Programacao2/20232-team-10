@@ -18,6 +18,7 @@ class Action {                          //Classe para acoes sem alvo
         Action(Actor *actor);           //Construtor
         virtual void execute() = 0;     //Funcao para execucao da acao
         virtual bool possible();
+        virtual bool isTargeted();
         virtual std::string getDescription();
         static void instantiate_actions();
 };
@@ -28,6 +29,7 @@ class TargetedAction : public Action {                  //Classe para acoes com 
 
     public:
         TargetedAction(Actor *actor, Actor *target);    //Construtor
+        virtual bool isTargeted() override;
         virtual std::string getDescription() override;
 };
 

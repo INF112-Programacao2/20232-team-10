@@ -15,6 +15,10 @@ void Player::study(int x) {
     study_bar += 5 + x;
 }
 
+int Player::get_id(){
+    return this->id;
+}
+
 unsigned int Player::getProjectBar(){
     return project_bar;
 }
