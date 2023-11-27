@@ -3,11 +3,13 @@
 #include <iostream>
 
 void Engine::game(){
-    for (int i = 0; i < players.size(); i++){
-        pass_screen(players[i]);
-        playerTurn2(players[i]);
+    for (int t = 0; t < 3; t++){
+        for (int i = 0; i < players.size(); i++){
+            pass_screen(players[i]);
+            playerTurn2(players[i]);
+        }
+        results();
     }
-    results();
 }
 
 void Engine::pass_screen(Player *player) {
@@ -329,6 +331,10 @@ void Engine::playerTurn2(Player *player) {
     int action_num = comboBox1->getSelectedItemId().toInt();
 
     Action* action = Action::ActionByID(action_num, player, players[comboBox2->getSelectedItemId().toInt()]);
+
+    if (!action){
+        action = new StudyAction(player);
+    }
 
     this->turn_actions.push_back(action);
 

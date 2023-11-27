@@ -43,7 +43,7 @@ class WorkOnProjectAction : public Action {     //Classe para a acao de trabalha
     public:
         WorkOnProjectAction(Actor *actor);      //Construtor
         virtual void execute() override;        //Funcao para execucacao da acao
-        virtual bool possible() override;
+        //virtual bool possible() override;
         virtual std::string getDescription() override;
 };
 
@@ -59,7 +59,7 @@ class DamageAction : public TargetedAction {        //Classe para a acao de caus
     public:
         DamageAction(Actor *actor, Actor *target);  
         virtual void execute() override; 
-        virtual bool possible() override;          
+        //virtual bool possible() override;          
         virtual std::string getDescription() override; 
 };
 
