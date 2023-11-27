@@ -6,21 +6,28 @@
 #include "actor.h"
 #include "player.h"
 
+const int ACTION_NUM = 4;
 
 class Action {                          //Classe para acoes sem alvo
     protected:
         Actor *actor;                   //Quem vai executar a acao
         std::string name;
         std::string resultsText;
+        int id;
+        bool targeted;
 
     public:
         static std::vector<Action*> game_actions;
+        static Action* ActionByID(int id);
+        static Action* ActionByID(int id, Actor *actor);
+        static Action* ActionByID(int id, Actor *actor, Actor *target);
+        static void instantiate_actions();
         Action(Actor *actor);           //Construtor
         virtual void execute() = 0;     //Funcao para execucao da acao
         virtual bool possible();
-        virtual bool isTargeted();
+        bool isTargeted();
+        int get_id();
         virtual std::string getDescription();
-        static void instantiate_actions();
 };
 
 class TargetedAction : public Action {                  //Classe para acoes com alvo (classe filha da classe Action)
@@ -29,7 +36,6 @@ class TargetedAction : public Action {                  //Classe para acoes com 
 
     public:
         TargetedAction(Actor *actor, Actor *target);    //Construtor
-        virtual bool isTargeted() override;
         virtual std::string getDescription() override;
 };
 

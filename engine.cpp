@@ -143,7 +143,6 @@ void Engine::playerTurn2(Player *player) {
     int time = 60;
 
     tgui::Theme theme{"./Black.txt"};
-    tgui::Scrollbar::Policy Never;
 
     //Area de dados do jogador
     auto statsArea = tgui::TextArea::create();
@@ -153,7 +152,7 @@ void Engine::playerTurn2(Player *player) {
     statsArea->setSize(470, 100);
     statsArea->setText("");
     statsArea->setTextSize(16);
-    statsArea->setHorizontalScrollbarPolicy(Never);
+    statsArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     statsArea->setReadOnly(true);
     statsArea->setText(player->getName());
     gui.add(statsArea);
@@ -202,7 +201,7 @@ void Engine::playerTurn2(Player *player) {
     acao->setSize(90, 35);
     acao->setText("AÇÃO:");
     acao->setTextSize(20);
-    acao->setHorizontalScrollbarPolicy(Never);
+    acao->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(acao);
 
     //ComboBox1
@@ -226,7 +225,7 @@ void Engine::playerTurn2(Player *player) {
     TextArea1->setSize(400, 200);
     TextArea1->setText("");
     TextArea1->setTextSize(15);
-    TextArea1->setHorizontalScrollbarPolicy(Never);
+    TextArea1->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     TextArea1->setReadOnly(true);
     gui.add(TextArea1);
     
@@ -299,7 +298,7 @@ void Engine::playerTurn2(Player *player) {
     TextArea2->setSize(90, 30);
     TextArea2->setText("ALVO: ");
     TextArea2->setTextSize(18);
-    TextArea2->setHorizontalScrollbarPolicy(Never);
+    TextArea2->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(TextArea2);
 
     //Geracao do window para o Game Menu
@@ -316,6 +315,9 @@ void Engine::playerTurn2(Player *player) {
             time--;
             tempo->setValue(time);
         }
+        TextArea2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
+        comboBox2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
+
         window.clear();
         gui.draw();
         window.display();
@@ -323,12 +325,23 @@ void Engine::playerTurn2(Player *player) {
             break;
         }
     }
+
+    int action_num = comboBox1->getSelectedItemId().toInt();
+
+    Action* action = Action::ActionByID(action_num, player, players[comboBox2->getSelectedItemId().toInt()]);
+
+    this->turn_actions.push_back(action);
+
     gui.removeAllWidgets();
+
 }
 
 void Engine::character_creator_screen() {
     tgui::Theme theme{"./Black.txt"};
-    tgui::Scrollbar::Policy Never;
+
+    bool stay = true;
+    int points = 12;
+    int atributes[SKILL_NUM] = {0, 0, 0, 0, 0, 0};
 
     //Titulo
     auto title = tgui::TextArea::create();
@@ -338,73 +351,73 @@ void Engine::character_creator_screen() {
     title->setSize(340, 40);
     title->setText("CRIADOR DE PERSONAGEM");
     title->setTextSize(23);
-    title->setHorizontalScrollbarPolicy(Never);
+    title->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(title);
 
     //Botao de atletismo
     auto FitnessButton = tgui::SpinButton::create();
     FitnessButton->setRenderer(theme.getRenderer("SpinButton"));
     FitnessButton->setPosition(310, 180);
-    FitnessButton->setMaximum(10);
+    FitnessButton->setMaximum(9);
     FitnessButton->setMinimum(0);
     FitnessButton->setSize(20, 40);
     FitnessButton->setStep(1);
-    FitnessButton->setValue(0);
+    FitnessButton->setValue(atributes[FITNESS]);
     gui.add(FitnessButton);
 
     //Botao de agilidade
     auto AgilityButton = tgui::SpinButton::create();
     AgilityButton->setRenderer(theme.getRenderer("SpinButton"));
     AgilityButton->setPosition(430, 180);
-    AgilityButton->setMaximum(10);
+    AgilityButton->setMaximum(9);
     AgilityButton->setMinimum(0);
     AgilityButton->setSize(20, 40);
     AgilityButton->setStep(1);
-    AgilityButton->setValue(0);
+    AgilityButton->setValue(atributes[AGILITY]);
     gui.add(AgilityButton);
 
     //Botao de resistencia
     auto EnduranceButton = tgui::SpinButton::create();
     EnduranceButton->setRenderer(theme.getRenderer("SpinButton"));
     EnduranceButton->setPosition(550, 180);
-    EnduranceButton->setMaximum(10);
+    EnduranceButton->setMaximum(9);
     EnduranceButton->setMinimum(0);
     EnduranceButton->setSize(20, 40);
     EnduranceButton->setStep(1);
-    EnduranceButton->setValue(0);
+    EnduranceButton->setValue(atributes[ENDURANCE]);
     gui.add(EnduranceButton);
 
     //Botao de pensamento
     auto ThinkingButton = tgui::SpinButton::create();
     ThinkingButton->setRenderer(theme.getRenderer("SpinButton"));
     ThinkingButton->setPosition(310, 280);
-    ThinkingButton->setMaximum(10);
+    ThinkingButton->setMaximum(9);
     ThinkingButton->setMinimum(0);
     ThinkingButton->setSize(20, 40);
     ThinkingButton->setStep(1);
-    ThinkingButton->setValue(0);
+    ThinkingButton->setValue(atributes[THINKING]);
     gui.add(ThinkingButton);
 
     //Botao de primeiros socorros
     auto FirstAidButton = tgui::SpinButton::create();
     FirstAidButton->setRenderer(theme.getRenderer("SpinButton"));
-    FirstAidButton->setPosition(310, 280);
-    FirstAidButton->setMaximum(10);
+    FirstAidButton->setPosition(430, 280);
+    FirstAidButton->setMaximum(9);
     FirstAidButton->setMinimum(0);
     FirstAidButton->setSize(20, 40);
     FirstAidButton->setStep(1);
-    FirstAidButton->setValue(0);
+    FirstAidButton->setValue(atributes[FIRST_AID]);
     gui.add(FirstAidButton);
 
     //Botao de carisma
     auto CharismaButton = tgui::SpinButton::create();
     CharismaButton->setRenderer(theme.getRenderer("SpinButton"));
     CharismaButton->setPosition(550, 280);
-    CharismaButton->setMaximum(10);
+    CharismaButton->setMaximum(9);
     CharismaButton->setMinimum(0);
     CharismaButton->setSize(20, 40);
     CharismaButton->setStep(1);
-    CharismaButton->setValue(0);
+    CharismaButton->setValue(atributes[CHARISMA]);
     gui.add(CharismaButton);
 
     //Atletismo Texto
@@ -413,9 +426,9 @@ void Engine::character_creator_screen() {
     FitnessArea->setPosition(230, 180);
     FitnessArea->setMaximumCharacters(0);
     FitnessArea->setSize(80, 40);
-    FitnessArea->setText("ATL: ");
+    FitnessArea->setText("ATL: " + std::to_string(atributes[FITNESS]));
     FitnessArea->setTextSize(20);
-    FitnessArea->setHorizontalScrollbarPolicy(Never);
+    FitnessArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(FitnessArea);
 
     //Agilidade Texto
@@ -424,9 +437,9 @@ void Engine::character_creator_screen() {
     AgilityArea->setPosition(350, 180);
     AgilityArea->setMaximumCharacters(0);
     AgilityArea->setSize(80, 40);
-    AgilityArea->setText("AGI: ");
+    AgilityArea->setText("AGI: " + std::to_string(atributes[AGILITY]));
     AgilityArea->setTextSize(20);
-    AgilityArea->setHorizontalScrollbarPolicy(Never);
+    AgilityArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(AgilityArea);
 
     //Resistencia Area
@@ -435,9 +448,9 @@ void Engine::character_creator_screen() {
     EnduranceArea->setPosition(470, 180);
     EnduranceArea->setMaximumCharacters(0);
     EnduranceArea->setSize(80, 40);
-    EnduranceArea->setText("RES: ");
+    EnduranceArea->setText("RES: " + std::to_string(atributes[ENDURANCE]));
     EnduranceArea->setTextSize(20);
-    EnduranceArea->setHorizontalScrollbarPolicy(Never);
+    EnduranceArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(EnduranceArea);
 
     //Pensamento Area
@@ -446,9 +459,9 @@ void Engine::character_creator_screen() {
     ThinkingArea->setPosition(230, 280);
     ThinkingArea->setMaximumCharacters(0);
     ThinkingArea->setSize(80, 40);
-    ThinkingArea->setText("PEN: ");
+    ThinkingArea->setText("PEN: " + std::to_string(atributes[THINKING]));
     ThinkingArea->setTextSize(20);
-    ThinkingArea->setHorizontalScrollbarPolicy(Never);
+    ThinkingArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(ThinkingArea);
 
     //Primeiros Socorros Area
@@ -457,9 +470,9 @@ void Engine::character_creator_screen() {
     FirstAidArea->setPosition(350, 280);
     FirstAidArea->setMaximumCharacters(0);
     FirstAidArea->setSize(80, 40);
-    FirstAidArea->setText("F/A: ");
+    FirstAidArea->setText("F/A: " + std::to_string(atributes[FIRST_AID]));
     FirstAidArea->setTextSize(20);
-    FirstAidArea->setHorizontalScrollbarPolicy(Never);
+    FirstAidArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(FirstAidArea);
 
     //Carisma Area
@@ -468,38 +481,46 @@ void Engine::character_creator_screen() {
     CharismaArea->setPosition(470, 280);
     CharismaArea->setMaximumCharacters(0);
     CharismaArea->setSize(80, 40);
-    CharismaArea->setText("CAR: ");
+    CharismaArea->setText("CAR: " + std::to_string(atributes[CHARISMA]));
     CharismaArea->setTextSize(20);
-    CharismaArea->setHorizontalScrollbarPolicy(Never);
+    CharismaArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(CharismaArea);
 
     //EditBox1
-    tgui::EditBox::Alignment center;
     auto EditBox1 = tgui::EditBox::create();
-    EditBox1->setAlignment(center);
+    EditBox1->setAlignment(tgui::EditBox::Alignment::Center);
     EditBox1->setPosition(320, 70);
     EditBox1->setSize(160, 50);
     EditBox1->setText("NOME");
     EditBox1->setTextSize(15);
+    gui.add(EditBox1);
 
     //Botao de proximo
     auto NextButton = tgui::Button::create();
     NextButton->setPosition(630, 540);
-    NextButton->setSize(170, 59.5);
+    NextButton->setSize(170, 60);
     NextButton->setText("PROXIMO");
     NextButton->setTextSize(20);
+    NextButton->onClick([&]{
+        if (points >= 0){
+            createPlayer((std::string)EditBox1->getText(), atributes);
+            stay = false;
+        }
+    });
+    gui.add(NextButton);
 
     //Pontos restantes
     auto RemainingPoints = tgui::TextArea::create();
-    RemainingPoints->setHorizontalScrollbarPolicy(Never);
+    RemainingPoints->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     RemainingPoints->setMaximumCharacters(0);
     RemainingPoints->setPosition(270, 130);
     RemainingPoints->setSize(260, 30);
-    RemainingPoints->setText("PONTOS RESTANTES: ");
+    RemainingPoints->setText("PONTOS RESTANTES: " + std::to_string(points));
     RemainingPoints->setTextSize(18);
+    gui.add(RemainingPoints);
     
 
-    while (true){
+    while (stay){
         sf::Event event;
         while (window.pollEvent(event)){
             gui.handleEvent(event);
@@ -507,41 +528,36 @@ void Engine::character_creator_screen() {
                 window.close();
             }
         }
+
+        atributes[FITNESS] = FitnessButton->getValue();
+        atributes[AGILITY] = AgilityButton->getValue();
+        atributes[ENDURANCE] = EnduranceButton->getValue();
+        atributes[THINKING] = ThinkingButton->getValue();
+        atributes[FIRST_AID] = FirstAidButton->getValue();
+        atributes[CHARISMA] = CharismaButton->getValue();
+
+        FitnessArea->setText("ATL: " + std::to_string(atributes[FITNESS]));
+        AgilityArea->setText("AGI: " + std::to_string(atributes[AGILITY]));
+        EnduranceArea->setText("RES: " + std::to_string(atributes[ENDURANCE]));
+        ThinkingArea->setText("PEN: " + std::to_string(atributes[THINKING]));
+        FirstAidArea->setText("F/A: " + std::to_string(atributes[FIRST_AID]));
+        CharismaArea->setText("CAR: " + std::to_string(atributes[CHARISMA]));
+
+        points = 12;
+        for (int i = 0; i < SKILL_NUM; i++){
+            points -= atributes[i];
+        }
+
+        RemainingPoints->setText("PONTOS RESTANTES: " + std::to_string(points));
+
         window.clear();
         gui.draw();
         window.display();
     }
+
     gui.removeAllWidgets();
 
 }
-
-/*    Action *action;
-    
-    int action_num;
-    int target;
-    std::cin >> action_num;
-
-    switch (action_num) {
-        case 1:
-            action = new WorkOnProjectAction(player);
-            break;
-
-        case 2:
-            std::cin >> target;
-
-            action = new DamageAction(player, this->players[target]);
-            break;
-        case 3:
-            action = new StudyAction(player);
-        case 4:
-            std::cin >> target;
-
-            action = new HealAction(player, this->players[target]);
-        default:
-            break;
-    }
-    this->turn_actions.push_back(action);
-*/
 
 void Engine::results() {
     for(int i=0; i<turn_actions.size(); i++) {
