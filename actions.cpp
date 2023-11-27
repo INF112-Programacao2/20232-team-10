@@ -93,46 +93,6 @@ void Action::instantiate_actions(){
     }
 }
 
-Action* Action::ActionByID(int id){
-    if(id == 0){
-        WorkOnProjectAction* work_on_project_action = new WorkOnProjectAction(nullptr);
-        return work_on_project_action;
-    }
-    if(id == 1){
-        DamageAction* damage_action = new DamageAction(nullptr, nullptr);
-        return damage_action;
-    }
-    if(id == 2){
-        StudyAction* study_action = new StudyAction(nullptr);
-        return study_action;
-    }
-    if(id == 3){
-        HealAction* heal_action = new HealAction(nullptr, nullptr);
-        return heal_action;
-    }
-    return nullptr;
-}
-
-Action* Action::ActionByID(int id, Actor *actor){
-    if(id == 0){
-        WorkOnProjectAction* work_on_project_action = new WorkOnProjectAction(actor);
-        return work_on_project_action;
-    }
-    if(id == 1){
-        DamageAction* damage_action = new DamageAction(actor, nullptr);
-        return damage_action;
-    }
-    if(id == 2){
-        StudyAction* study_action = new StudyAction(actor);
-        return study_action;
-    }
-    if(id == 3){
-        HealAction* heal_action = new HealAction(actor, nullptr);
-        return heal_action;
-    }
-    return nullptr;
-}
-
 Action* Action::ActionByID(int id, Actor *actor, Actor *target){
     if(id == 0){
         WorkOnProjectAction* work_on_project_action = new WorkOnProjectAction(actor);

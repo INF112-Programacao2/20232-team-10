@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 
@@ -13,7 +14,7 @@
 class Engine {
     private:
         std::vector<Player*> players;
-        std::vector<Action*> turn_actions;
+        std::queue<Action*> turn_actions;
         //std::vector<Place*> places;
         unsigned int time = 0;
 

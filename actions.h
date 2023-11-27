@@ -18,9 +18,7 @@ class Action {                          //Classe para acoes sem alvo
 
     public:
         static std::vector<Action*> game_actions;
-        static Action* ActionByID(int id);
-        static Action* ActionByID(int id, Actor *actor);
-        static Action* ActionByID(int id, Actor *actor, Actor *target);
+        static Action* ActionByID(int id, Actor *actor = nullptr, Actor *target = nullptr);
         static void instantiate_actions();
         Action(Actor *actor);           //Construtor
         virtual void execute() = 0;     //Funcao para execucao da acao

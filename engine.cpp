@@ -336,7 +336,7 @@ void Engine::playerTurn2(Player *player) {
         action = new StudyAction(player);
     }
 
-    this->turn_actions.push_back(action);
+    this->turn_actions.push(action);
 
     gui.removeAllWidgets();
 
@@ -566,9 +566,10 @@ void Engine::character_creator_screen() {
 }
 
 void Engine::results() {
-    for(int i=0; i<turn_actions.size(); i++) {
-        turn_actions[i]->execute();
-        delete turn_actions[i];
+    while (!turn_actions.empty()) {
+        turn_actions.front()->execute();
+        delete turn_actions.front();
+        turn_actions.pop();
     }
 }
 
