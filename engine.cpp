@@ -1,5 +1,9 @@
 #include "engine.h"
 
+int triang(int n){
+    return (n*n + n) / 2;
+}
+
 void Engine::game(){
     for (int t = 0; t < 3; t++){
         for (int i = 0; i < players.size(); i++){
@@ -322,8 +326,8 @@ void Engine::character_creator_screen() {
     tgui::Theme theme{"./Black.txt"};
 
     bool stay = true;
-    int points = 12;
-    int atributes[SKILL_NUM] = {0, 0, 0, 0, 0, 0};
+    int points = 36;
+    int atributes[SKILL_NUM] = {1, 1, 1, 1, 1, 1};
 
     //Titulo
     auto title = tgui::TextArea::create();
@@ -339,10 +343,10 @@ void Engine::character_creator_screen() {
     //Botao de atletismo
     auto FitnessButton = tgui::SpinButton::create();
     FitnessButton->setRenderer(theme.getRenderer("SpinButton"));
-    FitnessButton->setPosition(310, 180);
+    FitnessButton->setPosition(230, 180);
     FitnessButton->setMaximum(5);
-    FitnessButton->setMinimum(0);
-    FitnessButton->setSize(20, 40);
+    FitnessButton->setMinimum(1);
+    FitnessButton->setSize(20, 50);
     FitnessButton->setStep(1);
     FitnessButton->setValue(atributes[FITNESS]);
     gui.add(FitnessButton);
@@ -350,10 +354,10 @@ void Engine::character_creator_screen() {
     //Botao de agilidade
     auto AgilityButton = tgui::SpinButton::create();
     AgilityButton->setRenderer(theme.getRenderer("SpinButton"));
-    AgilityButton->setPosition(430, 180);
+    AgilityButton->setPosition(470, 180);
     AgilityButton->setMaximum(5);
-    AgilityButton->setMinimum(0);
-    AgilityButton->setSize(20, 40);
+    AgilityButton->setMinimum(1);
+    AgilityButton->setSize(20, 50);
     AgilityButton->setStep(1);
     AgilityButton->setValue(atributes[AGILITY]);
     gui.add(AgilityButton);
@@ -361,10 +365,10 @@ void Engine::character_creator_screen() {
     //Botao de resistencia
     auto EnduranceButton = tgui::SpinButton::create();
     EnduranceButton->setRenderer(theme.getRenderer("SpinButton"));
-    EnduranceButton->setPosition(550, 180);
+    EnduranceButton->setPosition(710, 180);
     EnduranceButton->setMaximum(5);
-    EnduranceButton->setMinimum(0);
-    EnduranceButton->setSize(20, 40);
+    EnduranceButton->setMinimum(1);
+    EnduranceButton->setSize(20, 50);
     EnduranceButton->setStep(1);
     EnduranceButton->setValue(atributes[ENDURANCE]);
     gui.add(EnduranceButton);
@@ -372,10 +376,10 @@ void Engine::character_creator_screen() {
     //Botao de pensamento
     auto ThinkingButton = tgui::SpinButton::create();
     ThinkingButton->setRenderer(theme.getRenderer("SpinButton"));
-    ThinkingButton->setPosition(310, 280);
+    ThinkingButton->setPosition(230, 280);
     ThinkingButton->setMaximum(5);
-    ThinkingButton->setMinimum(0);
-    ThinkingButton->setSize(20, 40);
+    ThinkingButton->setMinimum(1);
+    ThinkingButton->setSize(20, 50);
     ThinkingButton->setStep(1);
     ThinkingButton->setValue(atributes[THINKING]);
     gui.add(ThinkingButton);
@@ -383,10 +387,10 @@ void Engine::character_creator_screen() {
     //Botao de primeiros socorros
     auto FirstAidButton = tgui::SpinButton::create();
     FirstAidButton->setRenderer(theme.getRenderer("SpinButton"));
-    FirstAidButton->setPosition(430, 280);
+    FirstAidButton->setPosition(470, 280);
     FirstAidButton->setMaximum(5);
-    FirstAidButton->setMinimum(0);
-    FirstAidButton->setSize(20, 40);
+    FirstAidButton->setMinimum(1);
+    FirstAidButton->setSize(20, 50);
     FirstAidButton->setStep(1);
     FirstAidButton->setValue(atributes[FIRST_AID]);
     gui.add(FirstAidButton);
@@ -394,77 +398,78 @@ void Engine::character_creator_screen() {
     //Botao de carisma
     auto CharismaButton = tgui::SpinButton::create();
     CharismaButton->setRenderer(theme.getRenderer("SpinButton"));
-    CharismaButton->setPosition(550, 280);
+    CharismaButton->setPosition(710, 280);
     CharismaButton->setMaximum(5);
-    CharismaButton->setMinimum(0);
-    CharismaButton->setSize(20, 40);
+    CharismaButton->setMinimum(1);
+    CharismaButton->setSize(20, 50);
     CharismaButton->setStep(1);
     CharismaButton->setValue(atributes[CHARISMA]);
     gui.add(CharismaButton);
 
-    //Atletismo Texto
+    //Atletismo Area
+    
     auto FitnessArea = tgui::TextArea::create();
     FitnessArea->setRenderer(theme.getRenderer("TextArea"));
-    FitnessArea->setPosition(230, 180);
+    FitnessArea->setPosition(70, 180);
     FitnessArea->setMaximumCharacters(0);
-    FitnessArea->setSize(80, 40);
-    FitnessArea->setText("ATL: " + std::to_string(atributes[FITNESS]));
-    FitnessArea->setTextSize(20);
+    FitnessArea->setSize(160, 50);
+    FitnessArea->setText("ATLETISMO: " + std::to_string(atributes[FITNESS]));
+    FitnessArea->setTextSize(16);
     FitnessArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(FitnessArea);
 
-    //Agilidade Texto
+    //Agilidade Area
     auto AgilityArea = tgui::TextArea::create();
     AgilityArea->setRenderer(theme.getRenderer("TextArea"));
-    AgilityArea->setPosition(350, 180);
+    AgilityArea->setPosition(310, 180);
     AgilityArea->setMaximumCharacters(0);
-    AgilityArea->setSize(80, 40);
-    AgilityArea->setText("AGI: " + std::to_string(atributes[AGILITY]));
-    AgilityArea->setTextSize(20);
+    AgilityArea->setSize(160, 50);
+    AgilityArea->setText("AGILIDADE: " + std::to_string(atributes[AGILITY]));
+    AgilityArea->setTextSize(16);
     AgilityArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(AgilityArea);
 
-    //Resistencia Area
+    //Resistência Area
     auto EnduranceArea = tgui::TextArea::create();
     EnduranceArea->setRenderer(theme.getRenderer("TextArea"));
-    EnduranceArea->setPosition(470, 180);
+    EnduranceArea->setPosition(550, 180);
     EnduranceArea->setMaximumCharacters(0);
-    EnduranceArea->setSize(80, 40);
-    EnduranceArea->setText("RES: " + std::to_string(atributes[ENDURANCE]));
-    EnduranceArea->setTextSize(20);
+    EnduranceArea->setSize(160, 50);
+    EnduranceArea->setText("RESISTÊNCIA: " + std::to_string(atributes[ENDURANCE]));
+    EnduranceArea->setTextSize(16);
     EnduranceArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(EnduranceArea);
 
-    //Pensamento Area
+    //Lógica Area
     auto ThinkingArea = tgui::TextArea::create();
     ThinkingArea->setRenderer(theme.getRenderer("TextArea"));
-    ThinkingArea->setPosition(230, 280);
+    ThinkingArea->setPosition(70, 280);
     ThinkingArea->setMaximumCharacters(0);
-    ThinkingArea->setSize(80, 40);
-    ThinkingArea->setText("PEN: " + std::to_string(atributes[THINKING]));
-    ThinkingArea->setTextSize(20);
+    ThinkingArea->setSize(160, 50);
+    ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[THINKING]));
+    ThinkingArea->setTextSize(16);
     ThinkingArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(ThinkingArea);
 
     //Primeiros Socorros Area
     auto FirstAidArea = tgui::TextArea::create();
     FirstAidArea->setRenderer(theme.getRenderer("TextArea"));
-    FirstAidArea->setPosition(350, 280);
+    FirstAidArea->setPosition(310, 280);
     FirstAidArea->setMaximumCharacters(0);
-    FirstAidArea->setSize(80, 40);
-    FirstAidArea->setText("F/A: " + std::to_string(atributes[FIRST_AID]));
-    FirstAidArea->setTextSize(20);
+    FirstAidArea->setSize(160, 50);
+    FirstAidArea->setText("PRIMEIROS SOCORROS: " + std::to_string(atributes[FIRST_AID]));
+    FirstAidArea->setTextSize(16);
     FirstAidArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(FirstAidArea);
 
-    //Carisma Area
+    //Comunicação Area
     auto CharismaArea = tgui::TextArea::create();
     CharismaArea->setRenderer(theme.getRenderer("TextArea"));
-    CharismaArea->setPosition(470, 280);
+    CharismaArea->setPosition(550, 280);
     CharismaArea->setMaximumCharacters(0);
-    CharismaArea->setSize(80, 40);
-    CharismaArea->setText("CAR: " + std::to_string(atributes[CHARISMA]));
-    CharismaArea->setTextSize(20);
+    CharismaArea->setSize(160, 50);
+    CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[CHARISMA]));
+    CharismaArea->setTextSize(16);
     CharismaArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(CharismaArea);
 
@@ -481,7 +486,7 @@ void Engine::character_creator_screen() {
     auto NextButton = tgui::Button::create();
     NextButton->setPosition(630, 540);
     NextButton->setSize(170, 60);
-    NextButton->setText("PROXIMO");
+    NextButton->setText("PRÓXIMO");
     NextButton->setTextSize(20);
     NextButton->onClick([&]{
         if (points >= 0){
@@ -518,16 +523,16 @@ void Engine::character_creator_screen() {
         atributes[FIRST_AID] = FirstAidButton->getValue();
         atributes[CHARISMA] = CharismaButton->getValue();
 
-        FitnessArea->setText("ATL: " + std::to_string(atributes[FITNESS]));
-        AgilityArea->setText("AGI: " + std::to_string(atributes[AGILITY]));
-        EnduranceArea->setText("RES: " + std::to_string(atributes[ENDURANCE]));
-        ThinkingArea->setText("PEN: " + std::to_string(atributes[THINKING]));
-        FirstAidArea->setText("F/A: " + std::to_string(atributes[FIRST_AID]));
-        CharismaArea->setText("CAR: " + std::to_string(atributes[CHARISMA]));
+        FitnessArea->setText("ATLETISMO: " + std::to_string(atributes[FITNESS]));
+        AgilityArea->setText("AGILIDADE: " + std::to_string(atributes[AGILITY]));
+        EnduranceArea->setText("RESISTÊNCIA: " + std::to_string(atributes[ENDURANCE]));
+        ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[THINKING]));
+        FirstAidArea->setText("PRIMEIROS SOCORROS: " + std::to_string(atributes[FIRST_AID]));
+        CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[CHARISMA]));
 
-        points = 12;
+        points = 36;
         for (int i = 0; i < SKILL_NUM; i++){
-            points -= atributes[i];
+            points -= triang(atributes[i]);
         }
 
         RemainingPoints->setText("PONTOS RESTANTES: " + std::to_string(points));
