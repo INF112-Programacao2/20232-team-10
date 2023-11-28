@@ -1,8 +1,8 @@
 #ifndef V_ENGINE
 #define V_ENGINE
 
-#include <iostream>
 #include <vector>
+#include <queue>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 
@@ -13,7 +13,7 @@
 class Engine {
     private:
         std::vector<Player*> players;
-        std::vector<Action*> turn_actions;
+        std::queue<Action*> turn_actions;
         //std::vector<Place*> places;
         unsigned int time = 0;
 
@@ -24,10 +24,11 @@ class Engine {
         void playerTurn1(Player *player);
         void playerTurn2(Player *player);
         void playerTurn3(Player *player);
-        void pass_screen();
+        void pass_screen(Player *player);
+        void character_creator_screen();
         void main_menu();
         void results();
-        void createPlayer(std::string name, int atributes[6]);
+        void createPlayer(tgui::String name, int atributes[6]);
         void characterCreator();
 };
 
