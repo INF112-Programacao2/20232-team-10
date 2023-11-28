@@ -2,7 +2,7 @@
 
 unsigned int Player::player_count = 0;
 
-Player::Player(std::string name, int atributes[6]) : Actor(name, atributes) {
+Player::Player(tgui::String name, int atributes[6]) : Actor(name, atributes) {
     id = player_count;
     this->project_bar = 0;
     this->study_bar = 0;

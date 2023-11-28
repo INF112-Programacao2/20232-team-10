@@ -1,7 +1,5 @@
 #include "engine.h"
 
-#include <iostream>
-
 void Engine::game(){
     for (int t = 0; t < 3; t++){
         for (int i = 0; i < players.size(); i++){
@@ -100,28 +98,6 @@ void Engine::main_menu() {
     }
     gui.removeAllWidgets();
 }
-
-/*
-void Engine::characterCreator(){
-    int points = 12;
-    std::string nome;
-    int atributos[6];
-
-    tgui::Theme theme{"../../themes/Black.txt"};
-    tgui::Scrollbar::Policy Never;
-
-    auto title = tgui::TextArea::create();
-    title->setRenderer(theme.getRenderer("TextArea"));
-    title->setPosition(30, 10);
-    title->setMaximumCharacters(0);
-    title->setSize(470, 100);
-    title->setText("");
-    title->setTextSize(16);
-    title->setHorizontalScrollbarPolicy(Never);
-    gui.add(title);
-
-}
-*/
 
 void Engine::playerTurn1(Player *player) {
     /*
@@ -239,7 +215,7 @@ void Engine::playerTurn2(Player *player) {
     healthButton->setText("SAÚDE");
     healthButton->setTextSize(18);
     healthButton->onClick([&]{
-        TextArea1->setText(std::to_string(player->get_hp()));
+        TextArea1->setText("Saúde: " + player->getHealth());
     });
     gui.add(healthButton);
 
@@ -364,7 +340,7 @@ void Engine::character_creator_screen() {
     auto FitnessButton = tgui::SpinButton::create();
     FitnessButton->setRenderer(theme.getRenderer("SpinButton"));
     FitnessButton->setPosition(310, 180);
-    FitnessButton->setMaximum(9);
+    FitnessButton->setMaximum(5);
     FitnessButton->setMinimum(0);
     FitnessButton->setSize(20, 40);
     FitnessButton->setStep(1);
@@ -375,7 +351,7 @@ void Engine::character_creator_screen() {
     auto AgilityButton = tgui::SpinButton::create();
     AgilityButton->setRenderer(theme.getRenderer("SpinButton"));
     AgilityButton->setPosition(430, 180);
-    AgilityButton->setMaximum(9);
+    AgilityButton->setMaximum(5);
     AgilityButton->setMinimum(0);
     AgilityButton->setSize(20, 40);
     AgilityButton->setStep(1);
@@ -386,7 +362,7 @@ void Engine::character_creator_screen() {
     auto EnduranceButton = tgui::SpinButton::create();
     EnduranceButton->setRenderer(theme.getRenderer("SpinButton"));
     EnduranceButton->setPosition(550, 180);
-    EnduranceButton->setMaximum(9);
+    EnduranceButton->setMaximum(5);
     EnduranceButton->setMinimum(0);
     EnduranceButton->setSize(20, 40);
     EnduranceButton->setStep(1);
@@ -397,7 +373,7 @@ void Engine::character_creator_screen() {
     auto ThinkingButton = tgui::SpinButton::create();
     ThinkingButton->setRenderer(theme.getRenderer("SpinButton"));
     ThinkingButton->setPosition(310, 280);
-    ThinkingButton->setMaximum(9);
+    ThinkingButton->setMaximum(5);
     ThinkingButton->setMinimum(0);
     ThinkingButton->setSize(20, 40);
     ThinkingButton->setStep(1);
@@ -408,7 +384,7 @@ void Engine::character_creator_screen() {
     auto FirstAidButton = tgui::SpinButton::create();
     FirstAidButton->setRenderer(theme.getRenderer("SpinButton"));
     FirstAidButton->setPosition(430, 280);
-    FirstAidButton->setMaximum(9);
+    FirstAidButton->setMaximum(5);
     FirstAidButton->setMinimum(0);
     FirstAidButton->setSize(20, 40);
     FirstAidButton->setStep(1);
@@ -419,7 +395,7 @@ void Engine::character_creator_screen() {
     auto CharismaButton = tgui::SpinButton::create();
     CharismaButton->setRenderer(theme.getRenderer("SpinButton"));
     CharismaButton->setPosition(550, 280);
-    CharismaButton->setMaximum(9);
+    CharismaButton->setMaximum(5);
     CharismaButton->setMinimum(0);
     CharismaButton->setSize(20, 40);
     CharismaButton->setStep(1);
@@ -509,7 +485,7 @@ void Engine::character_creator_screen() {
     NextButton->setTextSize(20);
     NextButton->onClick([&]{
         if (points >= 0){
-            createPlayer((std::string)EditBox1->getText(), atributes);
+            createPlayer(EditBox1->getText(), atributes);
             stay = false;
         }
     });
@@ -573,7 +549,7 @@ void Engine::results() {
     }
 }
 
-void Engine::createPlayer(std::string name, int atributes[6]){
+void Engine::createPlayer(tgui::String name, int atributes[6]){
     Player *player = new Player(name, atributes);
     players.push_back(player);
 }

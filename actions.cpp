@@ -1,5 +1,4 @@
 #include "actions.h"
-#include <iostream>
 
 //Construtores para as classes de acoes
 
@@ -43,27 +42,27 @@ bool Action::isTargeted(){
     return this->targeted;
 }
 
-std::string Action::getDescription(){
+tgui::String Action::getDescription(){
     return "Action";
 }
 
-std::string TargetedAction::getDescription(){
+tgui::String TargetedAction::getDescription(){
     return "Targeted Action";
 }
 
-std::string WorkOnProjectAction::getDescription(){
+tgui::String WorkOnProjectAction::getDescription(){
     return "Trabalhar no projeto";
 }
 
-std::string StudyAction::getDescription(){
+tgui::String StudyAction::getDescription(){
     return "Estudar";
 }
 
-std::string DamageAction::getDescription(){
+tgui::String DamageAction::getDescription(){
     return "Atacar alvo";
 }
 
-std::string HealAction::getDescription(){
+tgui::String HealAction::getDescription(){
     return "Curar alvo";
 }
 

@@ -1,7 +1,6 @@
 #ifndef V_ENGINE
 #define V_ENGINE
 
-#include <iostream>
 #include <vector>
 #include <queue>
 #include <TGUI/TGUI.hpp>
@@ -29,7 +28,7 @@ class Engine {
         void character_creator_screen();
         void main_menu();
         void results();
-        void createPlayer(std::string name, int atributes[6]);
+        void createPlayer(tgui::String name, int atributes[6]);
         void characterCreator();
 };
 
