@@ -4,7 +4,7 @@
 #include <vector>
 #include "actor.h"
 #include "player.h"
-
+#include "actions.h"
 
 //Locais onde o usuário pode visitar;
 class Place {
