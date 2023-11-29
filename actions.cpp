@@ -1,4 +1,5 @@
 #include "actions.h"
+#include "dice.h"
 
 //Construtores para as classes de acoes
 
@@ -70,20 +71,29 @@ tgui::String HealAction::getDescription(){
 
 //Funcoes de execucao para as respectivas acoes
 void DamageAction::execute() {              
-    int damagequant = actor->getSkill(FITNESS) - target->getSkill(ENDURANCE);                                         //Quantidade de dano = pontos de STR do actor - pontos de CON do alvo
-    target->damage(damagequant);                                                                                //Chama a funcao de causar dano da classe Actor
+    target->damage();                                                                                //Chama a funcao de causar dano da classe Actor
 }
 
 void WorkOnProjectAction::execute() {
-    actor->workOnProject(actor->getSkill(THINKING));                       //Chama a funcao de trabalhor no projeto da classe Actor, com os pontos de INT do jogador como parametro
+    int work = actor->skillRoll(LOGIC, 30);
+    actor->workOnProject(work);                       //Chama a funcao de trabalhor no projeto da classe Actor, com os pontos de INT do jogador como parametro
 }
 
 void StudyAction::execute() {
-    actor->study(actor->getSkill(CHARISMA));                           //Chama a funcao de estudar da classe Actor, com os pontos de WIS do jogador como parametro
+    int study = actor->skillRoll(COMMUNICATION, 30);
+    actor->study(study);                           //Chama a funcao de estudar da classe Actor, com os pontos de WIS do jogador como parametro
 }
 
 void HealAction::execute() {
-    target->heal(actor->getSkill(FIRST_AID));                                           //Chama a funcao de curar da classe Actor, com os pontos de WIS do jogador como parametro
+    if (actor->skillCheck(FIRST_AID, 60)){
+        target->heal();                                           //Chama a funcao de curar da classe Actor, com os pontos de WIS do jogador como parametro
+        actorText = "Você curou alguns ferimentos de " + target->getName();
+        targetText = actor->getName() + " curou alguns dos seus ferimentos";
+    }
+    else{
+        actorText = "Você não consegui curar os ferimentos de " + target->getName();
+        targetText = actor->getName() + " tentou curar alguns dos seus ferimentos, mas falhou";
+    }
 }
 
 void Action::instantiate_actions(){

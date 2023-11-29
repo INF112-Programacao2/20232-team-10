@@ -1,4 +1,5 @@
 #include "actor.h"
+#include "dice.h"
 
 Actor::Actor(tgui::String name){                 //Construtor
     this->name = name;
@@ -39,6 +40,19 @@ void Actor::die() {         //Funcao para morte do jogador
 
 int Actor::getSkill(unsigned int s){
     return this->skill[s];
+}
+
+bool Actor::skillCheck(int skill_name, int challenge){
+    return skillRoll(skill_name, 100) > challenge;
+}
+
+int Actor::skillRoll(int skill_name, int range){
+    if (skill[skill_name]-2 > 0){
+        return Dice::dice(range, skill[skill_name]-2, '>');
+    }
+    else{
+        return Dice::dice(range, (skill[skill_name]-3)*-1, '<');
+    }
 }
 
 int Actor::getDamageLevel(){

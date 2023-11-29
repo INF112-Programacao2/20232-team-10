@@ -381,7 +381,7 @@ void Engine::character_creator_screen() {
     ThinkingButton->setMinimum(1);
     ThinkingButton->setSize(20, 50);
     ThinkingButton->setStep(1);
-    ThinkingButton->setValue(atributes[THINKING]);
+    ThinkingButton->setValue(atributes[LOGIC]);
     gui.add(ThinkingButton);
 
     //Botao de primeiros socorros
@@ -403,7 +403,7 @@ void Engine::character_creator_screen() {
     CharismaButton->setMinimum(1);
     CharismaButton->setSize(20, 50);
     CharismaButton->setStep(1);
-    CharismaButton->setValue(atributes[CHARISMA]);
+    CharismaButton->setValue(atributes[COMMUNICATION]);
     gui.add(CharismaButton);
 
     //Atletismo Area
@@ -446,7 +446,7 @@ void Engine::character_creator_screen() {
     ThinkingArea->setPosition(70, 280);
     ThinkingArea->setMaximumCharacters(0);
     ThinkingArea->setSize(160, 50);
-    ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[THINKING]));
+    ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[LOGIC]));
     ThinkingArea->setTextSize(16);
     ThinkingArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(ThinkingArea);
@@ -468,7 +468,7 @@ void Engine::character_creator_screen() {
     CharismaArea->setPosition(550, 280);
     CharismaArea->setMaximumCharacters(0);
     CharismaArea->setSize(160, 50);
-    CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[CHARISMA]));
+    CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[COMMUNICATION]));
     CharismaArea->setTextSize(16);
     CharismaArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(CharismaArea);
@@ -519,16 +519,16 @@ void Engine::character_creator_screen() {
         atributes[FITNESS] = FitnessButton->getValue();
         atributes[AGILITY] = AgilityButton->getValue();
         atributes[ENDURANCE] = EnduranceButton->getValue();
-        atributes[THINKING] = ThinkingButton->getValue();
+        atributes[LOGIC] = ThinkingButton->getValue();
         atributes[FIRST_AID] = FirstAidButton->getValue();
-        atributes[CHARISMA] = CharismaButton->getValue();
+        atributes[COMMUNICATION] = CharismaButton->getValue();
 
         FitnessArea->setText("ATLETISMO: " + std::to_string(atributes[FITNESS]));
         AgilityArea->setText("AGILIDADE: " + std::to_string(atributes[AGILITY]));
         EnduranceArea->setText("RESISTÊNCIA: " + std::to_string(atributes[ENDURANCE]));
-        ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[THINKING]));
+        ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[LOGIC]));
         FirstAidArea->setText("PRIMEIROS SOCORROS: " + std::to_string(atributes[FIRST_AID]));
-        CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[CHARISMA]));
+        CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[COMMUNICATION]));
 
         points = 36;
         for (int i = 0; i < SKILL_NUM; i++){
