@@ -8,10 +8,10 @@ const unsigned int SKILL_NUM = 6;   // Número de skills no jogo
 const tgui::String skill_name[SKILL_NUM] = {     // Nomes das skills
     "Atletismo",
     "Agilidade",
-    "Resistencia",
-    "Pensamento",
+    "Resistência",
+    "Lógica",
     "Primeiros Socorros",
-    "Carisma"
+    "Comunicação"
 };
 
 enum skills{   // Enum para o nome das skills

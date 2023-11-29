@@ -10,6 +10,8 @@
 #include "actor.h"
 #include "player.h"
 
+int triang(int n);
+
 class Engine {
     private:
         std::vector<Player*> players;
