@@ -9,10 +9,10 @@
 //Locais onde o usuário pode visitar;
 class Place {
     private:
-        std::string place;
+        tgui::String place;
 
     public:
-         std::vector<Action*> placeActions;   //Vector para armazenar os lugares
-         Place(std::string place);         //Construtor
+         std::vector<int> placeActions;   //Vector para armazenar os lugares
+         Place(tgui::String place);         //Construtor
 };
 #endif
