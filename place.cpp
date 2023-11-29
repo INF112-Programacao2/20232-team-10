@@ -2,13 +2,7 @@
 #include <iostream>
 
 //Declaração do Vector LocalActions 
-static std::vector< Action*> placeActions; 
+static std::vector<int> placeActions; 
 //Inicialização do construtor
-Place:: Place(std::string place):place(place){}
+Place:: Place(tgui::String place):place(place){}
 
-//Objetos "Place" disponíveis no jogo
-Place Bbt;
-Place Cce;
-Place Rita;
-Place Pvb;
-Place Pva;

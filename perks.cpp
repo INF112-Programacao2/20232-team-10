@@ -6,22 +6,20 @@
 #include "actions.h"
 
 //Construtor
-Perks::Perks(std::string nome, std::string descricao, int id):
-nome(nome),descricao(descricao),id(id);
-//Destrutor
- ~Perks(){
 
- }
+Perk::Perk(tgui::String nome, tgui::String descricao, int id):
+nome(nome),descricao(descricao),id(id);
+
 //Funções getter's
-std::string Perks:: get_nome(){
+tgui::String Perk:: get_nome(){
     return  this->nome;
 }
- std::string  Perks::get_descricao(){
+ tgui::String  Perk::get_descricao(){
     return this->descricao;
  }
-int Perks:: get_id(){
+int Perk:: get_id(){
     return this->id;
 }
- virtual void Perks:: onAdd(){
+void Perk:: onAdd(){
     //A atualizar
  }
