@@ -18,6 +18,16 @@ void Engine::pass_screen(Player *player) {
 
     tgui::Theme theme{"./Black.txt"};
 
+    //Configura a imagem de fundo do menu de espera 
+    auto picture = tgui::Picture::create("./capypass.png");
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
+    bool stay = true;
+    
+    //Configura a imagem de fundo do menu de espera 
+    auto picture = tgui::Picture::create("./criacaopersn.webp.jpg");
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
     bool stay = true;
 
     //Botao de proximo turno
@@ -50,6 +60,12 @@ void Engine::pass_screen(Player *player) {
 
 void Engine::main_menu() {
     tgui::Theme theme{"../../themes/Black.txt"};
+    
+    //Configura a imagem de fundo do menu principal
+    auto picture = tgui::Picture::create("./4pilastrascc.png");
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
+    bool stay = true;
     
     //Botao de novo jogo
     auto newGameButton = tgui::Button::create();
@@ -330,7 +346,7 @@ void Engine::character_creator_screen() {
     int atributes[SKILL_NUM] = {1, 1, 1, 1, 1, 1};
     
     //Configura a imagem de fundo do menu de personagem
-    auto picture = tgui::Picture::create("./fundo1ufv.jpg");
+    auto picture = tgui::Picture::create("./criacaopersn.webp.jpg");
     picture->setSize({"100%", "100%"});
     gui.add(picture);
     
@@ -548,6 +564,47 @@ void Engine::character_creator_screen() {
     }
 
     gui.removeAllWidgets();
+
+}
+
+//Tela para mostrar os resultados do jogo
+void Engine::result_screen(Player *player){
+    
+    tgui::Theme theme{"./Black.txt"};
+    bool stay=true;
+
+    //Titulo
+    auto title = tgui::TextArea::create();
+    title->setRenderer(theme.getRenderer("TextArea"));
+    title->setPosition(320, 20);
+    title->setMaximumCharacters(0);
+    title->setSize(160, 40);
+    title->setText("RESULTADOS");
+    title->setTextSize(23);
+    title->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(title);
+
+    //Botao de proximo
+    auto NextButton = tgui::Button::create();
+    NextButton->setPosition(630, 540);
+    NextButton->setSize(170, 60);
+    NextButton->setText("PRÓXIMO");
+    NextButton->setTextSize(20);
+    NextButton->onClick([&]{
+        stay = false;
+    });
+    gui.add(NextButton);
+
+    //Tabela de informações dos resultados
+    auto info = tgui::TextArea::create();
+    info->setRenderer(theme.getRenderer("TextArea"));
+    info->setPosition(200, 170);
+    info->setMaximumCharacters(0);
+    info->setSize(400, 200);
+    info->setText("");
+    info->setTextSize(16);
+    info->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Automatic);
+    gui.add(info);
 
 }
 
