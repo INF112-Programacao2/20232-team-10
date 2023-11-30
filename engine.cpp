@@ -26,7 +26,7 @@ void Engine::pass_screen(Player *player) {
     //Configura a imagem de fundo do menu de espera 
     auto picture = tgui::Picture::create("./capypass.png");
     picture->setSize(630,530);
-    picture->setPosition(70,6.4)
+    picture->setPosition(70,10);
     gui.add(picture);
     bool stay = true;
 
