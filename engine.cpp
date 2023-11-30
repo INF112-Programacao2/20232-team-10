@@ -25,17 +25,18 @@ void Engine::pass_screen(Player *player) {
 
     //Configura a imagem de fundo do menu de espera 
     auto picture = tgui::Picture::create("./capypass.png");
-    picture->setSize({"100%", "100%"});
+    picture->setSize(630,530);
+    picture->setPosition(70,6.4)
     gui.add(picture);
     bool stay = true;
 
     //Botao de proximo turno
     auto nextTurnButton = tgui::Button::create();
     nextTurnButton->setRenderer(theme.getRenderer("Button"));
-    nextTurnButton->setPosition(200, 230);
-    nextTurnButton->setSize(400, 140);
+    nextTurnButton->setPosition(630, 540);
+    nextTurnButton->setSize(170, 60);;
     nextTurnButton->setText("Vez de " + player->getName());
-    nextTurnButton->setTextSize(25);
+    nextTurnButton->setTextSize(20);
     nextTurnButton->onClick([&]{
         stay = false;
     });
