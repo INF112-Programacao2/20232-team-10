@@ -50,7 +50,12 @@ void Engine::pass_screen(Player *player) {
 
 void Engine::main_menu() {
     tgui::Theme theme{"../../themes/Black.txt"};
-
+    
+    //Configura a imagem de fundo do menu inicial
+    auto picture = tgui::Picture::create("./fundo1ufv.jpg");
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
+    
     //Botao de novo jogo
     auto newGameButton = tgui::Button::create();
     newGameButton->setRenderer(theme.getRenderer("Button"));
