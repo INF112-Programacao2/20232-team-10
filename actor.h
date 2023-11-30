@@ -49,6 +49,7 @@ class Actor {                               //Classe geral para todos os atores 
         tgui::String getHealth();
         virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
         virtual void study(int x) = 0;              //Funcao para estudar
+        tgui::String resultsText;
         //virtual void travelTo(Place *destination);
 };
 

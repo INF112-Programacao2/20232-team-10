@@ -12,10 +12,31 @@ Action::Action(Actor *actor): actor(actor){
     this->description = "Action";
 }
 
+Actor* Action::getActor(){
+    return actor;
+}
+
+tgui::String Action::getResultsText(){
+    return resultsText;
+}
+
+void Action::updateResultsText(){
+    this->actor->resultsText += resultsText + "\n";
+}
+
 TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), target(target){
     this->id = -1;
     this->targeted = true;
     this->description = "Targeted Action";
+}
+
+Actor* TargetedAction::getTarget(){
+    return target;
+}
+
+void TargetedAction::updateResultsText(){
+    this->actor->resultsText += resultsText + "\n";
+    this->target->resultsText += resultsText + "\n";
 }
 
 WorkOnProjectAction::WorkOnProjectAction(Actor *actor): Action(actor){
@@ -60,7 +81,7 @@ void StartFightAction::execute() {
     fight.addFighter(actor, 1);
     fight.addFighter(target, 0);
     fight.simulateFight();
-    this->actorText = this->targetText = fight.getLog();
+    this->resultsText = this->resultsText = fight.getLog();
 }
 
 void WorkOnProjectAction::execute() {
@@ -76,12 +97,10 @@ void StudyAction::execute() {
 void HealAction::execute() {
     if (actor->skillCheck(FIRST_AID, 60)){
         target->heal();                                           //Chama a funcao de curar da classe Actor, com os pontos de WIS do jogador como parametro
-        actorText = "Você curou alguns ferimentos de " + target->getName();
-        targetText = actor->getName() + " curou alguns dos seus ferimentos";
+        resultsText = actor->getName() + " curou alguns ferimentos de " + target->getName();
     }
     else{
-        actorText = "Você não consegui curar os ferimentos de " + target->getName();
-        targetText = actor->getName() + " tentou curar alguns dos seus ferimentos, mas falhou";
+        resultsText = actor->getName() + " não conseguiu curar os ferimentos de " + target->getName();
     }
 }
 

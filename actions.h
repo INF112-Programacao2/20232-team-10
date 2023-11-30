@@ -11,7 +11,7 @@ class Action {                          //Classe para acoes sem alvo
     protected:
         Actor *actor;                   //Quem vai executar a acao
         tgui::String name;
-        tgui::String actorText;          //Texto que aparecerá para o agente no fim do turno 
+        tgui::String resultsText;          //Texto que aparecerá para o agente no fim do turno 
         tgui::String description;
         int id;
         bool targeted;
@@ -24,17 +24,20 @@ class Action {                          //Classe para acoes sem alvo
         virtual void execute() = 0;     //Funcao para execucao da acao
         virtual bool possible();
         bool isTargeted();
+        Actor *getActor();
         int get_id();
         tgui::String getDescription();
+        tgui::String getResultsText();
+        virtual void updateResultsText();
 };
 
 class TargetedAction : public Action {                  //Classe para acoes com alvo (classe filha da classe Action)
     protected:
         Actor *target;                                  //Alvo da acao
-        tgui::String targetText;                         //Texto que aparecerá para o alvo no fim da ação
-
     public:
         TargetedAction(Actor *actor, Actor *target);    //Construtor
+        Actor *getTarget();
+        virtual void updateResultsText() override;
 };
 
 class WorkOnProjectAction : public Action {     //Classe para a acao de trabalhar no projeto (herda da classe Action, pois nao possui alvo)

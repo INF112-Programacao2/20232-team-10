@@ -7,10 +7,15 @@ int triang(int n){
 void Engine::game(){
     for (int t = 0; t < 3; t++){
         for (int i = 0; i < players.size(); i++){
+            players[i]->resultsText = "";
             pass_screen(players[i]);
             playerTurn2(players[i]);
         }
         results();
+        for (int i = 0; i < players.size(); i++){
+            pass_screen(players[i]);
+            result_screen(players[i]);
+        }
     }
 }
 
@@ -340,7 +345,7 @@ void Engine::character_creator_screen() {
     int atributes[SKILL_NUM] = {1, 1, 1, 1, 1, 1};
     
     //Configura a imagem de fundo do menu de personagem
-    auto picture = tgui::Picture::create("./criacaopersn.jpg");
+    auto picture = tgui::Picture::create("./criacaopersn.png");
     picture->setSize({"100%", "100%"});
     gui.add(picture);
     
@@ -570,9 +575,9 @@ void Engine::result_screen(Player *player){
     //Titulo
     auto title = tgui::TextArea::create();
     title->setRenderer(theme.getRenderer("TextArea"));
-    title->setPosition(320, 20);
+    title->setPosition(310, 20);
     title->setMaximumCharacters(0);
-    title->setSize(160, 40);
+    title->setSize(180, 40);
     title->setText("RESULTADOS");
     title->setTextSize(23);
     title->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
@@ -595,16 +600,30 @@ void Engine::result_screen(Player *player){
     info->setPosition(200, 170);
     info->setMaximumCharacters(0);
     info->setSize(400, 200);
-    info->setText("");
+    info->setText(player->resultsText);
     info->setTextSize(16);
     info->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Automatic);
     gui.add(info);
 
+    while(stay) {
+        sf::Event pass_screen;
+        while(window.pollEvent(pass_screen)) {
+            gui.handleEvent(pass_screen);
+            if(pass_screen.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+    gui.removeAllWidgets();
 }
 
 void Engine::results() {
     while (!turn_actions.empty()) {
         turn_actions.front()->execute();
+        turn_actions.front()->updateResultsText();
         delete turn_actions.front();
         turn_actions.pop();
     }
