@@ -51,11 +51,6 @@ void Engine::pass_screen(Player *player) {
 void Engine::main_menu() {
     tgui::Theme theme{"../../themes/Black.txt"};
     
-    //Configura a imagem de fundo do menu inicial
-    auto picture = tgui::Picture::create("./fundo1ufv.jpg");
-    picture->setSize({"100%", "100%"});
-    gui.add(picture);
-    
     //Botao de novo jogo
     auto newGameButton = tgui::Button::create();
     newGameButton->setRenderer(theme.getRenderer("Button"));
@@ -333,7 +328,12 @@ void Engine::character_creator_screen() {
     bool stay = true;
     int points = 36;
     int atributes[SKILL_NUM] = {1, 1, 1, 1, 1, 1};
-
+    
+    //Configura a imagem de fundo do menu de personagem
+    auto picture = tgui::Picture::create("./fundo1ufv.jpg");
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
+    
     //Titulo
     auto title = tgui::TextArea::create();
     title->setRenderer(theme.getRenderer("TextArea"));
