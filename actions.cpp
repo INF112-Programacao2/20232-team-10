@@ -104,20 +104,16 @@ void Action::instantiate_actions(){
 
 Action* Action::ActionByID(int id, Actor *actor, Actor *target){
     if(id == 0){
-        WorkOnProjectAction* work_on_project_action = new WorkOnProjectAction(actor);
-        return work_on_project_action;
+        return new WorkOnProjectAction(actor);
     }
     if(id == 1){
-        DamageAction* damage_action = new DamageAction(actor, target);
-        return damage_action;
+        return new DamageAction(actor, target);
     }
     if(id == 2){
-        StudyAction* study_action = new StudyAction(actor);
-        return study_action;
+        return new StudyAction(actor);
     }
     if(id == 3){
-        HealAction* heal_action = new HealAction(actor, target);
-        return heal_action;
+        return new HealAction(actor, target);
     }
     return nullptr;
 }

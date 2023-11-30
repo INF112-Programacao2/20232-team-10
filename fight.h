@@ -3,25 +3,31 @@
 
 class FightAction{
     protected:
-        tgui::String actorText;
-        tgui::String neutralText;
-        tgui::String targetText;
+        Actor *actor;
+        Actor *target;
+        tgui::String actionText;
         int weight;
-        int damage;
+        int id;
+    public:
+        FightAction(Actor *actor, Actor *target=nullptr);
+        static FightAction *FightActionByID(int id, Actor *actor = nullptr, Actor *target = nullptr);
+        int getID();
+        int getWeight();
+        virtual void execute() = 0;
+        virtual bool possible();
 };
 
-#endif
-
-#ifndef V_FIGHTER_CLASS
-#define V_FIGHTER_CLASS
-
-#include <vector>
-
-class FighterClass{
-    protected:
-        std::vector<int> fighter_actions_ids;
+class FA_Punch : public FightAction{
     public:
-        FightAction *chooseFightAction();
+        FA_Punch(Actor *actor, Actor *target);
+        virtual void execute() override;
+};
+
+class FA_KnifeSlash : public FightAction{
+    public:
+        FA_KnifeSlash(Actor *actor, Actor *target);
+        virtual void execute() override;
+        virtual bool possible() override;
 };
 
 #endif
@@ -31,14 +37,24 @@ class FighterClass{
 
 #include <vector>
 #include <queue>
+#include <map>
 #include "player.h"
 
 class Fight{
     protected:
+        tgui::String fight_log;
         std::vector<Actor*> fighters;
+        std::vector<FightAction*> local_actions;
         std::queue<FightAction*> fight_actions;
+        std::map <Actor*,int> alignments;
     public:
-
+        void simulateFight();
+        void addFighter(Actor *fighter, int alignment);
+        void removeFighter(Actor *fighter);
+        Actor *getTarget(Actor *actor);
+        void getAction(Actor *actor);
+        void results();
+        tgui::String getLog();
 };
 
 #endif

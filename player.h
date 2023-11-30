@@ -20,4 +20,11 @@ class Player : public Actor {               //Classe para jogadores (ou seja, qu
         unsigned int getStudyBar();
 };
 
+class Killer : public Player{
+    protected:
+
+    public:
+        Killer(tgui::String name, int atributes[6]);
+};
+
 #endif

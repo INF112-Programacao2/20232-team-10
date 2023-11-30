@@ -251,7 +251,7 @@ void Engine::playerTurn2(Player *player) {
             if (players[i] == player){
                 continue;
             }
-            TextArea1->addText(players[i]->getName() + '\n');
+            TextArea1->addText(players[i]->getName(false) + '\n');
         }
     });
     gui.add(playersButton);

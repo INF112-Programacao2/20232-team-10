@@ -25,11 +25,14 @@ enum skills{   // Enum para o nome das skills
 
 class Actor {                               //Classe geral para todos os atores do jogo (jogador, vilao, NPC, etc)
     protected:
-        tgui::String name;                   //Nome
+        tgui::String name;                  //Nome
         int injuries;                       //Quantidade de dano acumulado
-        int vitality;                       //Quantidade de dano que
+        int vitality;                       //Quantidade de dano que o ator aguenta
         unsigned int skill[6];              //Array para os valores das skills, em ordem
         bool alive;                         //Bool para estado de vida
+        bool costumed;
+        tgui::String costume;
+        bool killer = false;
 
     public:
         Actor(tgui::String name);                    //Construtor
@@ -37,11 +40,12 @@ class Actor {                               //Classe geral para todos os atores 
         void heal(int x=1);                           //Funcao para curar
         void damage(int x=1);                         //Funcao para causar dano
         void die();                                 //Funcao para morte
-        tgui::String getName();          
-        int getSkill(unsigned int s);
+        tgui::String getName(bool use_alias=true);  // Se verdadeiro, retorna o nome da fantasia usada
+        int getSkill(int skill_name);
         int getDamageLevel();
+        bool isKiller();
         bool skillCheck(int skill, int challenge);
-        int skillRoll(int skill, int range);
+        int skillRoll(int skill, int range=100);
         tgui::String getHealth();
         virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
         virtual void study(int x) = 0;              //Funcao para estudar
