@@ -1,6 +1,8 @@
 #ifndef V_FIGHT_ACTIONS
 #define V_FIGHT_ACTIONS
 
+#include "player.h"
+
 class FightAction{
     protected:
         Actor *actor;
@@ -11,6 +13,7 @@ class FightAction{
     public:
         FightAction(Actor *actor, Actor *target=nullptr);
         static FightAction *FightActionByID(int id, Actor *actor = nullptr, Actor *target = nullptr);
+        tgui::String getText();
         int getID();
         int getWeight();
         virtual void execute() = 0;

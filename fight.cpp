@@ -11,6 +11,10 @@ bool FightAction::possible(){
     return true;
 }
 
+tgui::String FightAction::getText(){
+    return actionText;
+}
+
 int FightAction::getID(){
     return id;
 }
@@ -23,9 +27,10 @@ FightAction* FightAction::FightActionByID(int id, Actor *actor, Actor *target){
     if (id == 0){
         return new FA_Punch(actor, target);
     }
-    if (id == 0){
+    if (id == 1){
         return new FA_KnifeSlash(actor, target);
     }
+    return nullptr;
 }
 
 FA_Punch::FA_Punch(Actor *actor, Actor *target) : FightAction(actor, target){
@@ -95,6 +100,7 @@ Actor* Fight::getTarget(Actor *actor){
             return fighters[i];
         }
     }
+    return nullptr;
 }
 
 void Fight::getAction(Actor *actor){
@@ -116,6 +122,7 @@ void Fight::getAction(Actor *actor){
 void Fight::results(){
     while (!fight_actions.empty()){
         fight_actions.front()->execute();
+        fight_log += fight_actions.front()->getText() + "\n";
         delete fight_actions.front();
         fight_actions.pop();
     }

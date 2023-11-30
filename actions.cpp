@@ -1,34 +1,41 @@
 #include "actions.h"
 #include "dice.h"
+#include "fight.h"
 
 //Construtores para as classes de acoes
 
 std::vector<Action*> Action::game_actions;
 
 Action::Action(Actor *actor): actor(actor){
-    this->id = 0;
+    this->id = -2;
     this->targeted = false;
+    this->description = "Action";
 }
 
 TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), target(target){
-    this->id = 1;
+    this->id = -1;
     this->targeted = true;
+    this->description = "Targeted Action";
 }
 
 WorkOnProjectAction::WorkOnProjectAction(Actor *actor): Action(actor){
-    this->id = 2;
+    this->id = 0;
+    this->description = "Trabalhar no projeto";
 }
 
-DamageAction::DamageAction(Actor *actor, Actor *target): TargetedAction(actor, target){
-    this->id = 3;
+StartFightAction::StartFightAction(Actor *actor, Actor *target): TargetedAction(actor, target){
+    this->id = 1;
+    this->description = "Atacar alvo";
 }
 
 StudyAction::StudyAction(Actor *actor): Action(actor){
-    this->id = 4;
+    this->id = 2;
+    this->description = "Estudar";
 }
 
 HealAction::HealAction(Actor *actor, Actor *target) : TargetedAction(actor, target) {
-    this->id = 5;
+    this->id = 3;
+    this->description = "Curar alvo";
 }
 
 bool Action::possible(){
@@ -44,34 +51,16 @@ bool Action::isTargeted(){
 }
 
 tgui::String Action::getDescription(){
-    return "Action";
+    return description;
 }
-
-tgui::String TargetedAction::getDescription(){
-    return "Targeted Action";
-}
-
-tgui::String WorkOnProjectAction::getDescription(){
-    return "Trabalhar no projeto";
-}
-
-tgui::String StudyAction::getDescription(){
-    return "Estudar";
-}
-
-tgui::String DamageAction::getDescription(){
-    return "Atacar alvo";
-}
-
-tgui::String HealAction::getDescription(){
-    return "Curar alvo";
-}
-
-
 
 //Funcoes de execucao para as respectivas acoes
-void DamageAction::execute() {              
-    target->damage();                                                                                //Chama a funcao de causar dano da classe Actor
+void StartFightAction::execute() {              
+    Fight fight;
+    fight.addFighter(actor, 1);
+    fight.addFighter(target, 0);
+    fight.simulateFight();
+    this->actorText = this->targetText = fight.getLog();
 }
 
 void WorkOnProjectAction::execute() {
@@ -107,7 +96,7 @@ Action* Action::ActionByID(int id, Actor *actor, Actor *target){
         return new WorkOnProjectAction(actor);
     }
     if(id == 1){
-        return new DamageAction(actor, target);
+        return new StartFightAction(actor, target);
     }
     if(id == 2){
         return new StudyAction(actor);

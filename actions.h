@@ -12,6 +12,7 @@ class Action {                          //Classe para acoes sem alvo
         Actor *actor;                   //Quem vai executar a acao
         tgui::String name;
         tgui::String actorText;          //Texto que aparecerá para o agente no fim do turno 
+        tgui::String description;
         int id;
         bool targeted;
 
@@ -24,7 +25,7 @@ class Action {                          //Classe para acoes sem alvo
         virtual bool possible();
         bool isTargeted();
         int get_id();
-        virtual tgui::String getDescription();
+        tgui::String getDescription();
 };
 
 class TargetedAction : public Action {                  //Classe para acoes com alvo (classe filha da classe Action)
@@ -34,7 +35,6 @@ class TargetedAction : public Action {                  //Classe para acoes com 
 
     public:
         TargetedAction(Actor *actor, Actor *target);    //Construtor
-        virtual tgui::String getDescription() override;
 };
 
 class WorkOnProjectAction : public Action {     //Classe para a acao de trabalhar no projeto (herda da classe Action, pois nao possui alvo)
@@ -42,7 +42,6 @@ class WorkOnProjectAction : public Action {     //Classe para a acao de trabalha
         WorkOnProjectAction(Actor *actor);      //Construtor
         virtual void execute() override;        //Funcao para execucacao da acao
         //virtual bool possible() override;
-        virtual tgui::String getDescription() override;
 };
 
 class StudyAction : public Action {             //Classe para a acao de estudar
@@ -50,15 +49,13 @@ class StudyAction : public Action {             //Classe para a acao de estudar
         StudyAction(Actor *actor);              
         virtual void execute() override;
         //virtual bool possible() override;
-        virtual tgui::String getDescription() override;
 };
 
-class DamageAction : public TargetedAction {        //Classe para a acao de causar dano (herda da classe TargetedAction, pois possui alvo)
+class StartFightAction : public TargetedAction {        //Classe para a acao de iniciar combate (herda da classe TargetedAction, pois possui alvo)
     public:
-        DamageAction(Actor *actor, Actor *target);  
+        StartFightAction(Actor *actor, Actor *target);  
         virtual void execute() override; 
-        //virtual bool possible() override;          
-        virtual tgui::String getDescription() override; 
+        //virtual bool possible() override;
 };
 
 class HealAction : public TargetedAction {          //Classe para a acao de curar
@@ -66,7 +63,6 @@ class HealAction : public TargetedAction {          //Classe para a acao de cura
         HealAction(Actor *actor, Actor *target);
         virtual void execute() override;
         //virtual bool possible() override;
-        virtual tgui::String getDescription() override;
 };
 
 #endif
