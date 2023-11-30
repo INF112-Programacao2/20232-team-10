@@ -340,7 +340,7 @@ void Engine::character_creator_screen() {
     int atributes[SKILL_NUM] = {1, 1, 1, 1, 1, 1};
     
     //Configura a imagem de fundo do menu de personagem
-    auto picture = tgui::Picture::create("./criacaopersn.webp.jpg");
+    auto picture = tgui::Picture::create("./criacaopersn.jpg");
     picture->setSize({"100%", "100%"});
     gui.add(picture);
     
