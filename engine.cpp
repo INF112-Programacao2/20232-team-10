@@ -23,12 +23,6 @@ void Engine::pass_screen(Player *player) {
     picture->setSize({"100%", "100%"});
     gui.add(picture);
     bool stay = true;
-    
-    //Configura a imagem de fundo do menu de espera 
-    auto picture = tgui::Picture::create("./criacaopersn.webp.jpg");
-    picture->setSize({"100%", "100%"});
-    gui.add(picture);
-    bool stay = true;
 
     //Botao de proximo turno
     auto nextTurnButton = tgui::Button::create();
