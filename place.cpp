@@ -1,8 +1,17 @@
- #include "place.h"
-#include <iostream>
+#include "place.h"
 
-//Declaração do Vector LocalActions 
-static std::vector<int> placeActions; 
+int Place::next_id = 0;
+
 //Inicialização do construtor
-Place::Place(tgui::String place) : place(place){}
+Place::Place(tgui::String place, tgui::String picture) : name(name), picture(picture){
+    id = next_id;
+    next_id++;
+}
 
+tgui::String Place::getName(){
+    return name;
+}
+
+tgui::String Place::getPicture(){
+    return picture;
+}

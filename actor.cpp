@@ -5,7 +5,7 @@ Actor::Actor(tgui::String name){                 //Construtor
     this->name = name;
     this->alive = true;             
     for (int i = 0; i < SKILL_NUM; i++){    //Inicializacao do valores das skills com 0
-        this->skill[i] = 0;
+        this->skill[i] = 3;
     }
     this->injuries = 0;     //Zera a quantidade de dano
     this->killer = false;

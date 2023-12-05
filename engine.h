@@ -8,6 +8,7 @@
 
 #include "actions.h"
 #include "actor.h"
+#include "place.h"
 #include "player.h"
 
 int triang(int n);
@@ -16,7 +17,7 @@ class Engine {
     private:
         std::vector<Player*> players;
         std::queue<Action*> turn_actions;
-        //std::vector<Place*> places;
+        std::vector<Place*> places;
         unsigned int time = 0;
 
     public:
@@ -35,7 +36,7 @@ class Engine {
         void result_screen(Player *player);
         void role_screen(Player *player);
         bool roleSelector(Player *player);
-
+        void instantiatePlaces();
 };
 
 #endif

@@ -6,6 +6,7 @@ int triang(int n){
 }
 
 void Engine::game(){
+    Action::instantiateActions();
     for (int t = 0; t < 3; t++){
         for (int i = 0; i < players.size(); i++){
             players[i]->resultsText = "";
@@ -206,16 +207,7 @@ void Engine::main_menu() {
 }
 
 void Engine::playerTurn1(Player *player) {
-    
-    int destination;
-
-    std::cout << "Para onde voce quer ir?\n";
-    
-    std::cin >> destination;
-
     //player->travelTo(this->places[destination]);
-
-
 
     sf::Clock clock;
 
@@ -920,4 +912,13 @@ void Engine::results() {
 void Engine::createPlayer(tgui::String name, int atributes[6]){
     Player *player = new Player(name, atributes);
     players.push_back(player);
+}
+
+void Engine::instantiatePlaces(){
+    places.push_back(&Place("CCE", "./fundi1ufv.jpg"));
+    places.push_back(&Place("DCE", "./fundi1ufv.jpg"));
+    places.push_back(&Place("PVA", "./fundi1ufv.jpg"));
+    places.push_back(&Place("PVB", "./fundi1ufv.jpg"));
+    places.push_back(&Place("Rita", "./fundi1ufv.jpg"));
+    places.push_back(&Place("RU", "./fundi1ufv.jpg"));
 }

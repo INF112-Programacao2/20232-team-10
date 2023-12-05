@@ -104,7 +104,7 @@ void HealAction::execute() {
     }
 }
 
-void Action::instantiate_actions(){
+void Action::instantiateActions(){
     for (int i = 0; i < ACTION_NUM; i++){
         game_actions.push_back(ActionByID(i));
     }
