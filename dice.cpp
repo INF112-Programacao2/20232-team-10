@@ -4,7 +4,7 @@ std::random_device Dice::rng;
 std::mt19937 gen(Dice::rng());
 
 int Dice::single_die(int range){
-    std::uniform_int_distribution d(1, range);
+    std::uniform_int_distribution<std::mt19937::result_type> d(1, range);
     return d(rng);
 }
 
