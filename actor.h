@@ -49,6 +49,7 @@ class Actor {                               //Classe geral para todos os atores 
         bool isKiller();
         bool skillCheck(int skill, int challenge);
         int skillRoll(int skill, int range=100);
+        void setKiller();
         tgui::String getHealth();
         virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
         virtual void study(int x) = 0;              //Funcao para estudar

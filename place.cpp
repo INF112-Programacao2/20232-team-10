@@ -3,7 +3,7 @@
 int Place::next_id = 0;
 
 //Inicialização do construtor
-Place::Place(tgui::String place, tgui::String picture) : name(name), picture(picture){
+Place::Place(tgui::String name, tgui::String picture) : name(name), picture(picture){
     id = next_id;
     next_id++;
 }

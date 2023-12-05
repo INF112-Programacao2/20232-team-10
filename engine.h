@@ -19,7 +19,7 @@ class Engine {
     private:
         std::vector<Player*> players;
         std::queue<Action*> turn_actions;
-        Place* places[PLACE_NUM];
+        std::vector<Place*> places;
         unsigned int time = 0;
 
     public:
@@ -37,7 +37,7 @@ class Engine {
         void characterCreator();
         void result_screen(Player *player);
         void role_screen(Player *player);
-        bool roleSelector(Player *player);
+        void roleSelector();
         void instantiatePlaces();
 };
 

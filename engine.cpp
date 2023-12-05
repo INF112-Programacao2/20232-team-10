@@ -7,7 +7,10 @@ int triang(int n){
 
 void Engine::game(){
     Action::instantiateActions();
+    instantiatePlaces();
+    roleSelector();
     for (int i = 0; i < players.size(); i++){
+        pass_screen(players[i]);
         role_screen(players[i]);
     }
     for (int t = 0; t < 6; t++){
@@ -31,25 +34,16 @@ void Engine::game(){
     }
 }
 
-bool Engine::roleSelector(Player *player) {
-
+void Engine::roleSelector() {
     int chosen = Dice::single_die(players.size()-1);
-
-    for(int i=0; i<players.size(); i++) {
-        if(player->get_id() == chosen) {
-            return true;
-        }
-    }
-    return false;
+    players[chosen]->setKiller();
 }
 
 void Engine::role_screen(Player *player) {
-    
     tgui::Theme theme{"./Black.txt"};
     bool stay = true;
-    bool chosen = roleSelector(player);
     tgui::String text, description, screen;
-    if (chosen){
+    if (player->isKiller()){
         text = "Você é o assassino!";    
         description = "Seu objetivo é matar furtivamente todos os estudantes de computação!\n Complete seu objetivo antes do final da última semana do período sem ser pego.";
         screen = "./capyblood.jpeg";
@@ -60,6 +54,11 @@ void Engine::role_screen(Player *player) {
         screen = "./capystd.jpeg";    
     }
 
+    // Imagem de fundo
+    auto roleScreenBackground = tgui::Picture::create(screen);
+    roleScreenBackground->setSize({"100%", "100%"});
+    gui.add(roleScreenBackground);
+    
     //Mensagem da carga
     auto roleText = tgui::TextArea::create();
     roleText->setRenderer(theme.getRenderer("TextArea"));
@@ -69,11 +68,8 @@ void Engine::role_screen(Player *player) {
     roleText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     roleText->setTextSize(25);
     roleText->setReadOnly(true);
+    roleText->setText(text);
     gui.add(roleText);
-    
-    auto roleScreenBackground = tgui::Picture::create(screen);
-    roleScreenBackground->setSize({"100%", "100%"});
-    gui.add(roleScreenBackground);
 
     //Descricao da carga
     auto roleDescription = tgui::TextArea::create();
@@ -116,7 +112,6 @@ void Engine::role_screen(Player *player) {
 }
 
 void Engine::pass_screen(Player *player) {
-
     tgui::Theme theme{"./Black.txt"};
 
     //Configura a imagem de fundo do menu de espera 
@@ -216,7 +211,6 @@ void Engine::main_menu() {
 }
 
 void Engine::playerTurn1(Player *player) {
-    //player->travelTo(this->places[destination]);
 
     sf::Clock clock;
 
@@ -390,7 +384,6 @@ void Engine::playerTurn1(Player *player) {
 }
 
 void Engine::playerTurn2(Player *player) {
-
     //***// Interface Game Menu //***//
 
     sf::Clock clock;
@@ -830,7 +823,7 @@ void Engine::character_creator_screen() {
 
 //Tela para mostrar os resultados do jogo
 void Engine::result_screen(Player *player){
-    
+
     tgui::Theme theme{"./Black.txt"};
     bool stay=true;
 
@@ -892,15 +885,14 @@ void Engine::results() {
 }
 
 void Engine::createPlayer(tgui::String name, int atributes[6]){
-    Player *player = new Player(name, atributes);
-    players.push_back(player);
+    players.push_back(new Player(name, atributes));
 }
 
 void Engine::instantiatePlaces(){
-    places[0] = new Place("CCE", "./fundi1ufv.jpg");
-    places[1] = new Place("DCE", "./fundi1ufv.jpg");
-    places[2] = new Place("PVA", "./fundi1ufv.jpg");
-    places[3] = new Place("PVB", "./fundi1ufv.jpg");
-    places[4] = new Place("Rita", "./fundi1ufv.jpg");
-    places[5] = new Place("RU", "./fundi1ufv.jpg");
+    places.push_back(new Place("CCE", "./cce.jpg"));
+    places.push_back(new Place("DCE", "./dce.jpg"));
+    places.push_back(new Place("PVA", "./pva.jpg"));
+    places.push_back(new Place("PVB", "./pvb.jpeg"));
+    places.push_back(new Place("Rita", "./rita.jpeg"));
+    places.push_back(new Place("RU", "./RU.jpeg"));
 }

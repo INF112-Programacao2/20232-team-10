@@ -98,3 +98,7 @@ void Actor::travelTo(Place* destination){
 Place* Actor::getPlace(){
     return current_place;
 }
+
+void Actor::setKiller(){
+    this->killer = true;
+}
