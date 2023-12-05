@@ -262,27 +262,27 @@ void Engine::playerTurn1(Player *player) {
     gui.add(studyBar);
 
     //Barra de tempo
-    auto tempo = tgui::ProgressBar::create();
-    tempo->setRenderer(theme.getRenderer("ProgressBar"));
-    tempo->setPosition(600, 570);
-    tempo->setSize(200, 30);
-    tempo->setValue(time);                 //Recebe o valor do clock do turno
-    tempo->setMaximum(60);
-    tempo->setMinimum(0);
-    tempo->setText("TEMPO");        
-    tempo->setTextSize(15);
-    gui.add(tempo);
+    auto timeBar = tgui::ProgressBar::create();
+    timeBar->setRenderer(theme.getRenderer("ProgressBar"));
+    timeBar->setPosition(600, 570);
+    timeBar->setSize(200, 30);
+    timeBar->setValue(time);                 //Recebe o valor do clock do turno
+    timeBar->setMaximum(40);
+    timeBar->setMinimum(0);
+    timeBar->setText("TEMPO");        
+    timeBar->setTextSize(15);
+    gui.add(timeBar);
 
-    //Acao: 
-    auto acao = tgui::TextArea::create();
-    acao->setRenderer(theme.getRenderer("TextArea"));
-    acao->setPosition(230, 430);
-    acao->setMaximumCharacters(0);
-    acao->setSize(90, 35);
-    acao->setText("AÇÃO:");
-    acao->setTextSize(20);
-    acao->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    gui.add(acao);
+    //Texto do lado da combobox1 
+    auto comboText1 = tgui::TextArea::create();
+    comboText1->setRenderer(theme.getRenderer("TextArea"));
+    comboText1->setPosition(230, 430);
+    comboText1->setMaximumCharacters(0);
+    comboText1->setSize(90, 35);
+    comboText1->setText("DESTINO:");
+    comboText1->setTextSize(20);
+    comboText1->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(comboText1);
 
     //ComboBox1
     auto comboBox1 = tgui::ComboBox::create();
@@ -292,8 +292,8 @@ void Engine::playerTurn1(Player *player) {
     comboBox1->setPosition(320, 430);
     comboBox1->setSize(250, 35);
     comboBox1->setTextSize(15);
-    for (int i = 0; i < Action::game_actions.size(); i++){
-        comboBox1->addItem(Action::game_actions[i]->getDescription(), std::to_string(i));
+    for (int i = 0; i < PLACE_NUM; i++){
+        comboBox1->addItem(places[i]->getName(), std::to_string(i));
     }
     gui.add(comboBox1);
 
@@ -366,7 +366,7 @@ void Engine::playerTurn1(Player *player) {
         if (clock.getElapsedTime() > sf::seconds(0.25)){
             clock.restart();
             time--;
-            tempo->setValue(time);
+            timeBar->setValue(time);
         }
 
         window.clear();
@@ -441,27 +441,27 @@ void Engine::playerTurn2(Player *player) {
     gui.add(studyBar);
 
     //Barra de tempo
-    auto tempo = tgui::ProgressBar::create();
-    tempo->setRenderer(theme.getRenderer("ProgressBar"));
-    tempo->setPosition(600, 570);
-    tempo->setSize(200, 30);
-    tempo->setValue(time);                 //Recebe o valor do clock do turno
-    tempo->setMaximum(60);
-    tempo->setMinimum(0);
-    tempo->setText("TEMPO");        
-    tempo->setTextSize(15);
-    gui.add(tempo);
+    auto timeBar = tgui::ProgressBar::create();
+    timeBar->setRenderer(theme.getRenderer("ProgressBar"));
+    timeBar->setPosition(600, 570);
+    timeBar->setSize(200, 30);
+    timeBar->setValue(time);                 //Recebe o valor do clock do turno
+    timeBar->setMaximum(60);
+    timeBar->setMinimum(0);
+    timeBar->setText("TEMPO");        
+    timeBar->setTextSize(15);
+    gui.add(timeBar);
 
-    //Acao: 
-    auto acao = tgui::TextArea::create();
-    acao->setRenderer(theme.getRenderer("TextArea"));
-    acao->setPosition(230, 430);
-    acao->setMaximumCharacters(0);
-    acao->setSize(90, 35);
-    acao->setText("AÇÃO:");
-    acao->setTextSize(20);
-    acao->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    gui.add(acao);
+    //Texto do lado da comboBox1 
+    auto comboText1 = tgui::TextArea::create();
+    comboText1->setRenderer(theme.getRenderer("TextArea"));
+    comboText1->setPosition(230, 430);
+    comboText1->setMaximumCharacters(0);
+    comboText1->setSize(90, 35);
+    comboText1->setText("AÇÃO:");
+    comboText1->setTextSize(20);
+    comboText1->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(comboText1);
 
     //ComboBox1
     auto comboBox1 = tgui::ComboBox::create();
@@ -572,7 +572,7 @@ void Engine::playerTurn2(Player *player) {
         if (clock.getElapsedTime() > sf::seconds(0.25)){
             clock.restart();
             time--;
-            tempo->setValue(time);
+            timeBar->setValue(time);
         }
         TextArea2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
         comboBox2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
