@@ -42,23 +42,23 @@ void Engine::role_screen(Player *player) {
     tgui::String text, description, screen;
     if (chosen){
         text = "Você é o assassino!";    
-        description = "Seu objetivo é matar furtivamente todos os estudantes de computação! Complete seu objetivo antes do final da última semana do período sem ser pego.";
-        screen = "./AssassinScreen.png";
+        description = "Seu objetivo é matar furtivamente todos os estudantes de computação!\n Complete seu objetivo antes do final da última semana do período sem ser pego.";
+        screen = "./capyblood.jpeg";
     }
     else{
         text = "Você é um estudante!";
-        description = "Seu objetivo é sobreviver à última semana do período! Estude para suas provas finais e conclua o trabalho final de Programação II, mas fique de olho no assassino que está solto!";
-        screen = "./StudentScreen.png";    
+        description = "Seu objetivo é sobreviver à última semana do período!\n Estude para suas provas finais e conclua o trabalho final de Programação II, mas fique de olho no assassino que está solto!";
+        screen = "./capystd.jpeg";    
     }
 
     //Mensagem da carga
     auto roleText = tgui::TextArea::create();
     roleText->setRenderer(theme.getRenderer("TextArea"));
     roleText->setMaximumCharacters(0);
-    roleText->setPosition(310,20);
-    roleText->setSize(180, 40);
+    roleText->setPosition(240,30);
+    roleText->setSize(320, 40);
     roleText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    roleText->setTextSize(20);
+    roleText->setTextSize(25);
     roleText->setReadOnly(true);
     gui.add(roleText);
     
@@ -70,11 +70,11 @@ void Engine::role_screen(Player *player) {
     auto roleDescription = tgui::TextArea::create();
     roleDescription->setRenderer(theme.getRenderer("TextArea"));
     roleDescription->setMaximumCharacters(0);
-    roleDescription->setPosition(400,20);
-    roleDescription->setSize(200, 80);
+    roleDescription->setPosition(255,400);
+    roleDescription->setSize(290, 115);
     roleDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     roleDescription->setText(description);
-    roleDescription->setTextSize(10);
+    roleDescription->setTextSize(15);
     roleDescription->setReadOnly(true);
     gui.add(roleDescription);
 
