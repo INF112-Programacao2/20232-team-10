@@ -42,20 +42,8 @@ void Engine::role_screen(Player *player) {
     tgui::String assassinDescription = "Seu objetivo é matar furtivamente todos os estudantes de computação! Complete seu objetivo antes do final da última semana do período sem ser pego.";
     tgui::String studentText = "Você é um estudante!";
     tgui::String studentDescripion = "Seu objetivo é sobreviver à última semana do período! Estude para suas provas finais e conclua o trabalho final de Programação II, mas fique de olho no assassino que está solto!";
-   // tgui::String assassinScreen = "./AssassinScreen.png";
-   // tgui::String studentScreen = "./StudentScreen.png";
-
-   /* //Configura a imagem do fundo do menu da carga
-    auto roleScreenBackground = tgui::Picture::create("");
-    if(chosen) {
-        auto roleScreenBackground = tgui::Picture::create(assassinScreen);
-    }
-    else {
-        auto roleScreenBackground = tgui::Picture::create(studentScreen);
-    }
-    roleScreenBackground->setSize(650,530);
-    roleScreenBackground->setPosition(70,10);
-    gui.add(roleScreenBackground);*/
+    tgui::String assassinScreen = "./AssassinScreen.png";
+    tgui::String studentScreen = "./StudentScreen.png";
 
     //Mensagem da carga
     auto roleText = tgui::TextArea::create();
@@ -67,7 +55,7 @@ void Engine::role_screen(Player *player) {
     roleText->setTextSize(20);
     roleText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     roleText->setReadOnly(true);
-    gui.add(roleText);
+    
 
     //Descricao da carga
     auto roleDescription = tgui::TextArea::create();
@@ -79,10 +67,20 @@ void Engine::role_screen(Player *player) {
     if(chosen) {
         roleText->setText(assassinText);
         roleDescription->setText(assassinDescription);
+        auto roleScreenBackground = tgui::Picture::create(assassinScreen);
+        roleScreenBackground->setSize({"100%", "100%"});
+        gui.add(roleScreenBackground);
+        gui.add(roleText);
+        gui.add(roleDescription);  
     }
     else {
         roleText->setText(studentText);
         roleDescription->setText(studentDescripion);
+        auto roleScreenBackground = tgui::Picture::create(studentScreen);
+        roleScreenBackground->setSize({"100%", "100%"});
+        gui.add(roleScreenBackground);
+        gui.add(roleText);
+        gui.add(roleDescription);     
     }
     roleDescription->setTextSize(10);
     roleDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
@@ -225,7 +223,7 @@ void Engine::playerTurn1(Player *player) {
     
     std::cin >> destination;
 
-    player->travelTo(this->places[destination]);
+    //player->travelTo(this->places[destination]);
 
 
 
