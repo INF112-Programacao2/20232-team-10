@@ -7,26 +7,131 @@ int triang(int n){
 void Engine::game(){
     for (int t = 0; t < 3; t++){
         for (int i = 0; i < players.size(); i++){
+            players[i]->resultsText = "";
             pass_screen(players[i]);
             playerTurn2(players[i]);
         }
         results();
+        for (int i = 0; i < players.size(); i++){
+            pass_screen(players[i]);
+            result_screen(players[i]);
+        }
     }
+}
+
+void Engine::role_screen() {
+    
+    tgui::Theme theme{"./Black.txt"};
+    bool stay = true;
+
+    //Configura a imagem do fundo do menu do assassino
+    auto roleScreenAssassin = tgui::Picture::create("./AssassinScreen.png");
+    roleScreenAssassin->setSize(650,530);
+    roleScreenAssassin->setPosition(70,10);
+    gui.add(roleScreenAssassin);
+    bool stay = true;
+
+    //Configura a imagem do fundo do menu do estudante
+    auto roleScreenStudent = tgui::Picture::create("./StudentScreen.png");
+    roleScreenStudent->setSize(650,530);
+    roleScreenStudent->setPosition(70,10);
+    gui.add(roleScreenStudent);
+    bool stay = true;
+
+    //Mensagem para assassino
+    auto roleText = tgui::TextArea::create();
+    roleText->setRenderer(theme.getRenderer("TextArea"));
+    roleText->setMaximumCharacters(0);
+    roleText->setPosition(230,20);
+    roleText->setSize(154, 60);
+    roleText->setText("Você é o assassino!");
+    roleText->setTextSize(40);
+    roleText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    roleText->setReadOnly(true);
+    gui.add(roleText);
+
+    //Descricao para assassino
+    auto roleDescription = tgui::TextArea::create();
+    roleDescription->setRenderer(theme.getRenderer("TextArea"));
+    roleDescription->setMaximumCharacters(0);
+    roleDescription->setPosition(430,20);
+    roleDescription->setSize(75, 30);
+    roleDescription->setText("Seu objetivo é matar furtivamente todos os estudantes de computação! Complete seu objetivo antes do final da última semana do período sem ser pego.");
+    roleDescription->setTextSize(20);
+    roleDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    roleDescription->setReadOnly(true);
+    gui.add(roleDescription);
+
+    //Mensagem para estudante
+    auto studentText = tgui::TextArea::create();
+    studentText->setRenderer(theme.getRenderer("TextArea"));
+    studentText->setMaximumCharacters(0);
+    studentText->setPosition(230,20);
+    studentText->setSize(154, 60);
+    studentText->setText("Você é um estudante!");
+    studentText->setTextSize(40);
+    studentText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    studentText->setReadOnly(true);
+    gui.add(studentText);
+
+    //Descricao para estudante
+    auto studentDescription = tgui::TextArea::create();
+    studentDescription->setRenderer(theme.getRenderer("TextArea"));
+    studentDescription->setMaximumCharacters(0);
+    studentDescription->setPosition(430,20);
+    studentDescription->setSize(75, 30);
+    studentDescription->setText("Seu objetivo é sobreviver à última semana do período! Estude para suas provas finais e conclua o trabalho final de Programação II, mas fique de olho no assassino que está solto!");
+    studentDescription->setTextSize(20);
+    studentDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    studentDescription->setReadOnly(true);
+    gui.add(studentDescription);
+
+    //Botao de proximo
+    auto nextButton = tgui::Button::create();
+    nextButton->setRenderer(theme.getRenderer("Button"));
+    nextButton->setPosition(630, 540);
+    nextButton->setSize(170, 60);;
+    nextButton->setText("Proximo");
+    nextButton->setTextSize(20);
+    nextButton->onClick([&]{
+        stay = false;
+    });
+    gui.add(nextButton);
+
+    while(stay) {
+        sf::Event role_screen;
+        while(window.pollEvent(role_screen)) {
+            gui.handleEvent(role_screen);
+            if(role_screen.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+    gui.removeAllWidgets();
+
 }
 
 void Engine::pass_screen(Player *player) {
 
     tgui::Theme theme{"./Black.txt"};
 
+    //Configura a imagem de fundo do menu de espera 
+    auto picture = tgui::Picture::create("./capypass.png");
+    picture->setSize(630,530);
+    picture->setPosition(70,10);
+    gui.add(picture);
     bool stay = true;
 
     //Botao de proximo turno
     auto nextTurnButton = tgui::Button::create();
     nextTurnButton->setRenderer(theme.getRenderer("Button"));
-    nextTurnButton->setPosition(200, 230);
-    nextTurnButton->setSize(400, 140);
+    nextTurnButton->setPosition(630, 540);
+    nextTurnButton->setSize(170, 60);;
     nextTurnButton->setText("Vez de " + player->getName());
-    nextTurnButton->setTextSize(25);
+    nextTurnButton->setTextSize(20);
     nextTurnButton->onClick([&]{
         stay = false;
     });
@@ -50,7 +155,13 @@ void Engine::pass_screen(Player *player) {
 
 void Engine::main_menu() {
     tgui::Theme theme{"../../themes/Black.txt"};
-
+    
+    //Configura a imagem de fundo do menu principal
+    auto picture = tgui::Picture::create("./4pilastrascc.png");
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
+    bool stay = true;
+    
     //Botao de novo jogo
     auto newGameButton = tgui::Button::create();
     newGameButton->setRenderer(theme.getRenderer("Button"));
@@ -452,7 +563,7 @@ void Engine::playerTurn2(Player *player) {
             if (players[i] == player){
                 continue;
             }
-            TextArea1->addText(players[i]->getName() + '\n');
+            TextArea1->addText(players[i]->getName(false) + '\n');
         }
     });
     gui.add(playersButton);
@@ -529,7 +640,12 @@ void Engine::character_creator_screen() {
     bool stay = true;
     int points = 36;
     int atributes[SKILL_NUM] = {1, 1, 1, 1, 1, 1};
-
+    
+    //Configura a imagem de fundo do menu de personagem
+    auto picture = tgui::Picture::create("./criacaopersn.png");
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
+    
     //Titulo
     auto title = tgui::TextArea::create();
     title->setRenderer(theme.getRenderer("TextArea"));
@@ -582,7 +698,7 @@ void Engine::character_creator_screen() {
     ThinkingButton->setMinimum(1);
     ThinkingButton->setSize(20, 50);
     ThinkingButton->setStep(1);
-    ThinkingButton->setValue(atributes[THINKING]);
+    ThinkingButton->setValue(atributes[LOGIC]);
     gui.add(ThinkingButton);
 
     //Botao de primeiros socorros
@@ -604,7 +720,7 @@ void Engine::character_creator_screen() {
     CharismaButton->setMinimum(1);
     CharismaButton->setSize(20, 50);
     CharismaButton->setStep(1);
-    CharismaButton->setValue(atributes[CHARISMA]);
+    CharismaButton->setValue(atributes[COMMUNICATION]);
     gui.add(CharismaButton);
 
     //Atletismo Area
@@ -647,7 +763,7 @@ void Engine::character_creator_screen() {
     ThinkingArea->setPosition(70, 280);
     ThinkingArea->setMaximumCharacters(0);
     ThinkingArea->setSize(160, 50);
-    ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[THINKING]));
+    ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[LOGIC]));
     ThinkingArea->setTextSize(16);
     ThinkingArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(ThinkingArea);
@@ -669,7 +785,7 @@ void Engine::character_creator_screen() {
     CharismaArea->setPosition(550, 280);
     CharismaArea->setMaximumCharacters(0);
     CharismaArea->setSize(160, 50);
-    CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[CHARISMA]));
+    CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[COMMUNICATION]));
     CharismaArea->setTextSize(16);
     CharismaArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(CharismaArea);
@@ -720,16 +836,16 @@ void Engine::character_creator_screen() {
         atributes[FITNESS] = FitnessButton->getValue();
         atributes[AGILITY] = AgilityButton->getValue();
         atributes[ENDURANCE] = EnduranceButton->getValue();
-        atributes[THINKING] = ThinkingButton->getValue();
+        atributes[LOGIC] = ThinkingButton->getValue();
         atributes[FIRST_AID] = FirstAidButton->getValue();
-        atributes[CHARISMA] = CharismaButton->getValue();
+        atributes[COMMUNICATION] = CharismaButton->getValue();
 
         FitnessArea->setText("ATLETISMO: " + std::to_string(atributes[FITNESS]));
         AgilityArea->setText("AGILIDADE: " + std::to_string(atributes[AGILITY]));
         EnduranceArea->setText("RESISTÊNCIA: " + std::to_string(atributes[ENDURANCE]));
-        ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[THINKING]));
+        ThinkingArea->setText("LÓGICA: " + std::to_string(atributes[LOGIC]));
         FirstAidArea->setText("PRIMEIROS SOCORROS: " + std::to_string(atributes[FIRST_AID]));
-        CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[CHARISMA]));
+        CharismaArea->setText("COMUNICAÇÃO: " + std::to_string(atributes[COMMUNICATION]));
 
         points = 36;
         for (int i = 0; i < SKILL_NUM; i++){
@@ -747,9 +863,64 @@ void Engine::character_creator_screen() {
 
 }
 
+//Tela para mostrar os resultados do jogo
+void Engine::result_screen(Player *player){
+    
+    tgui::Theme theme{"./Black.txt"};
+    bool stay=true;
+
+    //Titulo
+    auto title = tgui::TextArea::create();
+    title->setRenderer(theme.getRenderer("TextArea"));
+    title->setPosition(310, 20);
+    title->setMaximumCharacters(0);
+    title->setSize(180, 40);
+    title->setText("RESULTADOS");
+    title->setTextSize(23);
+    title->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(title);
+
+    //Botao de proximo
+    auto NextButton = tgui::Button::create();
+    NextButton->setPosition(630, 540);
+    NextButton->setSize(170, 60);
+    NextButton->setText("PRÓXIMO");
+    NextButton->setTextSize(20);
+    NextButton->onClick([&]{
+        stay = false;
+    });
+    gui.add(NextButton);
+
+    //Tabela de informações dos resultados
+    auto info = tgui::TextArea::create();
+    info->setRenderer(theme.getRenderer("TextArea"));
+    info->setPosition(200, 170);
+    info->setMaximumCharacters(0);
+    info->setSize(400, 200);
+    info->setText(player->resultsText);
+    info->setTextSize(16);
+    info->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Automatic);
+    gui.add(info);
+
+    while(stay) {
+        sf::Event pass_screen;
+        while(window.pollEvent(pass_screen)) {
+            gui.handleEvent(pass_screen);
+            if(pass_screen.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+    gui.removeAllWidgets();
+}
+
 void Engine::results() {
     while (!turn_actions.empty()) {
         turn_actions.front()->execute();
+        turn_actions.front()->updateResultsText();
         delete turn_actions.front();
         turn_actions.pop();
     }

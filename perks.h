@@ -6,17 +6,21 @@
 
 //Classe destinada ao gerenciamento das perks
 class Perk{
-    private:
-        tgui::String nome;
-        tgui::String descricao;
+    protected:
+        Actor *actor;
+        tgui::String name;
+        tgui::String description;
         int id;
-    public::
-        tgui::String get_nome();
-        tgui::String get_descricao();
+    public:
+        Perk(Actor *actor);
+        tgui::String getName();
+        tgui::String getDescription();
         int get_id();
-        Perk(tgui::String nome, tgui::String descricao, int id);
-        virtual void onAdd();
+        virtual void onAdd() = 0;
+};
 
-
+class ToughPerk : public Perk{
+    ToughPerk(Actor *actor);
+    virtual void onAdd() override;
 };
 #endif

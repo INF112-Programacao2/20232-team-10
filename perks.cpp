@@ -7,19 +7,25 @@
 
 //Construtor
 
-Perk::Perk(tgui::String nome, tgui::String descricao, int id):
-nome(nome),descricao(descricao),id(id);
+Perk::Perk(Actor *actor):
+    actor(actor), name("PERK_BASE"), description("NÃO DEVERIA APARECER"),id(-1){};
 
 //Funções getter's
-tgui::String Perk:: get_nome(){
-    return  this->nome;
+tgui::String Perk::getName(){
+    return this->name;
 }
- tgui::String  Perk::get_descricao(){
-    return this->descricao;
- }
+tgui::String Perk::getDescription(){
+    return this->description;
+}
 int Perk:: get_id(){
     return this->id;
 }
-void Perk:: onAdd(){
-    //A atualizar
- }
+
+ToughPerk::ToughPerk(Actor *actor) : Perk(actor){
+    name = "Resistente";
+    description = "Seja mais resistente a dano";
+};
+
+void ToughPerk::onAdd(){
+    actor->study(10); // Placeholder
+}

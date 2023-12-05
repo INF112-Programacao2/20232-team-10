@@ -1,33 +1,62 @@
 #include "actions.h"
+#include "dice.h"
+#include "fight.h"
 
 //Construtores para as classes de acoes
 
 std::vector<Action*> Action::game_actions;
 
 Action::Action(Actor *actor): actor(actor){
-    this->id = 0;
+    this->id = -2;
     this->targeted = false;
+    this->description = "Action";
+}
+
+Actor* Action::getActor(){
+    return actor;
+}
+
+tgui::String Action::getResultsText(){
+    return resultsText;
+}
+
+void Action::updateResultsText(){
+    this->actor->resultsText += resultsText + "\n";
 }
 
 TargetedAction::TargetedAction(Actor *actor, Actor *target): Action(actor), target(target){
-    this->id = 1;
+    this->id = -1;
     this->targeted = true;
+    this->description = "Targeted Action";
+}
+
+Actor* TargetedAction::getTarget(){
+    return target;
+}
+
+void TargetedAction::updateResultsText(){
+    this->actor->resultsText += resultsText + "\n";
+    this->target->resultsText += resultsText + "\n";
 }
 
 WorkOnProjectAction::WorkOnProjectAction(Actor *actor): Action(actor){
-    this->id = 2;
+    this->id = 0;
+    this->description = "Trabalhar no projeto";
 }
 
-DamageAction::DamageAction(Actor *actor, Actor *target): TargetedAction(actor, target){
-    this->id = 3;
+StartFightAction::StartFightAction(Actor *actor, Actor *target): TargetedAction(actor, target){
+    this->id = 1;
+    this->description = "Atacar alvo";
 }
 
 StudyAction::StudyAction(Actor *actor): Action(actor){
-    this->id = 4;
+    this->id = 2;
+    this->description = "Estudar";
 }
 
 HealAction::HealAction(Actor *actor, Actor *target) : TargetedAction(actor, target) {
-    this->id = 5;
+    this->id = 3;
+    this->description = "Curar alvo";
 }
 
 bool Action::possible(){
@@ -43,47 +72,36 @@ bool Action::isTargeted(){
 }
 
 tgui::String Action::getDescription(){
-    return "Action";
+    return description;
 }
-
-tgui::String TargetedAction::getDescription(){
-    return "Targeted Action";
-}
-
-tgui::String WorkOnProjectAction::getDescription(){
-    return "Trabalhar no projeto";
-}
-
-tgui::String StudyAction::getDescription(){
-    return "Estudar";
-}
-
-tgui::String DamageAction::getDescription(){
-    return "Atacar alvo";
-}
-
-tgui::String HealAction::getDescription(){
-    return "Curar alvo";
-}
-
-
 
 //Funcoes de execucao para as respectivas acoes
-void DamageAction::execute() {              
-    int damagequant = actor->getSkill(FITNESS) - target->getSkill(ENDURANCE);                                         //Quantidade de dano = pontos de STR do actor - pontos de CON do alvo
-    target->damage(damagequant);                                                                                //Chama a funcao de causar dano da classe Actor
+void StartFightAction::execute() {              
+    Fight fight;
+    fight.addFighter(actor, 1);
+    fight.addFighter(target, 0);
+    fight.simulateFight();
+    this->resultsText = this->resultsText = fight.getLog();
 }
 
 void WorkOnProjectAction::execute() {
-    actor->workOnProject(actor->getSkill(THINKING));                       //Chama a funcao de trabalhor no projeto da classe Actor, com os pontos de INT do jogador como parametro
+    int work = actor->skillRoll(LOGIC, 30);
+    actor->workOnProject(work);                       //Chama a funcao de trabalhor no projeto da classe Actor, com os pontos de INT do jogador como parametro
 }
 
 void StudyAction::execute() {
-    actor->study(actor->getSkill(CHARISMA));                           //Chama a funcao de estudar da classe Actor, com os pontos de WIS do jogador como parametro
+    int study = actor->skillRoll(COMMUNICATION, 30);
+    actor->study(study);                           //Chama a funcao de estudar da classe Actor, com os pontos de WIS do jogador como parametro
 }
 
 void HealAction::execute() {
-    target->heal(actor->getSkill(FIRST_AID));                                           //Chama a funcao de curar da classe Actor, com os pontos de WIS do jogador como parametro
+    if (actor->skillCheck(FIRST_AID, 60)){
+        target->heal();                                           //Chama a funcao de curar da classe Actor, com os pontos de WIS do jogador como parametro
+        resultsText = actor->getName() + " curou alguns ferimentos de " + target->getName();
+    }
+    else{
+        resultsText = actor->getName() + " não conseguiu curar os ferimentos de " + target->getName();
+    }
 }
 
 void Action::instantiate_actions(){
@@ -94,20 +112,16 @@ void Action::instantiate_actions(){
 
 Action* Action::ActionByID(int id, Actor *actor, Actor *target){
     if(id == 0){
-        WorkOnProjectAction* work_on_project_action = new WorkOnProjectAction(actor);
-        return work_on_project_action;
+        return new WorkOnProjectAction(actor);
     }
     if(id == 1){
-        DamageAction* damage_action = new DamageAction(actor, target);
-        return damage_action;
+        return new StartFightAction(actor, target);
     }
     if(id == 2){
-        StudyAction* study_action = new StudyAction(actor);
-        return study_action;
+        return new StudyAction(actor);
     }
     if(id == 3){
-        HealAction* heal_action = new HealAction(actor, target);
-        return heal_action;
+        return new HealAction(actor, target);
     }
     return nullptr;
 }

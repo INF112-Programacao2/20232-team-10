@@ -1,4 +1,5 @@
 #include "actor.h"
+#include "dice.h"
 
 Actor::Actor(tgui::String name){                 //Construtor
     this->name = name;
@@ -7,6 +8,7 @@ Actor::Actor(tgui::String name){                 //Construtor
         this->skill[i] = 0;
     }
     this->injuries = 0;     //Zera a quantidade de dano
+    this->killer = false;
 }
 
 Actor::Actor(tgui::String name, int atributes[6]) {
@@ -29,16 +31,34 @@ void Actor::damage(int x) {             //Funcao para sofrer dano
     }
 }
 
-tgui::String Actor::getName(){
-    return this->name;
+tgui::String Actor::getName(bool use_alias){
+    if (use_alias && costumed){
+        return this->costume;
+    }
+    else{
+        return this->name;
+    }
 }
 
 void Actor::die() {         //Funcao para morte do jogador
     this->alive = false;    //Booleano de estado de vida vira falso
 }
 
-int Actor::getSkill(unsigned int s){
-    return this->skill[s];
+int Actor::getSkill(int skill_name){
+    return this->skill[skill_name];
+}
+
+bool Actor::skillCheck(int skill_name, int challenge){
+    return skillRoll(skill_name, 100) > challenge;
+}
+
+int Actor::skillRoll(int skill_name, int range){
+    if (skill[skill_name]-2 > 0){
+        return Dice::dice(range, skill[skill_name]-2, '>');
+    }
+    else{
+        return Dice::dice(range, (skill[skill_name]-3)*-1, '<');
+    }
 }
 
 int Actor::getDamageLevel(){
@@ -64,4 +84,8 @@ tgui::String Actor::getHealth(){
     else{
         return "Você tem ferimentos moderados";
     }
+}
+
+bool Actor::isKiller(){
+    return killer;
 }
