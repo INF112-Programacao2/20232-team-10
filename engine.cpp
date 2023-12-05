@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "dice.h"
 
 int triang(int n){
     return (n*n + n) / 2;
@@ -8,6 +9,7 @@ void Engine::game(){
     for (int t = 0; t < 3; t++){
         for (int i = 0; i < players.size(); i++){
             players[i]->resultsText = "";
+            //role_screen(players[i]);
             pass_screen(players[i]);
             playerTurn2(players[i]);
         }
@@ -19,72 +21,73 @@ void Engine::game(){
     }
 }
 
-void Engine::role_screen() {
+bool Engine::roleSelector(Player *player) {
+
+    int chosen = Dice::single_die(players.size()-1);
+
+    for(int i=0; i<players.size(); i++) {
+        if(player->get_id() == chosen) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Engine::role_screen(Player *player) {
     
     tgui::Theme theme{"./Black.txt"};
     bool stay = true;
+    bool chosen = roleSelector(player);
+    tgui::String assassinText = "Você é o assassino!";
+    tgui::String assassinDescription = "Seu objetivo é matar furtivamente todos os estudantes de computação! Complete seu objetivo antes do final da última semana do período sem ser pego.";
+    tgui::String studentText = "Você é um estudante!";
+    tgui::String studentDescripion = "Seu objetivo é sobreviver à última semana do período! Estude para suas provas finais e conclua o trabalho final de Programação II, mas fique de olho no assassino que está solto!";
+   // tgui::String assassinScreen = "./AssassinScreen.png";
+   // tgui::String studentScreen = "./StudentScreen.png";
 
-    //Configura a imagem do fundo do menu do assassino
-    auto roleScreenAssassin = tgui::Picture::create("./AssassinScreen.png");
-    roleScreenAssassin->setSize(650,530);
-    roleScreenAssassin->setPosition(70,10);
-    gui.add(roleScreenAssassin);
-    bool stay = true;
+   /* //Configura a imagem do fundo do menu da carga
+    auto roleScreenBackground = tgui::Picture::create("");
+    if(chosen) {
+        auto roleScreenBackground = tgui::Picture::create(assassinScreen);
+    }
+    else {
+        auto roleScreenBackground = tgui::Picture::create(studentScreen);
+    }
+    roleScreenBackground->setSize(650,530);
+    roleScreenBackground->setPosition(70,10);
+    gui.add(roleScreenBackground);*/
 
-    //Configura a imagem do fundo do menu do estudante
-    auto roleScreenStudent = tgui::Picture::create("./StudentScreen.png");
-    roleScreenStudent->setSize(650,530);
-    roleScreenStudent->setPosition(70,10);
-    gui.add(roleScreenStudent);
-    bool stay = true;
-
-    //Mensagem para assassino
+    //Mensagem da carga
     auto roleText = tgui::TextArea::create();
     roleText->setRenderer(theme.getRenderer("TextArea"));
     roleText->setMaximumCharacters(0);
-    roleText->setPosition(230,20);
-    roleText->setSize(154, 60);
-    roleText->setText("Você é o assassino!");
-    roleText->setTextSize(40);
+    roleText->setPosition(310,20);
+    roleText->setSize(180, 40);
+    roleText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    roleText->setTextSize(20);
     roleText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     roleText->setReadOnly(true);
     gui.add(roleText);
 
-    //Descricao para assassino
+    //Descricao da carga
     auto roleDescription = tgui::TextArea::create();
     roleDescription->setRenderer(theme.getRenderer("TextArea"));
     roleDescription->setMaximumCharacters(0);
-    roleDescription->setPosition(430,20);
-    roleDescription->setSize(75, 30);
-    roleDescription->setText("Seu objetivo é matar furtivamente todos os estudantes de computação! Complete seu objetivo antes do final da última semana do período sem ser pego.");
-    roleDescription->setTextSize(20);
+    roleDescription->setPosition(400,20);
+    roleDescription->setSize(200, 80);
+    roleDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    if(chosen) {
+        roleText->setText(assassinText);
+        roleDescription->setText(assassinDescription);
+    }
+    else {
+        roleText->setText(studentText);
+        roleDescription->setText(studentDescripion);
+    }
+    roleDescription->setTextSize(10);
     roleDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     roleDescription->setReadOnly(true);
     gui.add(roleDescription);
-
-    //Mensagem para estudante
-    auto studentText = tgui::TextArea::create();
-    studentText->setRenderer(theme.getRenderer("TextArea"));
-    studentText->setMaximumCharacters(0);
-    studentText->setPosition(230,20);
-    studentText->setSize(154, 60);
-    studentText->setText("Você é um estudante!");
-    studentText->setTextSize(40);
-    studentText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    studentText->setReadOnly(true);
-    gui.add(studentText);
-
-    //Descricao para estudante
-    auto studentDescription = tgui::TextArea::create();
-    studentDescription->setRenderer(theme.getRenderer("TextArea"));
-    studentDescription->setMaximumCharacters(0);
-    studentDescription->setPosition(430,20);
-    studentDescription->setSize(75, 30);
-    studentDescription->setText("Seu objetivo é sobreviver à última semana do período! Estude para suas provas finais e conclua o trabalho final de Programação II, mas fique de olho no assassino que está solto!");
-    studentDescription->setTextSize(20);
-    studentDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    studentDescription->setReadOnly(true);
-    gui.add(studentDescription);
 
     //Botao de proximo
     auto nextButton = tgui::Button::create();

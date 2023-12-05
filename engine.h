@@ -33,7 +33,8 @@ class Engine {
         void createPlayer(tgui::String name, int atributes[6]);
         void characterCreator();
         void result_screen(Player *player);
-        void role_screen();
+        void role_screen(Player *player);
+        bool roleSelector(Player *player);
 
 };
 
