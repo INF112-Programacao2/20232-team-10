@@ -90,3 +90,11 @@ tgui::String Actor::getHealth(){
 bool Actor::isKiller(){
     return killer;
 }
+
+void Actor::travelTo(Place* destination){
+    current_place = destination;
+}
+
+Place* Actor::getPlace(){
+    return current_place;
+}

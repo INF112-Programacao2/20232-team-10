@@ -7,10 +7,16 @@ int triang(int n){
 
 void Engine::game(){
     Action::instantiateActions();
-    for (int t = 0; t < 3; t++){
+    for (int i = 0; i < players.size(); i++){
+        role_screen(players[i]);
+    }
+    for (int t = 0; t < 6; t++){
+        for (int i = 0; i < players.size(); i++){
+            pass_screen(players[i]);
+            playerTurn1(players[i]);
+        }
         for (int i = 0; i < players.size(); i++){
             players[i]->resultsText = "";
-            //role_screen(players[i]);
             pass_screen(players[i]);
             playerTurn2(players[i]);
         }
@@ -19,6 +25,9 @@ void Engine::game(){
             pass_screen(players[i]);
             result_screen(players[i]);
         }
+    }
+    for (int i = 0; i < PLACE_NUM; i++){
+        delete places[i];
     }
 }
 
@@ -211,7 +220,7 @@ void Engine::playerTurn1(Player *player) {
 
     sf::Clock clock;
 
-    int time = 60;
+    int time = 40;
 
     tgui::Theme theme{"./Black.txt"};
 
@@ -345,33 +354,6 @@ void Engine::playerTurn1(Player *player) {
     });
     gui.add(playersButton);
 
-    //ComboBox2
-    auto comboBox2 = tgui::ComboBox::create();
-    comboBox2->setRenderer(theme.getRenderer("ComboBox"));
-    comboBox2->setChangeItemOnScroll(false);
-    comboBox2->setItemsToDisplay(0);
-    comboBox2->setMaximumItems(0);
-    comboBox2->setPosition(320, 500);
-    comboBox2->setSize(250, 30);
-    comboBox2->setTextSize(13);
-    for (int i = 0; i < players.size(); i++){
-        if (i != player->get_id()){
-            comboBox2->addItem(players[i]->getName(), std::to_string(i));
-        }
-    }
-    gui.add(comboBox2);
-
-    //TextArea2
-    auto TextArea2 = tgui::TextArea::create();
-    TextArea2->setRenderer(theme.getRenderer("TextArea"));
-    TextArea2->setPosition(230, 500);
-    TextArea2->setMaximumCharacters(0);
-    TextArea2->setSize(90, 30);
-    TextArea2->setText("ALVO: ");
-    TextArea2->setTextSize(18);
-    TextArea2->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    gui.add(TextArea2);
-
     //Geracao do window para o Game Menu
     while (true){
         sf::Event event;
@@ -386,8 +368,6 @@ void Engine::playerTurn1(Player *player) {
             time--;
             tempo->setValue(time);
         }
-        TextArea2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
-        comboBox2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
 
         window.clear();
         gui.draw();
@@ -397,15 +377,13 @@ void Engine::playerTurn1(Player *player) {
         }
     }
 
-    int action_num = comboBox1->getSelectedItemId().toInt();
+    Place* destination = places[comboBox1->getSelectedItemId().toInt()];
 
-    Action* action = Action::ActionByID(action_num, player, players[comboBox2->getSelectedItemId().toInt()]);
-
-    if (!action){
-        action = new StudyAction(player);
+    if (!destination){
+        // Vou colocar uma coisa aqui depois (Casa)
     }
 
-    this->turn_actions.push(action);
+    player->travelTo(destination);
 
     gui.removeAllWidgets();
     
@@ -420,6 +398,10 @@ void Engine::playerTurn2(Player *player) {
     int time = 60;
 
     tgui::Theme theme{"./Black.txt"};
+
+    auto picture = tgui::Picture::create(player->getPlace()->getPicture());
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
 
     //Area de dados do jogador
     auto statsArea = tgui::TextArea::create();
@@ -915,10 +897,10 @@ void Engine::createPlayer(tgui::String name, int atributes[6]){
 }
 
 void Engine::instantiatePlaces(){
-    places.push_back(&Place("CCE", "./fundi1ufv.jpg"));
-    places.push_back(&Place("DCE", "./fundi1ufv.jpg"));
-    places.push_back(&Place("PVA", "./fundi1ufv.jpg"));
-    places.push_back(&Place("PVB", "./fundi1ufv.jpg"));
-    places.push_back(&Place("Rita", "./fundi1ufv.jpg"));
-    places.push_back(&Place("RU", "./fundi1ufv.jpg"));
+    places[0] = new Place("CCE", "./fundi1ufv.jpg");
+    places[1] = new Place("DCE", "./fundi1ufv.jpg");
+    places[2] = new Place("PVA", "./fundi1ufv.jpg");
+    places[3] = new Place("PVB", "./fundi1ufv.jpg");
+    places[4] = new Place("Rita", "./fundi1ufv.jpg");
+    places[5] = new Place("RU", "./fundi1ufv.jpg");
 }

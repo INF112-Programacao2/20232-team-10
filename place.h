@@ -1,13 +1,13 @@
 #ifndef PLACE_H
 #define PLACE_H
+
 #include <string>
 #include <vector>
 #include <map>
-#include "actor.h"
-#include "player.h"
-#include "actions.h"
+#include "TGUI\TGUI.hpp"
 
 //Locais onde o usuário pode visitar;
+
 class Place {
     private:
         tgui::String name;
@@ -21,4 +21,5 @@ class Place {
         tgui::String getPicture();
         Place(tgui::String name, tgui::String picture);         //Construtor
 };
+
 #endif

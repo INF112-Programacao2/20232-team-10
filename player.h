@@ -8,7 +8,6 @@ class Player : public Actor {               //Classe para jogadores (ou seja, qu
         int id;                             //Numero para identificar o jogador
         unsigned int project_bar;           //Barra de progresso para o projeto
         unsigned int study_bar;             //Barra de progresso para estudo
-        // Place *current_place;
 
     public:
         static unsigned int player_count;   //Quantidade de jogadores

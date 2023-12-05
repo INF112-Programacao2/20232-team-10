@@ -2,7 +2,6 @@
 #define V_ACTIONS
 
 #include <vector>
-#include "actor.h"
 #include "player.h"
 
 const int ACTION_NUM = 4;

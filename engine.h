@@ -13,11 +13,13 @@
 
 int triang(int n);
 
+const int PLACE_NUM = 6;
+
 class Engine {
     private:
         std::vector<Player*> players;
         std::queue<Action*> turn_actions;
-        std::vector<Place*> places;
+        Place* places[PLACE_NUM];
         unsigned int time = 0;
 
     public:
@@ -26,7 +28,7 @@ class Engine {
         void game();                                    // A FUNÇÃO!!!!!
         void playerTurn1(Player *player);
         void playerTurn2(Player *player);
-        void playerTurn3(Player *player);
+        //void playerTurn3(Player *player);
         void pass_screen(Player *player);
         void character_creator_screen();
         void main_menu();

@@ -2,6 +2,7 @@
 #define V_ACTOR
 
 #include <TGUI/TGUI.hpp>
+#include "place.h"
 
 const unsigned int SKILL_NUM = 6;   // Número de skills no jogo
 
@@ -33,6 +34,7 @@ class Actor {                               //Classe geral para todos os atores 
         bool costumed;
         tgui::String costume;
         bool killer = false;
+        Place* current_place;
 
     public:
         Actor(tgui::String name);                    //Construtor
@@ -41,6 +43,7 @@ class Actor {                               //Classe geral para todos os atores 
         void damage(int x=1);                         //Funcao para causar dano
         void die();                                 //Funcao para morte
         tgui::String getName(bool use_alias=true);  // Se verdadeiro, retorna o nome da fantasia usada
+        Place* getPlace();
         int getSkill(int skill_name);
         int getDamageLevel();
         bool isKiller();
@@ -50,7 +53,7 @@ class Actor {                               //Classe geral para todos os atores 
         virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
         virtual void study(int x) = 0;              //Funcao para estudar
         tgui::String resultsText;
-        //virtual void travelTo(Place *destination);
+        virtual void travelTo(Place *destination);
 };
 
 #endif
