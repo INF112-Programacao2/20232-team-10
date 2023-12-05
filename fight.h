@@ -3,6 +3,8 @@
 
 #include "player.h"
 
+const int FIGHT_ACTION_NUM = 2;
+
 class FightAction{
     protected:
         Actor *actor;
@@ -47,7 +49,6 @@ class Fight{
     protected:
         tgui::String fight_log;
         std::vector<Actor*> fighters;
-        std::vector<FightAction*> local_actions;
         std::queue<FightAction*> fight_actions;
         std::map <Actor*,int> alignments;
     public:

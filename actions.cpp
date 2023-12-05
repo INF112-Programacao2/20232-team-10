@@ -81,7 +81,7 @@ void StartFightAction::execute() {
     fight.addFighter(actor, 1);
     fight.addFighter(target, 0);
     fight.simulateFight();
-    this->resultsText = this->resultsText = fight.getLog();
+    this->resultsText = fight.getLog();
 }
 
 void WorkOnProjectAction::execute() {

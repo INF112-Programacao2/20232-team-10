@@ -18,6 +18,7 @@ Actor::Actor(tgui::String name, int atributes[6]) {
         this->skill[i] = atributes[i];
     }
     this->injuries = 0;     //Zera a quantidade de dano
+    this->killer = false;
 };
 
 void Actor::heal(int x) {               //Funcao para curar

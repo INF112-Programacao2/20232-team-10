@@ -105,17 +105,26 @@ Actor* Fight::getTarget(Actor *actor){
 
 void Fight::getAction(Actor *actor){
     int total_weight = 0;
-    for (int i = 0; i < local_actions.size(); i++){
-        if (local_actions[i]->possible()){
-            total_weight += local_actions[i]->getWeight();
+    int possible = 0;
+    FightAction* fight_action;
+    Actor* target = getTarget(actor);
+    for (int i = 0; i < FIGHT_ACTION_NUM; i++){
+        fight_action = FightAction::FightActionByID(i, actor, target);
+        if (fight_action->possible()){
+            total_weight += fight_action->getWeight();
+            possible++;
         }
+        delete fight_action;
     }
     int chosen = Dice::single_die(total_weight);
-    for (int i = 0; i < local_actions.size(); i++){
-        chosen -= local_actions[i]->getWeight();
+    for (int i = 0; i < possible; i++){
+        fight_action = FightAction::FightActionByID(i, actor, target);
+        chosen -= fight_action->getWeight();
         if (chosen <= 0){
             fight_actions.push(FightAction::FightActionByID(i, actor, getTarget(actor)));
+            break;
         }
+        delete fight_action;
     }
 }
 
