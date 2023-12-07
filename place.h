@@ -14,11 +14,12 @@ class Place {
         tgui::String picture;
         int id;
         static int next_id;
-    public:
-        std::vector<int> placeActions;   //Vector para armazenar os lugares
         std::map<int, int> actionBonus;
+    public:
         tgui::String getName();
         tgui::String getPicture();
+        void setBonus(int key, int value);
+        int getBonus(int key);
         Place(tgui::String name, tgui::String picture);         //Construtor
 };
 

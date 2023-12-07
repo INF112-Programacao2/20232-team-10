@@ -15,3 +15,16 @@ tgui::String Place::getName(){
 tgui::String Place::getPicture(){
     return picture;
 }
+
+void Place::setBonus(int key, int value){
+    actionBonus[key] = value;
+}
+
+int Place::getBonus(int key){
+    if (actionBonus.find(key) == actionBonus.end()){
+        return 0;
+    }
+    else{
+        return actionBonus[key];
+    }
+}

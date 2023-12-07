@@ -6,6 +6,13 @@
 
 const int ACTION_NUM = 4;
 
+enum action_names{
+    ACTION_WORK_ON_PROJECT,
+    ACTION_START_FIGHT,
+    ACTION_STUDY,
+    ACTION_HEAL
+};
+
 class Action {                          //Classe para acoes sem alvo
     protected:
         Actor *actor;                   //Quem vai executar a acao

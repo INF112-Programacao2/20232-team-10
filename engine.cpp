@@ -35,7 +35,7 @@ void Engine::game(){
 }
 
 void Engine::roleSelector() {
-    int chosen = Dice::single_die(players.size()-1);
+    int chosen = Dice::single_die(players.size()) - 1;
     players[chosen]->setKiller();
 }
 
@@ -150,45 +150,42 @@ void Engine::pass_screen(Player *player) {
 }
 
 void Engine::main_menu() {
-    tgui::Theme theme{"../../themes/Black.txt"};
+    tgui::Theme theme{"./Black.txt"};
     
     //Configura a imagem de fundo do menu principal
-    auto picture = tgui::Picture::create("./4pilastrascc.png");
+    auto picture = tgui::Picture::create("./4pilastrascc.jpg");
     picture->setSize({"100%", "100%"});
     gui.add(picture);
-    bool stay = true;
     
     //Botao de novo jogo
     auto newGameButton = tgui::Button::create();
     newGameButton->setRenderer(theme.getRenderer("Button"));
-    newGameButton->setPosition(540, 180);
+    newGameButton->setPosition(50, 30);
     newGameButton->setSize(200, 70);
     newGameButton->setText("NOVO JOGO");
     newGameButton->setTextSize(19);
+    newGameButton->onClick([&]{
+        gui.removeAllWidgets();
+        for (int i = 0; i < 3; i++){
+            character_creator_screen();
+        }
+        game();
+    });
     gui.add(newGameButton);
 
     //Botao de carregar jogo
     auto loadGameButton = tgui::Button::create();
     loadGameButton->setRenderer(theme.getRenderer("Button"));
-    loadGameButton->setPosition(540, 250);
+    loadGameButton->setPosition(300, 30);
     loadGameButton->setSize(200, 70);
     loadGameButton->setText("CARREGAR JOGO");
     loadGameButton->setTextSize(19);
     gui.add(loadGameButton);
 
-    //Botao de criar personagem
-    auto createCharacterButton = tgui::Button::create();
-    createCharacterButton->setRenderer(theme.getRenderer("Button"));
-    createCharacterButton->setPosition(540, 320);
-    createCharacterButton->setSize(200, 70);
-    createCharacterButton->setText("CRIAR PERSONAGEM");
-    createCharacterButton->setTextSize(19);
-    gui.add(createCharacterButton);
-
     //Botao de sair
     auto exitButton = tgui::Button::create();
     exitButton->setRenderer(theme.getRenderer("Button"));
-    exitButton->setPosition(540, 390);
+    exitButton->setPosition(550, 30);
     exitButton->setSize(200, 70);
     exitButton->setText("SAIR");
     exitButton->setTextSize(19);
@@ -270,9 +267,9 @@ void Engine::playerTurn1(Player *player) {
     //Texto do lado da combobox1 
     auto comboText1 = tgui::TextArea::create();
     comboText1->setRenderer(theme.getRenderer("TextArea"));
-    comboText1->setPosition(230, 430);
+    comboText1->setPosition(210, 430);
     comboText1->setMaximumCharacters(0);
-    comboText1->setSize(90, 35);
+    comboText1->setSize(130, 35);
     comboText1->setText("DESTINO:");
     comboText1->setTextSize(20);
     comboText1->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
@@ -283,7 +280,7 @@ void Engine::playerTurn1(Player *player) {
     comboBox1->setChangeItemOnScroll(true);
     comboBox1->setItemsToDisplay(0);
     comboBox1->setMaximumItems(0);
-    comboBox1->setPosition(320, 430);
+    comboBox1->setPosition(340, 430);
     comboBox1->setSize(250, 35);
     comboBox1->setTextSize(15);
     for (int i = 0; i < PLACE_NUM; i++){
@@ -390,6 +387,8 @@ void Engine::playerTurn2(Player *player) {
 
     int time = 60;
 
+    bool valid_target = false;
+
     tgui::Theme theme{"./Black.txt"};
 
     auto picture = tgui::Picture::create(player->getPlace()->getPicture());
@@ -456,6 +455,23 @@ void Engine::playerTurn2(Player *player) {
     comboText1->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(comboText1);
 
+    //ComboBox2
+    auto comboBox2 = tgui::ComboBox::create();
+    comboBox2->setRenderer(theme.getRenderer("ComboBox"));
+    comboBox2->setChangeItemOnScroll(false);
+    comboBox2->setItemsToDisplay(0);
+    comboBox2->setMaximumItems(0);
+    comboBox2->setPosition(320, 500);
+    comboBox2->setSize(250, 30);
+    comboBox2->setTextSize(13);
+    for (int i = 0; i < players.size(); i++){
+        if (i != player->get_id() && player->getPlace() == players[i]->getPlace()){
+            comboBox2->addItem(players[i]->getName(), std::to_string(i));
+            valid_target = true;
+        }
+    }
+    gui.add(comboBox2);
+
     //ComboBox1
     auto comboBox1 = tgui::ComboBox::create();
     comboBox1->setChangeItemOnScroll(true);
@@ -465,7 +481,9 @@ void Engine::playerTurn2(Player *player) {
     comboBox1->setSize(250, 35);
     comboBox1->setTextSize(15);
     for (int i = 0; i < Action::game_actions.size(); i++){
-        comboBox1->addItem(Action::game_actions[i]->getDescription(), std::to_string(i));
+        if (valid_target || !Action::game_actions[i]->isTargeted()){
+            comboBox1->addItem(Action::game_actions[i]->getDescription(), std::to_string(i));
+        }
     }
     gui.add(comboBox1);
 
@@ -521,26 +539,10 @@ void Engine::playerTurn2(Player *player) {
             if (players[i] == player){
                 continue;
             }
-            TextArea1->addText(players[i]->getName(false) + '\n');
+            TextArea1->addText(players[i]->getName(false) + " (" + players[i]->getPlace()->getName() + ")\n");
         }
     });
     gui.add(playersButton);
-
-    //ComboBox2
-    auto comboBox2 = tgui::ComboBox::create();
-    comboBox2->setRenderer(theme.getRenderer("ComboBox"));
-    comboBox2->setChangeItemOnScroll(false);
-    comboBox2->setItemsToDisplay(0);
-    comboBox2->setMaximumItems(0);
-    comboBox2->setPosition(320, 500);
-    comboBox2->setSize(250, 30);
-    comboBox2->setTextSize(13);
-    for (int i = 0; i < players.size(); i++){
-        if (i != player->get_id()){
-            comboBox2->addItem(players[i]->getName(), std::to_string(i));
-        }
-    }
-    gui.add(comboBox2);
 
     //TextArea2
     auto TextArea2 = tgui::TextArea::create();
@@ -567,8 +569,8 @@ void Engine::playerTurn2(Player *player) {
             time--;
             timeBar->setValue(time);
         }
-        TextArea2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
-        comboBox2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
+        TextArea2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted() && valid_target);
+        comboBox2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted() && valid_target);
 
         window.clear();
         gui.draw();
@@ -840,6 +842,7 @@ void Engine::result_screen(Player *player){
 
     //Botao de proximo
     auto NextButton = tgui::Button::create();
+    NextButton->setRenderer(theme.getRenderer("Button"));
     NextButton->setPosition(630, 540);
     NextButton->setSize(170, 60);
     NextButton->setText("PRÓXIMO");
@@ -890,9 +893,22 @@ void Engine::createPlayer(tgui::String name, int atributes[6]){
 
 void Engine::instantiatePlaces(){
     places.push_back(new Place("CCE", "./cce.jpg"));
+    places[0]->setBonus(ACTION_WORK_ON_PROJECT, 20);
+    places[0]->setBonus(ACTION_STUDY, 15);
     places.push_back(new Place("DCE", "./dce.jpg"));
+    places[1]->setBonus(ACTION_WORK_ON_PROJECT, -10);
+    places[1]->setBonus(ACTION_STUDY, -10);
     places.push_back(new Place("PVA", "./pva.jpg"));
+    places[2]->setBonus(ACTION_STUDY, 10);
     places.push_back(new Place("PVB", "./pvb.jpeg"));
+    places[3]->setBonus(ACTION_STUDY, 10);
     places.push_back(new Place("Rita", "./rita.jpeg"));
-    places.push_back(new Place("RU", "./RU.jpeg"));
+    places[4]->setBonus(ACTION_WORK_ON_PROJECT, -20);
+    places[4]->setBonus(ACTION_STUDY, -20);
+    places.push_back(new Place("RU", "./RU.jpg"));
+    places[5]->setBonus(ACTION_WORK_ON_PROJECT, -20);
+    places[5]->setBonus(ACTION_STUDY, -15);
+    places.push_back(new Place("BBT", "./fundo1ufv.jpg"));
+    places[6]->setBonus(ACTION_WORK_ON_PROJECT, 15);
+    places[6]->setBonus(ACTION_STUDY, 25);
 }

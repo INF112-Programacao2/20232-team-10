@@ -8,7 +8,6 @@ Actor::Actor(tgui::String name){                 //Construtor
         this->skill[i] = 3;
     }
     this->injuries = 0;     //Zera a quantidade de dano
-    this->killer = false;
 }
 
 Actor::Actor(tgui::String name, int atributes[6]) {
@@ -101,4 +100,12 @@ Place* Actor::getPlace(){
 
 void Actor::setKiller(){
     this->killer = true;
+}
+
+void Actor::setCostumed(bool wear){
+    this->costumed = wear;
+}
+
+bool Actor::isCostumed(){
+    return costumed;
 }

@@ -31,8 +31,8 @@ class Actor {                               //Classe geral para todos os atores 
         int vitality;                       //Quantidade de dano que o ator aguenta
         unsigned int skill[6];              //Array para os valores das skills, em ordem
         bool alive;                         //Bool para estado de vida
-        bool costumed;
-        tgui::String costume;
+        bool costumed = false;
+        tgui::String costume = "Ghostface";
         bool killer = false;
         Place* current_place;
 
@@ -50,6 +50,8 @@ class Actor {                               //Classe geral para todos os atores 
         bool skillCheck(int skill, int challenge);
         int skillRoll(int skill, int range=100);
         void setKiller();
+        bool isCostumed();
+        void setCostumed(bool wear);
         tgui::String getHealth();
         virtual void workOnProject(int x) = 0;      //Funcao para trabalhar no projeto
         virtual void study(int x) = 0;              //Funcao para estudar
