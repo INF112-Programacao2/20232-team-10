@@ -5,6 +5,7 @@
 #include <queue>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "actions.h"
 #include "actor.h"

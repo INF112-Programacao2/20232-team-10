@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "dice.h"
+#include <SFML/Audio.hpp>
 
 int triang(int n){
     return (n*n + n) / 2;
@@ -150,6 +151,7 @@ void Engine::pass_screen(Player *player) {
 }
 
 void Engine::main_menu() {
+
     tgui::Theme theme{"./Black.txt"};
     
     //Configura a imagem de fundo do menu principal
@@ -192,9 +194,14 @@ void Engine::main_menu() {
     gui.add(exitButton);
 
     //Geracao do window para o Main Menu
+    sf::Music horrorgame;
+    if (!horrorgame.openFromFile("8bit-Syndrome-Horror-audio01-.ogg"))
+        return ; // error
+    
     while (true) {
         sf::Event main_menu;
         while(window.pollEvent(main_menu)) {
+            horrorgame.play();
             gui.handleEvent(main_menu);
             if(main_menu.type == sf::Event::Closed) {
                 window.close();
