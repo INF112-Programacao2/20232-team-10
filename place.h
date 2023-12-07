@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "TGUI\TGUI.hpp"
+#include "TGUI/TGUI.hpp"
 
 //Locais onde o usuário pode visitar;
 
