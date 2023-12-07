@@ -81,8 +81,8 @@ void StartFightAction::execute() {
         actor->setCostumed(true);
     }  
     Fight fight;
-    fight.addFighter(actor, 1);
-    fight.addFighter(target, 0);
+    fight.addFighter(actor, (actor->isKiller() ? ALIGNMENT_KILLER : ALIGNMENT_AGRESSOR));
+    fight.addFighter(target, ALIGNMENT_VICTIM);
     fight.simulateFight();
     this->resultsText = fight.getLog();
     actor->setCostumed(false);

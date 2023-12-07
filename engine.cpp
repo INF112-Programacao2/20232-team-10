@@ -225,7 +225,7 @@ void Engine::playerTurn1(Player *player) {
     statsArea->setTextSize(16);
     statsArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     statsArea->setReadOnly(true);
-    statsArea->setText(player->getName());
+    statsArea->setText(player->getName() + '\n' + "Saúde: " + player->getHealth());
     gui.add(statsArea);
 
     //Barra de progresso para o trabalho
@@ -405,7 +405,7 @@ void Engine::playerTurn2(Player *player) {
     statsArea->setTextSize(16);
     statsArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     statsArea->setReadOnly(true);
-    statsArea->setText(player->getName());
+    statsArea->setText(player->getName() + '\n' + "Saúde: " + player->getHealth());
     gui.add(statsArea);
 
     //Barra de progresso para o trabalho

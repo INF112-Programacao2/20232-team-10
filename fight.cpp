@@ -1,7 +1,7 @@
 #include "fight.h"
 #include "dice.h"
 
-FightAction::FightAction(Actor *actor, Actor *target) : actor(actor), target(target){
+FightAction::FightAction(Fight* fight, Actor *actor, Actor *target) : fight(fight), actor(actor), target(target){
     actionText = "Ação base";
     weight = 0;
     id = -1;
@@ -23,24 +23,66 @@ int FightAction::getWeight(){
     return weight;
 }
 
-FightAction* FightAction::FightActionByID(int id, Actor *actor, Actor *target){
-    if (id == 0){
-        return new FA_Punch(actor, target);
+FightAction* FightAction::FightActionByID(int id, Fight* fight, Actor* actor, Actor* target){
+    if (id == FA_PUNCH){
+        return new FA_Punch(fight, actor, target);
     }
-    if (id == 1){
-        return new FA_KnifeSlash(actor, target);
+    if (id == FA_TOPPLE){
+        return new FA_Topple(fight, actor, target);
+    }/*
+    if (id == FA_DODGE){
+        return new FA_Dodge(fight, actor, target);
+    }
+    if (id == FA_LEGENDARYAGILITY){
+        return new FA_LegendaryAgility(fight, actor, target);
+    }
+    if (id == FA_UNTILTHEEND){
+        return new FA_UntilTheEnd(fight, actor, target);
+    }*/
+    if (id == FA_UNSTOPPABLE){
+        return new FA_Unstoppable(fight, actor, target);
+    }
+    if (id == FA_IMPROVISEDWEAPON){
+        return new FA_ImprovisedWeapon(fight, actor, target);
+    }/*
+    if (id == FA_CHEAPTRICK){
+        return new FA_CheapTrick(fight, actor, target);
+    }
+    if (id == FA_QUICKTHINKING){
+        return new FA_QuickThinking(fight, actor, target);
+    }
+    if (id == FA_PATTERNFOUND){
+        return new FA_PatternFound(fight, actor, target);
+    }
+    if (id == FA_PROCEEDINGASIHAVEFORESEEN){
+        return new FA_ProceedingAsIHaveForeseen(fight, actor, target);
+    }
+    if (id == FA_AIMFORTHEWEAKPOINT){
+        return new FA_AimForTheWeakPoint(fight, actor, target);
+    }
+    if (id == FA_GROUPSDOCTOR){
+        return new FA_GroupsDoctor(fight, actor, target);
+    }*/
+    if (id == FA_SCREAM){
+        return new FA_Scream(fight, actor, target);
+    }/*
+    if (id == FA_INSPIRATION){
+        return new FA_Inspiration(fight, actor, target);
+    }*/
+    if (id == FA_KNIFESLASH){
+        return new FA_KnifeSlash(fight, actor, target);
     }
     return nullptr;
 }
 
-FA_Punch::FA_Punch(Actor *actor, Actor *target) : FightAction(actor, target){
-    weight = 3;
+FA_Punch::FA_Punch(Fight* fight, Actor *actor, Actor *target) : FightAction(fight, actor, target){
+    weight = actor->getSkill(FITNESS);
     id = 0;
 }
 
 void FA_Punch::execute(){
-    if (actor->skillRoll(FITNESS) > target->skillRoll(AGILITY) && !target->skillCheck(ENDURANCE, 20)){
-        target->damage();
+    if (actor->skillRoll(FITNESS) > target->skillRoll(AGILITY)){
+        target->damage(actor->skillRoll(FITNESS)/80 + 1);
         actionText = actor->getName() + " acertou um soco em " + target->getName();
     }
     else{
@@ -48,7 +90,76 @@ void FA_Punch::execute(){
     }
 }
 
-FA_KnifeSlash::FA_KnifeSlash(Actor *actor, Actor *target) : FightAction(actor, target){
+FA_Topple::FA_Topple(Fight* fight, Actor *actor, Actor *target) : FightAction(fight, actor, target){
+    weight = 3;
+    id = 0;
+}
+
+void FA_Topple::execute(){
+    if (actor->skillRoll(FITNESS) > target->skillRoll(AGILITY)+20){
+        target->damage(actor->skillRoll(FITNESS)/40 + 1);
+        actionText = actor->getName() + " derrubou " + target->getName();
+    }
+    else{
+        actionText = target->getName() + " desviou de um empurrão de " + actor->getName();
+    }
+}
+
+bool FA_Topple::possible(){
+    return actor->getSkill(FITNESS) >= 5;
+}
+
+FA_Unstoppable::FA_Unstoppable(Fight* fight, Actor *actor, Actor *target) : FightAction(fight, actor, target){
+    weight = 3;
+    id = 0;
+}
+
+void FA_Unstoppable::execute(){
+    if (actor->skillCheck(ENDURANCE, 60)){
+        actor->heal();
+        actionText = actor->getName() + " juntou toda sua força para ignorar seus ferimentos";
+    }
+    else{
+        actionText = actor->getName() + " soltou um suspiro de cansaço";
+    }
+}
+
+bool FA_Unstoppable::possible(){
+    return actor->getSkill(ENDURANCE) >= 5 && actor->getDamageLevel() > 0;
+}
+
+FA_ImprovisedWeapon::FA_ImprovisedWeapon(Fight* fight, Actor *actor, Actor *target) : FightAction(fight, actor, target){
+    weight = actor->getSkill(LOGIC);
+    id = 0;
+}
+
+void FA_ImprovisedWeapon::execute(){
+    if (actor->skillRoll(FITNESS, 50) + actor->skillRoll(LOGIC, 50) > target->skillRoll(AGILITY)+5){
+        target->damage(actor->skillRoll(LOGIC) / 40);
+        actionText = actor->getName() + " apunhalou " + target->getName() + " com um lápis apontado";
+    }
+    else{
+        actionText = actor->getName() + " ficou 6 segundos procurando um lápis";
+    }
+}
+
+FA_Scream::FA_Scream(Fight* fight, Actor *actor, Actor *target) : FightAction(fight, actor, target){
+    weight = actor->getSkill(COMMUNICATION);
+    id = 0;
+}
+
+void FA_Scream::execute(){
+    if (actor->skillRoll(COMMUNICATION)){
+        fight->addMaxTime(-actor->skillRoll(COMMUNICATION)/25 -1);
+    }
+    actionText = actor->getName() + " gritou por ajuda";
+}
+
+bool FA_Scream::possible(){
+    return fight->get_alignment(actor) == ALIGNMENT_VICTIM;
+}
+
+FA_KnifeSlash::FA_KnifeSlash(Fight* fight, Actor *actor, Actor *target) : FightAction(fight, actor, target){
     weight = 8;
     id = 1;
 }
@@ -70,6 +181,13 @@ bool FA_KnifeSlash::possible(){
 void Fight::addFighter(Actor *fighter, int alignment){
     fighters.push_back(fighter);
     alignments[fighter] = alignment;
+    if (alignment == ALIGNMENT_VICTIM){
+        maxTime -= fighter->skillRoll(COMMUNICATION) / 25;
+    }
+}
+
+void Fight::addMaxTime(int time){
+    maxTime += time;
 }
 
 void Fight::removeFighter(Actor *fighter){
@@ -109,7 +227,7 @@ void Fight::getAction(Actor *actor){
     FightAction* fight_action;
     Actor* target = getTarget(actor);
     for (int i = 0; i < FIGHT_ACTION_NUM; i++){
-        fight_action = FightAction::FightActionByID(i, actor, target);
+        fight_action = FightAction::FightActionByID(i, this, actor, target);
         if (fight_action->possible()){
             total_weight += fight_action->getWeight();
             possible++;
@@ -118,14 +236,20 @@ void Fight::getAction(Actor *actor){
     }
     int chosen = Dice::single_die(total_weight);
     for (int i = 0; i < possible; i++){
-        fight_action = FightAction::FightActionByID(i, actor, target);
-        chosen -= fight_action->getWeight();
-        if (chosen <= 0){
-            fight_actions.push(FightAction::FightActionByID(i, actor, getTarget(actor)));
-            break;
+        fight_action = FightAction::FightActionByID(i, this, actor, target);
+        if (fight_action->possible()){
+            chosen -= fight_action->getWeight();
+            if (chosen <= 0){
+                fight_actions.push(FightAction::FightActionByID(i, this, actor, getTarget(actor)));
+                break;
+            }
         }
         delete fight_action;
     }
+}
+
+int Fight::get_alignment(Actor* fighter){
+    return alignments[fighter];
 }
 
 void Fight::results(){
@@ -138,7 +262,6 @@ void Fight::results(){
 }
 
 void Fight::simulateFight(){
-    int maxTime = 10;
     for (int time = 0; time < maxTime; time++){
         for (int i = 0; i < fighters.size(); i++){
             getAction(fighters[i]);
