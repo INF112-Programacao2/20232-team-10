@@ -5,6 +5,8 @@ int triang(int n){
     return (n*n + n) / 2;
 }
 
+//teste
+
 void Engine::game(){
     Action::instantiateActions();
     instantiatePlaces();
