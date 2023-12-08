@@ -21,14 +21,19 @@ Actor::Actor(tgui::String name, int atributes[6]) {
 };
 
 void Actor::heal(int x) {               //Funcao para curar
-    if (injuries >= 1) injuries--;
+    injuries -= x;
+    if (injuries < 0){
+        injuries = 0;
+    }
 }
 
-void Actor::damage(int x) {             //Funcao para sofrer dano
-    injuries++;
+bool Actor::damage(int x) {             //Funcao para sofrer dano
+    injuries += x;
     if (injuries > skill[ENDURANCE] + 3) {
         die();
+        return true;
     }
+    return false;
 }
 
 tgui::String Actor::getName(bool use_alias){
@@ -59,6 +64,10 @@ int Actor::skillRoll(int skill_name, int range){
     else{
         return Dice::dice(range, (skill[skill_name]-3)*-1, '<');
     }
+}
+
+bool Actor::isAlive(){
+    return alive;
 }
 
 int Actor::getDamageLevel(){

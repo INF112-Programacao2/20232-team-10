@@ -16,6 +16,14 @@ int triang(int n);
 
 const int PLACE_NUM = 6;
 
+enum endings{
+    NO_ENDING,
+    KILL_THE_KILLER_ENDING,
+    KILLER_WIN_ENDING,
+    END_OF_SEMESTER_ENDING,
+    EVERYONE_DEAD_ENDING,
+};
+
 class Engine {
     private:
         std::vector<Player*> players;
@@ -35,11 +43,13 @@ class Engine {
         void main_menu();
         void results();
         void createPlayer(tgui::String name, int atributes[6]);
-        void characterCreator();
+        void deletePlayer(int id);
         void result_screen(Player *player);
         void role_screen(Player *player);
         void roleSelector();
         void instantiatePlaces();
+        bool check_for_ending();
+        void ending_screen(int ending);
 };
 
 #endif

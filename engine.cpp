@@ -1,6 +1,5 @@
 #include "engine.h"
 #include "dice.h"
-#include <SFML/Audio.hpp>
 
 int triang(int n){
     return (n*n + n) / 2;
@@ -28,6 +27,18 @@ void Engine::game(){
         for (int i = 0; i < players.size(); i++){
             pass_screen(players[i]);
             result_screen(players[i]);
+        }
+        for (int i = 0; i < players.size(); i++){
+            if (!players[i]->isAlive()){
+                deletePlayer(players[i]->get_id());
+                i--;
+            }
+        }
+        if (check_for_ending()){
+            break;
+        }
+        if (t == 5){
+            ending_screen(END_OF_SEMESTER_ENDING);
         }
     }
     for (int i = 0; i < PLACE_NUM; i++){
@@ -852,7 +863,7 @@ void Engine::result_screen(Player *player){
     NextButton->setRenderer(theme.getRenderer("Button"));
     NextButton->setPosition(630, 540);
     NextButton->setSize(170, 60);
-    NextButton->setText("PRÓXIMO");
+    NextButton->setText(player->isAlive()? "PRÓXIMO" : "DESCANSE EM PAZ");
     NextButton->setTextSize(20);
     NextButton->onClick([&]{
         stay = false;
@@ -898,6 +909,41 @@ void Engine::createPlayer(tgui::String name, int atributes[6]){
     players.push_back(new Player(name, atributes));
 }
 
+void Engine::deletePlayer(int id){
+    for (int i = 0; i < players.size(); i++){
+        if (players[i]->get_id() == id){
+            delete players[i];
+            players.erase(players.begin()+i);
+        }
+    }
+}
+
+bool Engine::check_for_ending(){
+    bool killer_alive = false;
+    bool someone_else_alive = false;
+    for (int i = 0; i < players.size(); i++){
+        if (players[i]->isKiller() && players[i]->isAlive()){
+            killer_alive = true;
+        }
+        else if (!players[i]->isKiller() && players[i]->isAlive()){
+            someone_else_alive = true;
+        }
+    }
+    if (killer_alive && someone_else_alive){
+        return false;
+    }
+    else if (someone_else_alive){
+        ending_screen(KILL_THE_KILLER_ENDING);
+    }
+    else if (killer_alive){
+        ending_screen(KILLER_WIN_ENDING);
+    }
+    else{
+        ending_screen(EVERYONE_DEAD_ENDING);
+    }
+    return true;
+}
+
 void Engine::instantiatePlaces(){
     places.push_back(new Place("CCE", "./cce.jpg"));
     places[0]->setBonus(ACTION_WORK_ON_PROJECT, 20);
@@ -918,4 +964,8 @@ void Engine::instantiatePlaces(){
     places.push_back(new Place("BBT", "./fundo1ufv.jpg"));
     places[6]->setBonus(ACTION_WORK_ON_PROJECT, 15);
     places[6]->setBonus(ACTION_STUDY, 25);
+}
+
+void Engine::ending_screen(int ending){
+    return;
 }

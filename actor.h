@@ -40,12 +40,13 @@ class Actor {                               //Classe geral para todos os atores 
         Actor(tgui::String name);                    //Construtor
         Actor(tgui::String name, int atributes[6]);
         void heal(int x=1);                           //Funcao para curar
-        void damage(int x=1);                         //Funcao para causar dano
+        bool damage(int x=1);                         //Funcao para causar dano (retorna verdadeiro se o dano for fatal)
         void die();                                 //Funcao para morte
         tgui::String getName(bool use_alias=true);  // Se verdadeiro, retorna o nome da fantasia usada
         Place* getPlace();
         int getSkill(int skill_name);
         int getDamageLevel();
+        bool isAlive();
         bool isKiller();
         bool skillCheck(int skill, int challenge);
         int skillRoll(int skill, int range=100);

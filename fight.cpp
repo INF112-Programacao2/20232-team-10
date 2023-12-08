@@ -82,8 +82,11 @@ FA_Punch::FA_Punch(Fight* fight, Actor *actor, Actor *target) : FightAction(figh
 
 void FA_Punch::execute(){
     if (actor->skillRoll(FITNESS) > target->skillRoll(AGILITY)){
-        target->damage(actor->skillRoll(FITNESS)/80 + 1);
         actionText = actor->getName() + " acertou um soco em " + target->getName();
+        if (target->damage(actor->skillRoll(FITNESS)/80 + 1)){
+            actionText += "\n          " + target->getName() + " MORREU";
+        }
+        
     }
     else{
         actionText = actor->getName() + " errou um soco em " + target->getName();
@@ -97,8 +100,11 @@ FA_Topple::FA_Topple(Fight* fight, Actor *actor, Actor *target) : FightAction(fi
 
 void FA_Topple::execute(){
     if (actor->skillRoll(FITNESS) > target->skillRoll(AGILITY)+20){
-        target->damage(actor->skillRoll(FITNESS)/40 + 1);
         actionText = actor->getName() + " derrubou " + target->getName();
+        if(target->damage(actor->skillRoll(FITNESS)/40 + 1)){
+            actionText += "\n          " + target->getName() + " MORREU";
+        }
+        
     }
     else{
         actionText = target->getName() + " desviou de um empurrão de " + actor->getName();
@@ -135,8 +141,11 @@ FA_ImprovisedWeapon::FA_ImprovisedWeapon(Fight* fight, Actor *actor, Actor *targ
 
 void FA_ImprovisedWeapon::execute(){
     if (actor->skillRoll(FITNESS, 50) + actor->skillRoll(LOGIC, 50) > target->skillRoll(AGILITY)+5){
-        target->damage(actor->skillRoll(LOGIC) / 40);
         actionText = actor->getName() + " apunhalou " + target->getName() + " com um lápis apontado";
+        if (target->damage(actor->skillRoll(LOGIC) / 40)){
+            actionText += "\n          " + target->getName() + " MORREU";
+        }
+        
     }
     else{
         actionText = actor->getName() + " ficou 6 segundos procurando um lápis";
