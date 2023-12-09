@@ -81,12 +81,12 @@ FA_Punch::FA_Punch(Fight* fight, Actor *actor, Actor *target) : FightAction(figh
 }
 
 void FA_Punch::execute(){
+    if (!target->isAlive()){
+        return;
+    }
     if (actor->skillRoll(FITNESS) > target->skillRoll(AGILITY)){
         actionText = actor->getName() + " acertou um soco em " + target->getName();
-        if (target->damage(actor->skillRoll(FITNESS)/80 + 1)){
-            actionText += "\n          " + target->getName() + " MORREU";
-        }
-        
+        target->damage(actor->skillRoll(FITNESS)/80 + 1);
     }
     else{
         actionText = actor->getName() + " errou um soco em " + target->getName();
@@ -99,12 +99,12 @@ FA_Topple::FA_Topple(Fight* fight, Actor *actor, Actor *target) : FightAction(fi
 }
 
 void FA_Topple::execute(){
+    if (!target->isAlive()){
+        return;
+    }
     if (actor->skillRoll(FITNESS) > target->skillRoll(AGILITY)+20){
         actionText = actor->getName() + " derrubou " + target->getName();
-        if(target->damage(actor->skillRoll(FITNESS)/40 + 1)){
-            actionText += "\n          " + target->getName() + " MORREU";
-        }
-        
+        target->damage(actor->skillRoll(FITNESS)/40 + 1);
     }
     else{
         actionText = target->getName() + " desviou de um empurrão de " + actor->getName();
@@ -140,12 +140,12 @@ FA_ImprovisedWeapon::FA_ImprovisedWeapon(Fight* fight, Actor *actor, Actor *targ
 }
 
 void FA_ImprovisedWeapon::execute(){
+    if (!target->isAlive()){
+        return;
+    }
     if (actor->skillRoll(FITNESS, 50) + actor->skillRoll(LOGIC, 50) > target->skillRoll(AGILITY)+5){
         actionText = actor->getName() + " apunhalou " + target->getName() + " com um lápis apontado";
-        if (target->damage(actor->skillRoll(LOGIC) / 40)){
-            actionText += "\n          " + target->getName() + " MORREU";
-        }
-        
+        target->damage(actor->skillRoll(LOGIC) / 40);
     }
     else{
         actionText = actor->getName() + " ficou 6 segundos procurando um lápis";
@@ -174,6 +174,9 @@ FA_KnifeSlash::FA_KnifeSlash(Fight* fight, Actor *actor, Actor *target) : FightA
 }
 
 void FA_KnifeSlash::execute(){
+    if (!target->isAlive()){
+        return;
+    }
     if (actor->skillRoll(FITNESS) > target->skillRoll(AGILITY)){
         target->damage();
         actionText = actor->getName() + " esfaqueou " + target->getName();
@@ -230,11 +233,14 @@ Actor* Fight::getTarget(Actor *actor){
     return nullptr;
 }
 
-void Fight::getAction(Actor *actor){
+bool Fight::getAction(Actor *actor){
     int total_weight = 0;
     int possible = 0;
     FightAction* fight_action;
     Actor* target = getTarget(actor);
+    if (target == nullptr){
+        return false;
+    }
     for (int i = 0; i < FIGHT_ACTION_NUM; i++){
         fight_action = FightAction::FightActionByID(i, this, actor, target);
         if (fight_action->possible()){
@@ -249,12 +255,13 @@ void Fight::getAction(Actor *actor){
         if (fight_action->possible()){
             chosen -= fight_action->getWeight();
             if (chosen <= 0){
-                fight_actions.push(FightAction::FightActionByID(i, this, actor, getTarget(actor)));
+                fight_actions.push(FightAction::FightActionByID(i, this, actor, target));
                 break;
             }
         }
         delete fight_action;
     }
+    return true;
 }
 
 int Fight::get_alignment(Actor* fighter){
@@ -268,15 +275,31 @@ void Fight::results(){
         delete fight_actions.front();
         fight_actions.pop();
     }
+    for (int i = 0; i < fighters.size(); i++){
+        if (!fighters[i]->isAlive()){
+            fight_log += fighters[i]->getName() + " morreu.\n";
+            removeFighter(fighters[i]);
+            i--;
+        }
+    }
 }
 
-void Fight::simulateFight(){
+int Fight::simulateFight(){
     for (int time = 0; time < maxTime; time++){
         for (int i = 0; i < fighters.size(); i++){
-            getAction(fighters[i]);
+            if (!getAction(fighters[i])){
+                if (alignments[fighters[i]] == ALIGNMENT_VICTIM){
+                    return RESULT_AGRESSOR_DEAD;
+                }
+                else{
+                    return RESULT_VICTIM_DEAD;
+                }
+            }
         }
         results();
+
     }
+    return RESULT_TIME_OUT;
 }
 
 tgui::String Fight::getLog(){

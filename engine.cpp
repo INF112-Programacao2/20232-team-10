@@ -483,7 +483,7 @@ void Engine::playerTurn2(Player *player) {
     comboBox2->setSize(250, 30);
     comboBox2->setTextSize(13);
     for (int i = 0; i < players.size(); i++){
-        if (i != player->get_id() && player->getPlace() == players[i]->getPlace()){
+        if (players[i] != player && player->getPlace() == players[i]->getPlace()){
             comboBox2->addItem(players[i]->getName(), std::to_string(i));
             valid_target = true;
         }

@@ -172,6 +172,13 @@ enum alignments {
     ALIGNMENT_AGRESSOR
 };
 
+enum fight_results {
+    RESULT_TIME_OUT,
+    RESULT_VICTIM_DEAD,
+    RESULT_AGRESSOR_DEAD,
+    RESULT_AGRESSOR_ESCAPED,
+};
+
 class Fight{
     protected:
         tgui::String fight_log;
@@ -180,13 +187,13 @@ class Fight{
         std::map <Actor*,int> alignments;
         int maxTime = 10;
     public:
-        void simulateFight();
+        int simulateFight();
         void addFighter(Actor *fighter, int alignment);
         void addMaxTime(int time);
         int get_alignment(Actor* fighter);
         void removeFighter(Actor *fighter);
         Actor *getTarget(Actor *actor);
-        void getAction(Actor *actor);
+        bool getAction(Actor *actor);
         void results();
         tgui::String getLog();
 };

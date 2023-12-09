@@ -81,10 +81,17 @@ void StartFightAction::execute() {
         actor->setCostumed(true);
     }  
     Fight fight;
+    int result;
     fight.addFighter(actor, (actor->isKiller() ? ALIGNMENT_KILLER : ALIGNMENT_AGRESSOR));
     fight.addFighter(target, ALIGNMENT_VICTIM);
-    fight.simulateFight();
+    result = fight.simulateFight();
     this->resultsText = fight.getLog();
+    if (result == RESULT_TIME_OUT){
+        this->resultsText += "\n" + actor->getName() + " foge enquanto a ajuda chega";
+    }
+    if (result == RESULT_VICTIM_DEAD || result == RESULT_AGRESSOR_ESCAPED){
+        this->resultsText += "\n" + actor->getName() + " foge";
+    }
     actor->setCostumed(false);
 }
 
