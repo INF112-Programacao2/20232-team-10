@@ -17,7 +17,63 @@ void Engine::game(){
             result_screen(players[i]);
         }
     }
+
+ //Configura a imagem de fundo do menu de personagem
+    auto picture = tgui::Picture::create("./criacaopersn.png");
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
+    
+    //Titulo
+    auto title = tgui::TextArea::create();
+    title->setRenderer(theme.getRenderer("TextArea"));
+    title->setPosition(230, 20);
+    title->setMaximumCharacters(0);
+    title->setSize(340, 40);
+    title->setText("Quantidade de Jogadores");
+    title->setTextSize(23);
+    title->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(title);
+    
+    //Botao de proximo
+    auto nextButton = tgui::Button::create();
+    nextButton->setRenderer(theme.getRenderer("Button"));
+    nextButton->setPosition(630, 540);
+    nextButton->setSize(170, 60);;
+    nextButton->setText("Começar");
+    nextButton->setTextSize(20);
+    nextButton->onClick([&]{
+        stay = false;
+    });
+    gui.add(nextButton);
+
+        //Botao de sair
+    auto exitButton = tgui::Button::create();
+    exitButton->setRenderer(theme.getRenderer("Button"));
+    exitButton->setPosition(540, 390);
+    exitButton->setSize(200, 70);
+    exitButton->setText("SAIR");
+    exitButton->setTextSize(19);
+    gui.add(exitButton);
+
+    while(stay) {
+        sf::Event role_screen;
+        while(window.pollEvent(role_screen)) {
+            gui.handleEvent(role_screen);
+            if(role_screen.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+    gui.removeAllWidgets();
+
 }
+
+
+
+
 
 void Engine::role_screen() {
     
@@ -223,8 +279,6 @@ void Engine::playerTurn1(Player *player) {
     std::cin >> destination;
 
     player->travelTo(this->places[destination]);
-
-
 
     sf::Clock clock;
 
