@@ -35,6 +35,7 @@ class Engine {
         sf::RenderWindow window{{800, 600}, "CCPanico"};
         tgui::Gui gui{window};
         void game();                                    // A FUNÇÃO!!!!!
+        void game_settings();
         void playerTurn1(Player *player);
         void playerTurn2(Player *player);
         //void playerTurn3(Player *player);

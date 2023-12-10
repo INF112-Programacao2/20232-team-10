@@ -78,7 +78,7 @@ void Engine:: game_settings{
         comboBox0->addItem(std::to_string[i])
     }
     gui.add(comboBox0);
-    //Botao de proximo
+    //Botao de começar o jogo
     auto nextButton = tgui::Button::create();
     nextButton->setRenderer(theme.getRenderer("Button"));
     nextButton->setPosition(630, 540);
