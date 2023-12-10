@@ -1,11 +1,23 @@
 #include "engine.h"
+#include "dice.h"
 
 int triang(int n){
     return (n*n + n) / 2;
 }
 
 void Engine::game(){
-    for (int t = 0; t < 3; t++){
+    Action::instantiateActions();
+    instantiatePlaces();
+    roleSelector();
+    for (int i = 0; i < players.size(); i++){
+        pass_screen(players[i]);
+        role_screen(players[i]);
+    }
+    for (int t = 0; t < 6; t++){
+        for (int i = 0; i < players.size(); i++){
+            pass_screen(players[i]);
+            playerTurn1(players[i]);
+        }
         for (int i = 0; i < players.size(); i++){
             players[i]->resultsText = "";
             pass_screen(players[i]);
@@ -16,9 +28,26 @@ void Engine::game(){
             pass_screen(players[i]);
             result_screen(players[i]);
         }
+        for (int i = 0; i < players.size(); i++){
+            if (!players[i]->isAlive()){
+                deletePlayer(players[i]->get_id());
+                i--;
+            }
+        }
+        if (check_for_ending()){
+            break;
+        }
+        if (t == 5){
+            ending_screen(END_OF_SEMESTER_ENDING);
+        }
     }
+    for (int i = 0; i < PLACE_NUM; i++){
+        delete places[i];
+    }
+}
+void Engine:: game_settings{
 
- //Configura a imagem de fundo do menu de personagem
+    //Imagem de fundo
     auto picture = tgui::Picture::create("./criacaopersn.png");
     picture->setSize({"100%", "100%"});
     gui.add(picture);
@@ -34,6 +63,21 @@ void Engine::game(){
     title->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(title);
     
+
+    
+    //ComboBox0
+    auto comboBox0 = tgui::ComboBox::create();
+    comboBox0->setRenderer(theme.getRenderer("ComboBox"));
+    comboBox0->setChangeItemOnScroll(false);
+    comboBox0->setItemsToDisplay(0);
+    comboBox0->setMaximumItems(0);
+    comboBox0->setPosition(320, 500);
+    comboBox0->setSize(250, 30);
+    comboBox0->setTextSize(13);
+    for (int i = 1; i <6; i++){
+        comboBox0->addItem(std::to_string[i])
+    }
+    gui.add(comboBox0);
     //Botao de proximo
     auto nextButton = tgui::Button::create();
     nextButton->setRenderer(theme.getRenderer("Button"));
@@ -75,72 +119,54 @@ void Engine::game(){
 
 
 
-void Engine::role_screen() {
-    
+void Engine::roleSelector() {
+    int chosen = Dice::single_die(players.size()) - 1;
+    players[chosen]->setKiller();
+}
+
+void Engine::role_screen(Player *player) {
     tgui::Theme theme{"./Black.txt"};
     bool stay = true;
+    tgui::String text, description, screen;
+    if (player->isKiller()){
+        text = "Você é o assassino!";    
+        description = "Seu objetivo é matar furtivamente todos os estudantes de computação!\n Complete seu objetivo antes do final da última semana do período sem ser pego.";
+        screen = "./capyblood.jpeg";
+    }
+    else{
+        text = "Você é um estudante!";
+        description = "Seu objetivo é sobreviver à última semana do período!\n Estude para suas provas finais e conclua o trabalho final de Programação II, mas fique de olho no assassino que está solto!";
+        screen = "./capystd.jpeg";    
+    }
 
-    //Configura a imagem do fundo do menu do assassino
-    auto roleScreenAssassin = tgui::Picture::create("./AssassinScreen.png");
-    roleScreenAssassin->setSize(650,530);
-    roleScreenAssassin->setPosition(70,10);
-    gui.add(roleScreenAssassin);
-    bool stay = true;
-
-    //Configura a imagem do fundo do menu do estudante
-    auto roleScreenStudent = tgui::Picture::create("./StudentScreen.png");
-    roleScreenStudent->setSize(650,530);
-    roleScreenStudent->setPosition(70,10);
-    gui.add(roleScreenStudent);
-    bool stay = true;
-
-    //Mensagem para assassino
+    // Imagem de fundo
+    auto roleScreenBackground = tgui::Picture::create(screen);
+    roleScreenBackground->setSize({"100%", "100%"});
+    gui.add(roleScreenBackground);
+    
+    //Mensagem da carga
     auto roleText = tgui::TextArea::create();
     roleText->setRenderer(theme.getRenderer("TextArea"));
     roleText->setMaximumCharacters(0);
-    roleText->setPosition(230,20);
-    roleText->setSize(154, 60);
-    roleText->setText("Você é o assassino!");
-    roleText->setTextSize(40);
+    roleText->setPosition(240,30);
+    roleText->setSize(320, 40);
     roleText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    roleText->setTextSize(25);
     roleText->setReadOnly(true);
+    roleText->setText(text);
     gui.add(roleText);
 
-    //Descricao para assassino
+    //Descricao da carga
     auto roleDescription = tgui::TextArea::create();
     roleDescription->setRenderer(theme.getRenderer("TextArea"));
     roleDescription->setMaximumCharacters(0);
-    roleDescription->setPosition(430,20);
-    roleDescription->setSize(75, 30);
-    roleDescription->setText("Seu objetivo é matar furtivamente todos os estudantes de computação! Complete seu objetivo antes do final da última semana do período sem ser pego.");
-    roleDescription->setTextSize(20);
+    roleDescription->setPosition(255,400);
+    roleDescription->setSize(290, 115);
     roleDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    roleDescription->setText(description);
+    roleDescription->setTextSize(15);
     roleDescription->setReadOnly(true);
     gui.add(roleDescription);
-
-    //Mensagem para estudante
-    auto studentText = tgui::TextArea::create();
-    studentText->setRenderer(theme.getRenderer("TextArea"));
-    studentText->setMaximumCharacters(0);
-    studentText->setPosition(230,20);
-    studentText->setSize(154, 60);
-    studentText->setText("Você é um estudante!");
-    studentText->setTextSize(40);
-    studentText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    studentText->setReadOnly(true);
-    gui.add(studentText);
-
-    //Descricao para estudante
-    auto studentDescription = tgui::TextArea::create();
-    studentDescription->setRenderer(theme.getRenderer("TextArea"));
-    studentDescription->setMaximumCharacters(0);
-    studentDescription->setPosition(430,20);
-    studentDescription->setSize(75, 30);
-    studentDescription->setText("Seu objetivo é sobreviver à última semana do período! Estude para suas provas finais e conclua o trabalho final de Programação II, mas fique de olho no assassino que está solto!");
-    studentDescription->setTextSize(20);
-    studentDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    studentDescription->setReadOnly(true);
-    gui.add(studentDescription);
 
     //Botao de proximo
     auto nextButton = tgui::Button::create();
@@ -171,7 +197,6 @@ void Engine::role_screen() {
 }
 
 void Engine::pass_screen(Player *player) {
-
     tgui::Theme theme{"./Black.txt"};
 
     //Configura a imagem de fundo do menu de espera 
@@ -210,54 +235,57 @@ void Engine::pass_screen(Player *player) {
 }
 
 void Engine::main_menu() {
-    tgui::Theme theme{"../../themes/Black.txt"};
+
+    tgui::Theme theme{"./Black.txt"};
     
     //Configura a imagem de fundo do menu principal
-    auto picture = tgui::Picture::create("./4pilastrascc.png");
+    auto picture = tgui::Picture::create("./4pilastrascc.jpg");
     picture->setSize({"100%", "100%"});
     gui.add(picture);
-    bool stay = true;
     
     //Botao de novo jogo
     auto newGameButton = tgui::Button::create();
     newGameButton->setRenderer(theme.getRenderer("Button"));
-    newGameButton->setPosition(540, 180);
+    newGameButton->setPosition(50, 30);
     newGameButton->setSize(200, 70);
     newGameButton->setText("NOVO JOGO");
     newGameButton->setTextSize(19);
+    newGameButton->onClick([&]{
+        gui.removeAllWidgets();
+        for (int i = 0; i < 3; i++){
+            character_creator_screen();
+        }
+        game();
+    });
     gui.add(newGameButton);
 
     //Botao de carregar jogo
     auto loadGameButton = tgui::Button::create();
     loadGameButton->setRenderer(theme.getRenderer("Button"));
-    loadGameButton->setPosition(540, 250);
+    loadGameButton->setPosition(300, 30);
     loadGameButton->setSize(200, 70);
     loadGameButton->setText("CARREGAR JOGO");
     loadGameButton->setTextSize(19);
     gui.add(loadGameButton);
 
-    //Botao de criar personagem
-    auto createCharacterButton = tgui::Button::create();
-    createCharacterButton->setRenderer(theme.getRenderer("Button"));
-    createCharacterButton->setPosition(540, 320);
-    createCharacterButton->setSize(200, 70);
-    createCharacterButton->setText("CRIAR PERSONAGEM");
-    createCharacterButton->setTextSize(19);
-    gui.add(createCharacterButton);
-
     //Botao de sair
     auto exitButton = tgui::Button::create();
     exitButton->setRenderer(theme.getRenderer("Button"));
-    exitButton->setPosition(540, 390);
+    exitButton->setPosition(550, 30);
     exitButton->setSize(200, 70);
     exitButton->setText("SAIR");
     exitButton->setTextSize(19);
     gui.add(exitButton);
 
     //Geracao do window para o Main Menu
+    sf::Music horrorgame;
+    if (!horrorgame.openFromFile("8bit-Syndrome-Horror-audio01-.ogg"))
+        return ; // error
+    
     while (true) {
         sf::Event main_menu;
         while(window.pollEvent(main_menu)) {
+            horrorgame.play();
             gui.handleEvent(main_menu);
             if(main_menu.type == sf::Event::Closed) {
                 window.close();
@@ -280,9 +308,11 @@ void Engine::playerTurn1(Player *player) {
 
     player->travelTo(this->places[destination]);
 
+
+
     sf::Clock clock;
 
-    int time = 60;
+    int time = 40;
 
     tgui::Theme theme{"./Black.txt"};
 
@@ -296,7 +326,7 @@ void Engine::playerTurn1(Player *player) {
     statsArea->setTextSize(16);
     statsArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     statsArea->setReadOnly(true);
-    statsArea->setText(player->getName());
+    statsArea->setText(player->getName() + '\n' + "Saúde: " + player->getHealth());
     gui.add(statsArea);
 
     //Barra de progresso para o trabalho
@@ -324,38 +354,38 @@ void Engine::playerTurn1(Player *player) {
     gui.add(studyBar);
 
     //Barra de tempo
-    auto tempo = tgui::ProgressBar::create();
-    tempo->setRenderer(theme.getRenderer("ProgressBar"));
-    tempo->setPosition(600, 570);
-    tempo->setSize(200, 30);
-    tempo->setValue(time);                 //Recebe o valor do clock do turno
-    tempo->setMaximum(60);
-    tempo->setMinimum(0);
-    tempo->setText("TEMPO");        
-    tempo->setTextSize(15);
-    gui.add(tempo);
+    auto timeBar = tgui::ProgressBar::create();
+    timeBar->setRenderer(theme.getRenderer("ProgressBar"));
+    timeBar->setPosition(600, 570);
+    timeBar->setSize(200, 30);
+    timeBar->setValue(time);                 //Recebe o valor do clock do turno
+    timeBar->setMaximum(40);
+    timeBar->setMinimum(0);
+    timeBar->setText("TEMPO");        
+    timeBar->setTextSize(15);
+    gui.add(timeBar);
 
-    //Acao: 
-    auto acao = tgui::TextArea::create();
-    acao->setRenderer(theme.getRenderer("TextArea"));
-    acao->setPosition(230, 430);
-    acao->setMaximumCharacters(0);
-    acao->setSize(90, 35);
-    acao->setText("AÇÃO:");
-    acao->setTextSize(20);
-    acao->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    gui.add(acao);
+    //Texto do lado da combobox1 
+    auto comboText1 = tgui::TextArea::create();
+    comboText1->setRenderer(theme.getRenderer("TextArea"));
+    comboText1->setPosition(210, 430);
+    comboText1->setMaximumCharacters(0);
+    comboText1->setSize(130, 35);
+    comboText1->setText("DESTINO:");
+    comboText1->setTextSize(20);
+    comboText1->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(comboText1);
 
     //ComboBox1
     auto comboBox1 = tgui::ComboBox::create();
     comboBox1->setChangeItemOnScroll(true);
     comboBox1->setItemsToDisplay(0);
     comboBox1->setMaximumItems(0);
-    comboBox1->setPosition(320, 430);
+    comboBox1->setPosition(340, 430);
     comboBox1->setSize(250, 35);
     comboBox1->setTextSize(15);
-    for (int i = 0; i < Action::game_actions.size(); i++){
-        comboBox1->addItem(Action::game_actions[i]->getDescription(), std::to_string(i));
+    for (int i = 0; i < PLACE_NUM; i++){
+        comboBox1->addItem(places[i]->getName(), std::to_string(i));
     }
     gui.add(comboBox1);
 
@@ -416,33 +446,6 @@ void Engine::playerTurn1(Player *player) {
     });
     gui.add(playersButton);
 
-    //ComboBox2
-    auto comboBox2 = tgui::ComboBox::create();
-    comboBox2->setRenderer(theme.getRenderer("ComboBox"));
-    comboBox2->setChangeItemOnScroll(false);
-    comboBox2->setItemsToDisplay(0);
-    comboBox2->setMaximumItems(0);
-    comboBox2->setPosition(320, 500);
-    comboBox2->setSize(250, 30);
-    comboBox2->setTextSize(13);
-    for (int i = 0; i < players.size(); i++){
-        if (i != player->get_id()){
-            comboBox2->addItem(players[i]->getName(), std::to_string(i));
-        }
-    }
-    gui.add(comboBox2);
-
-    //TextArea2
-    auto TextArea2 = tgui::TextArea::create();
-    TextArea2->setRenderer(theme.getRenderer("TextArea"));
-    TextArea2->setPosition(230, 500);
-    TextArea2->setMaximumCharacters(0);
-    TextArea2->setSize(90, 30);
-    TextArea2->setText("ALVO: ");
-    TextArea2->setTextSize(18);
-    TextArea2->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    gui.add(TextArea2);
-
     //Geracao do window para o Game Menu
     while (true){
         sf::Event event;
@@ -455,10 +458,8 @@ void Engine::playerTurn1(Player *player) {
         if (clock.getElapsedTime() > sf::seconds(0.25)){
             clock.restart();
             time--;
-            tempo->setValue(time);
+            timeBar->setValue(time);
         }
-        TextArea2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
-        comboBox2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
 
         window.clear();
         gui.draw();
@@ -468,29 +469,32 @@ void Engine::playerTurn1(Player *player) {
         }
     }
 
-    int action_num = comboBox1->getSelectedItemId().toInt();
+    Place* destination = places[comboBox1->getSelectedItemId().toInt()];
 
-    Action* action = Action::ActionByID(action_num, player, players[comboBox2->getSelectedItemId().toInt()]);
-
-    if (!action){
-        action = new StudyAction(player);
+    if (!destination){
+        // Vou colocar uma coisa aqui depois (Casa)
     }
 
-    this->turn_actions.push(action);
+    player->travelTo(destination);
 
     gui.removeAllWidgets();
     
 }
 
 void Engine::playerTurn2(Player *player) {
-
     //***// Interface Game Menu //***//
 
     sf::Clock clock;
 
     int time = 60;
 
+    bool valid_target = false;
+
     tgui::Theme theme{"./Black.txt"};
+
+    auto picture = tgui::Picture::create(player->getPlace()->getPicture());
+    picture->setSize({"100%", "100%"});
+    gui.add(picture);
 
     //Area de dados do jogador
     auto statsArea = tgui::TextArea::create();
@@ -502,7 +506,7 @@ void Engine::playerTurn2(Player *player) {
     statsArea->setTextSize(16);
     statsArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     statsArea->setReadOnly(true);
-    statsArea->setText(player->getName());
+    statsArea->setText(player->getName() + '\n' + "Saúde: " + player->getHealth());
     gui.add(statsArea);
 
     //Barra de progresso para o trabalho
@@ -530,27 +534,44 @@ void Engine::playerTurn2(Player *player) {
     gui.add(studyBar);
 
     //Barra de tempo
-    auto tempo = tgui::ProgressBar::create();
-    tempo->setRenderer(theme.getRenderer("ProgressBar"));
-    tempo->setPosition(600, 570);
-    tempo->setSize(200, 30);
-    tempo->setValue(time);                 //Recebe o valor do clock do turno
-    tempo->setMaximum(60);
-    tempo->setMinimum(0);
-    tempo->setText("TEMPO");        
-    tempo->setTextSize(15);
-    gui.add(tempo);
+    auto timeBar = tgui::ProgressBar::create();
+    timeBar->setRenderer(theme.getRenderer("ProgressBar"));
+    timeBar->setPosition(600, 570);
+    timeBar->setSize(200, 30);
+    timeBar->setValue(time);                 //Recebe o valor do clock do turno
+    timeBar->setMaximum(60);
+    timeBar->setMinimum(0);
+    timeBar->setText("TEMPO");        
+    timeBar->setTextSize(15);
+    gui.add(timeBar);
 
-    //Acao: 
-    auto acao = tgui::TextArea::create();
-    acao->setRenderer(theme.getRenderer("TextArea"));
-    acao->setPosition(230, 430);
-    acao->setMaximumCharacters(0);
-    acao->setSize(90, 35);
-    acao->setText("AÇÃO:");
-    acao->setTextSize(20);
-    acao->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    gui.add(acao);
+    //Texto do lado da comboBox1 
+    auto comboText1 = tgui::TextArea::create();
+    comboText1->setRenderer(theme.getRenderer("TextArea"));
+    comboText1->setPosition(230, 430);
+    comboText1->setMaximumCharacters(0);
+    comboText1->setSize(90, 35);
+    comboText1->setText("AÇÃO:");
+    comboText1->setTextSize(20);
+    comboText1->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(comboText1);
+
+    //ComboBox2
+    auto comboBox2 = tgui::ComboBox::create();
+    comboBox2->setRenderer(theme.getRenderer("ComboBox"));
+    comboBox2->setChangeItemOnScroll(false);
+    comboBox2->setItemsToDisplay(0);
+    comboBox2->setMaximumItems(0);
+    comboBox2->setPosition(320, 500);
+    comboBox2->setSize(250, 30);
+    comboBox2->setTextSize(13);
+    for (int i = 0; i < players.size(); i++){
+        if (players[i] != player && player->getPlace() == players[i]->getPlace()){
+            comboBox2->addItem(players[i]->getName(), std::to_string(i));
+            valid_target = true;
+        }
+    }
+    gui.add(comboBox2);
 
     //ComboBox1
     auto comboBox1 = tgui::ComboBox::create();
@@ -561,7 +582,9 @@ void Engine::playerTurn2(Player *player) {
     comboBox1->setSize(250, 35);
     comboBox1->setTextSize(15);
     for (int i = 0; i < Action::game_actions.size(); i++){
-        comboBox1->addItem(Action::game_actions[i]->getDescription(), std::to_string(i));
+        if (valid_target || !Action::game_actions[i]->isTargeted()){
+            comboBox1->addItem(Action::game_actions[i]->getDescription(), std::to_string(i));
+        }
     }
     gui.add(comboBox1);
 
@@ -617,26 +640,10 @@ void Engine::playerTurn2(Player *player) {
             if (players[i] == player){
                 continue;
             }
-            TextArea1->addText(players[i]->getName(false) + '\n');
+            TextArea1->addText(players[i]->getName(false) + " (" + players[i]->getPlace()->getName() + ")\n");
         }
     });
     gui.add(playersButton);
-
-    //ComboBox2
-    auto comboBox2 = tgui::ComboBox::create();
-    comboBox2->setRenderer(theme.getRenderer("ComboBox"));
-    comboBox2->setChangeItemOnScroll(false);
-    comboBox2->setItemsToDisplay(0);
-    comboBox2->setMaximumItems(0);
-    comboBox2->setPosition(320, 500);
-    comboBox2->setSize(250, 30);
-    comboBox2->setTextSize(13);
-    for (int i = 0; i < players.size(); i++){
-        if (i != player->get_id()){
-            comboBox2->addItem(players[i]->getName(), std::to_string(i));
-        }
-    }
-    gui.add(comboBox2);
 
     //TextArea2
     auto TextArea2 = tgui::TextArea::create();
@@ -661,10 +668,10 @@ void Engine::playerTurn2(Player *player) {
         if (clock.getElapsedTime() > sf::seconds(0.25)){
             clock.restart();
             time--;
-            tempo->setValue(time);
+            timeBar->setValue(time);
         }
-        TextArea2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
-        comboBox2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted());
+        TextArea2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted() && valid_target);
+        comboBox2->setVisible(Action::game_actions[comboBox1->getSelectedItemId().toInt()]->isTargeted() && valid_target);
 
         window.clear();
         gui.draw();
@@ -919,7 +926,7 @@ void Engine::character_creator_screen() {
 
 //Tela para mostrar os resultados do jogo
 void Engine::result_screen(Player *player){
-    
+
     tgui::Theme theme{"./Black.txt"};
     bool stay=true;
 
@@ -936,9 +943,10 @@ void Engine::result_screen(Player *player){
 
     //Botao de proximo
     auto NextButton = tgui::Button::create();
+    NextButton->setRenderer(theme.getRenderer("Button"));
     NextButton->setPosition(630, 540);
     NextButton->setSize(170, 60);
-    NextButton->setText("PRÓXIMO");
+    NextButton->setText(player->isAlive()? "PRÓXIMO" : "DESCANSE EM PAZ");
     NextButton->setTextSize(20);
     NextButton->onClick([&]{
         stay = false;
@@ -981,6 +989,66 @@ void Engine::results() {
 }
 
 void Engine::createPlayer(tgui::String name, int atributes[6]){
-    Player *player = new Player(name, atributes);
-    players.push_back(player);
+    players.push_back(new Player(name, atributes));
+}
+
+void Engine::deletePlayer(int id){
+    for (int i = 0; i < players.size(); i++){
+        if (players[i]->get_id() == id){
+            delete players[i];
+            players.erase(players.begin()+i);
+        }
+    }
+}
+
+bool Engine::check_for_ending(){
+    bool killer_alive = false;
+    bool someone_else_alive = false;
+    for (int i = 0; i < players.size(); i++){
+        if (players[i]->isKiller() && players[i]->isAlive()){
+            killer_alive = true;
+        }
+        else if (!players[i]->isKiller() && players[i]->isAlive()){
+            someone_else_alive = true;
+        }
+    }
+    if (killer_alive && someone_else_alive){
+        return false;
+    }
+    else if (someone_else_alive){
+        ending_screen(KILL_THE_KILLER_ENDING);
+    }
+    else if (killer_alive){
+        ending_screen(KILLER_WIN_ENDING);
+    }
+    else{
+        ending_screen(EVERYONE_DEAD_ENDING);
+    }
+    return true;
+}
+
+void Engine::instantiatePlaces(){
+    places.push_back(new Place("CCE", "./cce.jpg"));
+    places[0]->setBonus(ACTION_WORK_ON_PROJECT, 20);
+    places[0]->setBonus(ACTION_STUDY, 15);
+    places.push_back(new Place("DCE", "./dce.jpg"));
+    places[1]->setBonus(ACTION_WORK_ON_PROJECT, -10);
+    places[1]->setBonus(ACTION_STUDY, -10);
+    places.push_back(new Place("PVA", "./pva.jpg"));
+    places[2]->setBonus(ACTION_STUDY, 10);
+    places.push_back(new Place("PVB", "./pvb.jpeg"));
+    places[3]->setBonus(ACTION_STUDY, 10);
+    places.push_back(new Place("Rita", "./rita.jpeg"));
+    places[4]->setBonus(ACTION_WORK_ON_PROJECT, -20);
+    places[4]->setBonus(ACTION_STUDY, -20);
+    places.push_back(new Place("RU", "./RU.jpg"));
+    places[5]->setBonus(ACTION_WORK_ON_PROJECT, -20);
+    places[5]->setBonus(ACTION_STUDY, -15);
+    places.push_back(new Place("BBT", "./fundo1ufv.jpg"));
+    places[6]->setBonus(ACTION_WORK_ON_PROJECT, 15);
+    places[6]->setBonus(ACTION_STUDY, 25);
+}
+
+void Engine::ending_screen(int ending){
+    return;
 }

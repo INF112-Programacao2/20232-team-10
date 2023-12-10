@@ -2,10 +2,16 @@
 #define V_ACTIONS
 
 #include <vector>
-#include "actor.h"
 #include "player.h"
 
 const int ACTION_NUM = 4;
+
+enum action_names{
+    ACTION_WORK_ON_PROJECT,
+    ACTION_START_FIGHT,
+    ACTION_STUDY,
+    ACTION_HEAL
+};
 
 class Action {                          //Classe para acoes sem alvo
     protected:
@@ -19,7 +25,7 @@ class Action {                          //Classe para acoes sem alvo
     public:
         static std::vector<Action*> game_actions;
         static Action* ActionByID(int id, Actor *actor = nullptr, Actor *target = nullptr);
-        static void instantiate_actions();
+        static void instantiateActions();
         Action(Actor *actor);           //Construtor
         virtual void execute() = 0;     //Funcao para execucao da acao
         virtual bool possible();

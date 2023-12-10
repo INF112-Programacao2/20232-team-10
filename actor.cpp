@@ -5,10 +5,9 @@ Actor::Actor(tgui::String name){                 //Construtor
     this->name = name;
     this->alive = true;             
     for (int i = 0; i < SKILL_NUM; i++){    //Inicializacao do valores das skills com 0
-        this->skill[i] = 0;
+        this->skill[i] = 3;
     }
     this->injuries = 0;     //Zera a quantidade de dano
-    this->killer = false;
 }
 
 Actor::Actor(tgui::String name, int atributes[6]) {
@@ -18,17 +17,23 @@ Actor::Actor(tgui::String name, int atributes[6]) {
         this->skill[i] = atributes[i];
     }
     this->injuries = 0;     //Zera a quantidade de dano
+    this->killer = false;
 };
 
 void Actor::heal(int x) {               //Funcao para curar
-    if (injuries >= 1) injuries--;
+    injuries -= x;
+    if (injuries < 0){
+        injuries = 0;
+    }
 }
 
-void Actor::damage(int x) {             //Funcao para sofrer dano
-    injuries++;
+bool Actor::damage(int x) {             //Funcao para sofrer dano
+    injuries += x;
     if (injuries > skill[ENDURANCE] + 3) {
         die();
+        return true;
     }
+    return false;
 }
 
 tgui::String Actor::getName(bool use_alias){
@@ -61,6 +66,10 @@ int Actor::skillRoll(int skill_name, int range){
     }
 }
 
+bool Actor::isAlive(){
+    return alive;
+}
+
 int Actor::getDamageLevel(){
     return this->injuries;
 }
@@ -88,4 +97,24 @@ tgui::String Actor::getHealth(){
 
 bool Actor::isKiller(){
     return killer;
+}
+
+void Actor::travelTo(Place* destination){
+    current_place = destination;
+}
+
+Place* Actor::getPlace(){
+    return current_place;
+}
+
+void Actor::setKiller(){
+    this->killer = true;
+}
+
+void Actor::setCostumed(bool wear){
+    this->costumed = wear;
+}
+
+bool Actor::isCostumed(){
+    return costumed;
 }

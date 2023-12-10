@@ -1,7 +1,7 @@
-#include <random>
-
 #ifndef V_DICE
 #define V_DICE
+
+#include <random>
 
 class Dice{
     public:

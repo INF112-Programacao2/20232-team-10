@@ -28,7 +28,3 @@ unsigned int Player::getProjectBar(){
 unsigned int Player::getStudyBar(){
     return study_bar;
 }
-
-Killer::Killer(tgui::String name, int atributes[6]) : Player(name, atributes){
-    this->killer = true;
-}

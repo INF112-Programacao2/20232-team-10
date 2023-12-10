@@ -5,18 +5,30 @@
 #include <queue>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "actions.h"
 #include "actor.h"
+#include "place.h"
 #include "player.h"
 
 int triang(int n);
+
+const int PLACE_NUM = 6;
+
+enum endings{
+    NO_ENDING,
+    KILL_THE_KILLER_ENDING,
+    KILLER_WIN_ENDING,
+    END_OF_SEMESTER_ENDING,
+    EVERYONE_DEAD_ENDING,
+};
 
 class Engine {
     private:
         std::vector<Player*> players;
         std::queue<Action*> turn_actions;
-        //std::vector<Place*> places;
+        std::vector<Place*> places;
         unsigned int time = 0;
 
     public:
@@ -25,16 +37,19 @@ class Engine {
         void game();                                    // A FUNÇÃO!!!!!
         void playerTurn1(Player *player);
         void playerTurn2(Player *player);
-        void playerTurn3(Player *player);
+        //void playerTurn3(Player *player);
         void pass_screen(Player *player);
         void character_creator_screen();
         void main_menu();
         void results();
         void createPlayer(tgui::String name, int atributes[6]);
-        void characterCreator();
+        void deletePlayer(int id);
         void result_screen(Player *player);
-        void role_screen();
-
+        void role_screen(Player *player);
+        void roleSelector();
+        void instantiatePlaces();
+        bool check_for_ending();
+        void ending_screen(int ending);
 };
 
 #endif

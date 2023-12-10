@@ -76,21 +76,32 @@ tgui::String Action::getDescription(){
 }
 
 //Funcoes de execucao para as respectivas acoes
-void StartFightAction::execute() {              
+void StartFightAction::execute() {            
+    if (actor->isKiller()){
+        actor->setCostumed(true);
+    }  
     Fight fight;
-    fight.addFighter(actor, 1);
-    fight.addFighter(target, 0);
-    fight.simulateFight();
-    this->resultsText = this->resultsText = fight.getLog();
+    int result;
+    fight.addFighter(actor, (actor->isKiller() ? ALIGNMENT_KILLER : ALIGNMENT_AGRESSOR));
+    fight.addFighter(target, ALIGNMENT_VICTIM);
+    result = fight.simulateFight();
+    this->resultsText = fight.getLog();
+    if (result == RESULT_TIME_OUT){
+        this->resultsText += "\n" + actor->getName() + " foge enquanto a ajuda chega";
+    }
+    if (result == RESULT_VICTIM_DEAD || result == RESULT_AGRESSOR_ESCAPED){
+        this->resultsText += "\n" + actor->getName() + " foge";
+    }
+    actor->setCostumed(false);
 }
 
 void WorkOnProjectAction::execute() {
-    int work = actor->skillRoll(LOGIC, 30);
+    int work = actor->skillRoll(LOGIC, 30 + actor->getPlace()->getBonus(id));
     actor->workOnProject(work);                       //Chama a funcao de trabalhor no projeto da classe Actor, com os pontos de INT do jogador como parametro
 }
 
 void StudyAction::execute() {
-    int study = actor->skillRoll(COMMUNICATION, 30);
+    int study = actor->skillRoll(COMMUNICATION, 30 + actor->getPlace()->getBonus(id));
     actor->study(study);                           //Chama a funcao de estudar da classe Actor, com os pontos de WIS do jogador como parametro
 }
 
@@ -104,23 +115,23 @@ void HealAction::execute() {
     }
 }
 
-void Action::instantiate_actions(){
+void Action::instantiateActions(){
     for (int i = 0; i < ACTION_NUM; i++){
         game_actions.push_back(ActionByID(i));
     }
 }
 
 Action* Action::ActionByID(int id, Actor *actor, Actor *target){
-    if(id == 0){
+    if(id == ACTION_WORK_ON_PROJECT){
         return new WorkOnProjectAction(actor);
     }
-    if(id == 1){
+    if(id == ACTION_START_FIGHT){
         return new StartFightAction(actor, target);
     }
-    if(id == 2){
+    if(id == ACTION_STUDY){
         return new StudyAction(actor);
     }
-    if(id == 3){
+    if(id == ACTION_HEAL){
         return new HealAction(actor, target);
     }
     return nullptr;
