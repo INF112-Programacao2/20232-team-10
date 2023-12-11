@@ -1088,7 +1088,7 @@ bool Engine::check_for_ending(){
     }
     return true;
 }
-
+       
 //Tela final do jogo
 void Engine::ending_screen(int ending){
     
@@ -1112,39 +1112,55 @@ void Engine::ending_screen(int ending){
         screen = "everyonedies.jpeg";
     }
     else if (END_OF_SEMESTER_ENDING){
-        text = " O semestre acabou, nenhum assassino foi descoberto mas alguns alunos sobreviveram.";    
+        text = " O semestre acabou, nenhum assassino foi descoberto e nenhum estudante da Computação foi morto.";    
         description = "\n Aproveite suas férias e volte bem para o próximo semestre,\n mas cuidado! Nunca se sabe quando o CCPânico poderá ser reiniciado!!  ";
         screen = "endofsemesterend.jpeg";
     }
-    
+    return;
+
     // Imagem de fundo
     auto endingScreenBackground = tgui::Picture::create(screen);
     endingScreenBackground->setSize({"100%", "100%"});
     gui.add(endingScreenBackground);
 
-    //Mensagem da carga
-    auto endingScreenText = tgui::TextArea::create();
-    endingScreenText->setRenderer(theme.getRenderer("TextArea"));
-    endingScreenText->setMaximumCharacters(0);
-    endingScreenText->setPosition(240,30);
-    endingScreenText->setSize(320, 40);
-    endingScreenText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    endingScreenText->setTextSize(25);
-    endingScreenText->setReadOnly(true);
-    endingScreenText->setText(text);
-    gui.add(endingScreenText);
+    //Mensagem do título
+    auto endingText = tgui::TextArea::create();
+    endingText->setRenderer(theme.getRenderer("TextArea"));
+    endingText->setMaximumCharacters(0);
+    endingText->setPosition(240,30);
+    endingText->setSize(320, 40);
+    endingText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    endingText->setTextSize(25);
+    endingText->setReadOnly(true);
+    endingText->setText(text);
+    gui.add(endingText);
 
-    //Descricao da carga
-    auto endScreenDescription = tgui::TextArea::create();
-    endScreenDescription->setRenderer(theme.getRenderer("TextArea"));
-    endScreenDescription->setMaximumCharacters(0);
-    endScreenDescription->setPosition(255,400);
-    endScreenDescription->setSize(290, 115);
-    endScreenDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    endScreenDescription->setText(description);
-    endScreenDescription->setTextSize(15);
-    endScreenDescription->setReadOnly(true);
-    gui.add(endScreenDescription);
+    //Descricao da tela
+    auto endingDescription = tgui::TextArea::create();
+    endingDescription->setRenderer(theme.getRenderer("TextArea"));
+    endingDescription->setMaximumCharacters(0);
+    endingDescription->setPosition(255,400);
+    endingDescription->setSize(290, 115);
+    endingDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    endingDescription->setText(description);
+    endingDescription->setTextSize(15);
+    endingDescription->setReadOnly(true);
+    gui.add(endingDescription);
+
+    while(stay) {
+        sf::Event final_screen;
+        while(window.pollEvent(final_screen)) {
+            gui.handleEvent(final_screen);
+            if(final_screen.type == sf::Event::Closed) {
+                horrorgame.~Music();
+                window.close();
+            }
+        }
+        window.clear();
+        gui.draw();
+        window.display();
+    }
+    gui.removeAllWidgets();
 }
 
 void Engine::instantiatePlaces(){
