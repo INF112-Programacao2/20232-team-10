@@ -5,7 +5,10 @@ int triang(int n){
     return (n*n + n) / 2;
 }
 
-void Engine::game(){
+void Engine::game(int player_num){
+    for (int i = 0; i < player_num; i++){
+        character_creator_screen();
+    }
     Action::instantiateActions();
     instantiatePlaces();
     roleSelector();
@@ -45,7 +48,11 @@ void Engine::game(){
         delete places[i];
     }
 }
-void Engine:: game_settings{
+void Engine::game_settings(){
+
+    tgui::Theme theme{"./Black.txt"};
+    bool stay = true;
+    int player_num = 3;
 
     //Imagem de fundo
     auto picture = tgui::Picture::create("./criacaopersn.png");
@@ -63,21 +70,28 @@ void Engine:: game_settings{
     title->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(title);
     
+    //Quantidade de jogadores
+    auto playersButton = tgui::SpinButton::create();
+    playersButton->setRenderer(theme.getRenderer("SpinButton"));
+    playersButton->setMaximum(8);
+    playersButton->setMinimum(3);
+    playersButton->setStep(1);
+    playersButton->setPosition(210, 300);
+    playersButton->setSize(30, 50);
+    playersButton->setTextSize(13);
+    playersButton->setValue(player_num);
+    gui.add(playersButton);
 
-    
-    //ComboBox0
-    auto comboBox0 = tgui::ComboBox::create();
-    comboBox0->setRenderer(theme.getRenderer("ComboBox"));
-    comboBox0->setChangeItemOnScroll(false);
-    comboBox0->setItemsToDisplay(0);
-    comboBox0->setMaximumItems(0);
-    comboBox0->setPosition(320, 500);
-    comboBox0->setSize(250, 30);
-    comboBox0->setTextSize(13);
-    for (int i = 1; i <6; i++){
-        comboBox0->addItem(std::to_string[i])
-    }
-    gui.add(comboBox0);
+    auto playersArea = tgui::TextArea::create();
+    playersArea->setRenderer(theme.getRenderer("TextArea"));
+    playersArea->setPosition(50, 300);
+    playersArea->setMaximumCharacters(0);
+    playersArea->setSize(160, 50);
+    playersArea->setText(std::to_string(player_num) + " jogadores");
+    playersArea->setTextSize(16);
+    playersArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(playersArea);
+
     //Botao de começar o jogo
     auto nextButton = tgui::Button::create();
     nextButton->setRenderer(theme.getRenderer("Button"));
@@ -86,17 +100,21 @@ void Engine:: game_settings{
     nextButton->setText("Começar");
     nextButton->setTextSize(20);
     nextButton->onClick([&]{
+        game(playersButton->getValue());
         stay = false;
     });
     gui.add(nextButton);
 
-        //Botao de sair
+    //Botao de sair
     auto exitButton = tgui::Button::create();
     exitButton->setRenderer(theme.getRenderer("Button"));
-    exitButton->setPosition(540, 390);
-    exitButton->setSize(200, 70);
+    exitButton->setPosition(0, 540);
+    exitButton->setSize(170, 60);
     exitButton->setText("SAIR");
-    exitButton->setTextSize(19);
+    exitButton->setTextSize(20);
+    exitButton->onClick([&]{
+        stay = false;
+    });
     gui.add(exitButton);
 
     while(stay) {
@@ -107,6 +125,8 @@ void Engine:: game_settings{
                 window.close();
             }
         }
+        player_num = playersButton->getValue();
+        playersArea->setText(std::to_string(player_num) + " jogadores");
         window.clear();
         gui.draw();
         window.display();
@@ -114,10 +134,6 @@ void Engine:: game_settings{
     gui.removeAllWidgets();
 
 }
-
-
-
-
 
 void Engine::roleSelector() {
     int chosen = Dice::single_die(players.size()) - 1;
@@ -248,25 +264,13 @@ void Engine::main_menu() {
     newGameButton->setRenderer(theme.getRenderer("Button"));
     newGameButton->setPosition(50, 30);
     newGameButton->setSize(200, 70);
-    newGameButton->setText("NOVO JOGO");
+    newGameButton->setText("JOGAR");
     newGameButton->setTextSize(19);
     newGameButton->onClick([&]{
         gui.removeAllWidgets();
-        for (int i = 0; i < 3; i++){
-            character_creator_screen();
-        }
-        game();
+        game_settings();
     });
     gui.add(newGameButton);
-
-    //Botao de carregar jogo
-    auto loadGameButton = tgui::Button::create();
-    loadGameButton->setRenderer(theme.getRenderer("Button"));
-    loadGameButton->setPosition(300, 30);
-    loadGameButton->setSize(200, 70);
-    loadGameButton->setText("CARREGAR JOGO");
-    loadGameButton->setTextSize(19);
-    gui.add(loadGameButton);
 
     //Botao de sair
     auto exitButton = tgui::Button::create();
@@ -299,16 +303,6 @@ void Engine::main_menu() {
 }
 
 void Engine::playerTurn1(Player *player) {
-    
-    int destination;
-
-    std::cout << "Para onde voce quer ir?\n";
-    
-    std::cin >> destination;
-
-    player->travelTo(this->places[destination]);
-
-
 
     sf::Clock clock;
 
@@ -470,10 +464,6 @@ void Engine::playerTurn1(Player *player) {
     }
 
     Place* destination = places[comboBox1->getSelectedItemId().toInt()];
-
-    if (!destination){
-        // Vou colocar uma coisa aqui depois (Casa)
-    }
 
     player->travelTo(destination);
 
