@@ -16,7 +16,7 @@ void Engine::game(int player_num, int turn1_time, int turn2_time){
         pass_screen(players[i]);
         role_screen(players[i]);
     }
-    for (int t = 0; t < 6; t++){
+    for (game_time = 0; game_time < MAX_TIME; game_time++){
         for (int i = 0; i < players.size(); i++){
             pass_screen(players[i]);
             playerTurn1(players[i], turn1_time);
@@ -39,9 +39,6 @@ void Engine::game(int player_num, int turn1_time, int turn2_time){
         }
         if (check_for_ending()){
             break;
-        }
-        if (t == 5){
-            ending_screen(END_OF_SEMESTER_ENDING);
         }
     }
     for (int i = 0; i < PLACE_NUM; i++){
@@ -447,16 +444,19 @@ void Engine::playerTurn1(Player *player, int turn_time) {
     gui.add(TextArea1);
     
     //Botao de saude
-    auto healthButton = tgui::Button::create();
-    healthButton->setRenderer(theme.getRenderer("Button"));
-    healthButton->setPosition(200, 140);
-    healthButton->setSize(120, 35);
-    healthButton->setText("SAÚDE");
-    healthButton->setTextSize(18);
-    healthButton->onClick([&]{
-        TextArea1->setText("Saúde: " + player->getHealth());
+    auto needsButton = tgui::Button::create();
+    needsButton->setRenderer(theme.getRenderer("Button"));
+    needsButton->setPosition(200, 140);
+    needsButton->setSize(120, 35);
+    needsButton->setText("NECESSIDADES");
+    needsButton->setTextSize(16);
+    needsButton->onClick([&]{
+        TextArea1->setText("Necessidades: \n");
+        for (int i = 0; i < NEEDS_NUM; i++){
+            TextArea1->addText(needs_names[i] + ": " + std::to_string(player->getNeed(i)) + '\n');
+        }
     });
-    gui.add(healthButton);
+    gui.add(needsButton);
 
     //Botao de habilidades
     auto skillButton = tgui::Button::create();
@@ -468,7 +468,7 @@ void Engine::playerTurn1(Player *player, int turn_time) {
     skillButton->onClick([&]{ 
         TextArea1->setText("Skills: \n"); 
         for (int i = 0; i < SKILL_NUM; i++){
-            TextArea1->addText(skill_name[i] + ": " + std::to_string(player->getSkill(i)) + '\n');
+            TextArea1->addText(skill_names[i] + ": " + std::to_string(player->getSkill(i)) + '\n');
         }
     });
     gui.add(skillButton);
@@ -624,9 +624,11 @@ void Engine::playerTurn2(Player *player, int turn_time) {
     comboBox1->setSize(250, 35);
     comboBox1->setTextSize(15);
     for (int i = 0; i < Action::game_actions.size(); i++){
-        if (valid_target || !Action::game_actions[i]->isTargeted()){
+        Action* hypotetic_action = Action::ActionByID(i, player);
+        if ((valid_target || !hypotetic_action->isTargeted()) && hypotetic_action->possible()){
             comboBox1->addItem(Action::game_actions[i]->getDescription(), std::to_string(i));
         }
+        delete hypotetic_action;
     }
     gui.add(comboBox1);
 
@@ -643,16 +645,19 @@ void Engine::playerTurn2(Player *player, int turn_time) {
     gui.add(TextArea1);
     
     //Botao de saude
-    auto healthButton = tgui::Button::create();
-    healthButton->setRenderer(theme.getRenderer("Button"));
-    healthButton->setPosition(200, 140);
-    healthButton->setSize(120, 35);
-    healthButton->setText("SAÚDE");
-    healthButton->setTextSize(18);
-    healthButton->onClick([&]{
-        TextArea1->setText("Saúde: " + player->getHealth());
+    auto needsButton = tgui::Button::create();
+    needsButton->setRenderer(theme.getRenderer("Button"));
+    needsButton->setPosition(200, 140);
+    needsButton->setSize(120, 35);
+    needsButton->setText("NECESSIDADES");
+    needsButton->setTextSize(16);
+    needsButton->onClick([&]{
+        TextArea1->setText("Necessidades: \n");
+        for (int i = 0; i < NEEDS_NUM; i++){
+            TextArea1->addText(needs_names[i] + ": " + std::to_string(player->getNeed(i)) + '\n');
+        }
     });
-    gui.add(healthButton);
+    gui.add(needsButton);
 
     //Botao de habilidades
     auto skillButton = tgui::Button::create();
@@ -664,7 +669,7 @@ void Engine::playerTurn2(Player *player, int turn_time) {
     skillButton->onClick([&]{ 
         TextArea1->setText("Skills: \n"); 
         for (int i = 0; i < SKILL_NUM; i++){
-            TextArea1->addText(skill_name[i] + ": " + std::to_string(player->getSkill(i)) + '\n');
+            TextArea1->addText(skill_names[i] + ": " + std::to_string(player->getSkill(i)) + '\n');
         }
     });
     gui.add(skillButton);
@@ -1025,6 +1030,15 @@ void Engine::result_screen(Player *player){
 }
 
 void Engine::results() {
+    for (int i = 0; i < players.size(); i++){
+        for (int j = 0; j < NEEDS_NUM; j++){
+            players[i]->addNeed(j, -1);
+            if (players[i]->getNeed(j) < 0){
+                players[i]->randomSkillLoss();
+                players[i]->resultsText += "Você perdeu pontos de habilidade por não cuidar de suas necessidades\n";
+            }
+        }
+    }
     while (!turn_actions.empty()) {
         turn_actions.front()->execute();
         turn_actions.front()->updateResultsText();
@@ -1057,7 +1071,10 @@ bool Engine::check_for_ending(){
             someone_else_alive = true;
         }
     }
-    if (killer_alive && someone_else_alive){
+    if (game_time >=MAX_TIME){
+        ending_screen(END_OF_SEMESTER_ENDING);
+    }
+    else if (killer_alive && someone_else_alive){
         return false;
     }
     else if (someone_else_alive){
@@ -1136,7 +1153,7 @@ void Engine::instantiatePlaces(){
     places[0]->setBonus(ACTION_STUDY, 15);
     places.push_back(new Place("DCE", "./dce.jpg"));
     places[1]->setBonus(ACTION_WORK_ON_PROJECT, -10);
-    places[1]->setBonus(ACTION_STUDY, -10);
+    places[1]->setBonus(ACTION_STUDY, -15);
     places.push_back(new Place("PVA", "./pva.jpg"));
     places[2]->setBonus(ACTION_STUDY, 10);
     places.push_back(new Place("PVB", "./pvb.jpeg"));
@@ -1147,7 +1164,8 @@ void Engine::instantiatePlaces(){
     places.push_back(new Place("RU", "./RU.jpg"));
     places[5]->setBonus(ACTION_WORK_ON_PROJECT, -20);
     places[5]->setBonus(ACTION_STUDY, -15);
-    places.push_back(new Place("BBT", "./fundo1ufv.jpg"));
-    places[6]->setBonus(ACTION_WORK_ON_PROJECT, 15);
-    places[6]->setBonus(ACTION_STUDY, 25);
+}
+
+int Engine::getTime(){
+    return game_time;
 }

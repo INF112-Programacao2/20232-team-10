@@ -40,23 +40,38 @@ void TargetedAction::updateResultsText(){
 }
 
 WorkOnProjectAction::WorkOnProjectAction(Actor *actor): Action(actor){
-    this->id = 0;
+    this->id = ACTION_WORK_ON_PROJECT;
     this->description = "Trabalhar no projeto";
 }
 
 StartFightAction::StartFightAction(Actor *actor, Actor *target): TargetedAction(actor, target){
-    this->id = 1;
+    this->id = ACTION_START_FIGHT;
     this->description = "Atacar alvo";
 }
 
 StudyAction::StudyAction(Actor *actor): Action(actor){
-    this->id = 2;
+    this->id = ACTION_STUDY;
     this->description = "Estudar";
 }
 
 HealAction::HealAction(Actor *actor, Actor *target) : TargetedAction(actor, target) {
-    this->id = 3;
+    this->id = ACTION_HEAL;
     this->description = "Curar alvo";
+}
+
+LunchAction::LunchAction(Actor *actor): Action(actor){
+    this->id = ACTION_LUNCH;
+    this->description = "Almoçar";
+}
+
+VideogamesAction::VideogamesAction(Actor *actor): Action(actor){
+    this->id = ACTION_VIDEOGAMES;
+    this->description = "Jogar videogames";
+}
+
+RitarAction::RitarAction(Actor *actor): Action(actor){
+    this->id = ACTION_RITA;
+    this->description = "Ritar";
 }
 
 bool Action::possible(){
@@ -84,8 +99,9 @@ void StartFightAction::execute() {
     int result;
     fight.addFighter(actor, (actor->isKiller() ? ALIGNMENT_KILLER : ALIGNMENT_AGRESSOR));
     fight.addFighter(target, ALIGNMENT_VICTIM);
+    this->resultsText = actor->getName() + " atacou " + target->getName() + "!\n\n";
     result = fight.simulateFight();
-    this->resultsText = fight.getLog();
+    this->resultsText += fight.getLog();
     if (result == RESULT_TIME_OUT){
         this->resultsText += "\n" + actor->getName() + " foge enquanto a ajuda chega";
     }
@@ -98,11 +114,13 @@ void StartFightAction::execute() {
 void WorkOnProjectAction::execute() {
     int work = actor->skillRoll(LOGIC, 30 + actor->getPlace()->getBonus(id));
     actor->workOnProject(work);                       //Chama a funcao de trabalhor no projeto da classe Actor, com os pontos de INT do jogador como parametro
+    resultsText = "Você trabalhou no seu projeto final";
 }
 
 void StudyAction::execute() {
     int study = actor->skillRoll(COMMUNICATION, 30 + actor->getPlace()->getBonus(id));
     actor->study(study);                           //Chama a funcao de estudar da classe Actor, com os pontos de WIS do jogador como parametro
+    resultsText = "Você estudou para as provas";
 }
 
 void HealAction::execute() {
@@ -115,8 +133,31 @@ void HealAction::execute() {
     }
 }
 
+void LunchAction::execute() {
+    actor->setNeed(NEED_HUNGER, 5);                           //Preenche a necessidade de comida
+    resultsText = "Você almoçou";
+}
+
+void VideogamesAction::execute() {
+    actor->addNeed(NEED_FUN, 3);                           //Melhora a necessidade de diversão (sem limite máximo)
+    resultsText = "Você jogou videogames";
+}
+
+void RitarAction::execute() {
+    actor->setNeed(NEED_FUN, 5);                           //Preenche a necessidade de diversão
+    resultsText = "Você ritou";
+}
+
+bool LunchAction::possible(){
+    return actor->getPlace()->getName() == "RU";
+}
+
+bool RitarAction::possible(){
+    return actor->getPlace()->getName() == "Rita";
+}
+
 void Action::instantiateActions(){
-    for (int i = 0; i < ACTION_NUM; i++){
+    for (int i = 0; i < ACTIONS_NUM; i++){
         game_actions.push_back(ActionByID(i));
     }
 }
@@ -134,5 +175,15 @@ Action* Action::ActionByID(int id, Actor *actor, Actor *target){
     if(id == ACTION_HEAL){
         return new HealAction(actor, target);
     }
+    if(id == ACTION_LUNCH){
+        return new LunchAction(actor);
+    }
+    if(id == ACTION_VIDEOGAMES){
+        return new VideogamesAction(actor);
+    }
+    if(id == ACTION_RITA){
+        return new RitarAction(actor);
+    }
+    
     return nullptr;
 }

@@ -4,13 +4,16 @@
 #include <vector>
 #include "player.h"
 
-const int ACTION_NUM = 4;
+const int ACTIONS_NUM = 7;
 
 enum action_names{
     ACTION_WORK_ON_PROJECT,
     ACTION_START_FIGHT,
     ACTION_STUDY,
-    ACTION_HEAL
+    ACTION_HEAL,
+    ACTION_LUNCH,
+    ACTION_VIDEOGAMES,
+    ACTION_RITA,
 };
 
 class Action {                          //Classe para acoes sem alvo
@@ -57,7 +60,26 @@ class StudyAction : public Action {             //Classe para a acao de estudar
     public:
         StudyAction(Actor *actor);              
         virtual void execute() override;
-        //virtual bool possible() override;
+};
+
+class LunchAction : public Action {             //Classe para a acao de almoçar
+    public:
+        LunchAction(Actor *actor);              
+        virtual void execute() override;
+        virtual bool possible() override;
+};
+
+class VideogamesAction : public Action {             //Classe para a acao de jogar videogames
+    public:
+        VideogamesAction(Actor *actor);              
+        virtual void execute() override;
+};
+
+class RitarAction : public Action {             //Classe para a acao de ritar
+    public:
+        RitarAction(Actor *actor);              
+        virtual void execute() override;
+        virtual bool possible() override;
 };
 
 class StartFightAction : public TargetedAction {        //Classe para a acao de iniciar combate (herda da classe TargetedAction, pois possui alvo)

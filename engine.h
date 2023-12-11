@@ -15,6 +15,7 @@
 int triang(int n);
 
 const int PLACE_NUM = 6;
+const int MAX_TIME = 8;
 
 enum endings{
     NO_ENDING,
@@ -29,7 +30,7 @@ class Engine {
         std::vector<Player*> players;
         std::queue<Action*> turn_actions;
         std::vector<Place*> places;
-        unsigned int time = 0;
+        unsigned int game_time = 0;
 
     public:
         sf::RenderWindow window{{800, 600}, "CCPanico"};
@@ -52,6 +53,7 @@ class Engine {
         void instantiatePlaces();
         bool check_for_ending();
         void ending_screen(int ending);
+        int getTime();
 };
 
 #endif

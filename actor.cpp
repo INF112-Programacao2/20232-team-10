@@ -7,6 +7,9 @@ Actor::Actor(tgui::String name){                 //Construtor
     for (int i = 0; i < SKILL_NUM; i++){    //Inicializacao do valores das skills com 0
         this->skill[i] = 3;
     }
+    for (int i = 0; i < NEEDS_NUM; i++){
+        this->need[i] = 5;
+    }
     this->injuries = 0;     //Zera a quantidade de dano
 }
 
@@ -15,6 +18,9 @@ Actor::Actor(tgui::String name, int atributes[6]) {
     this->alive = true;
     for (int i = 0; i < SKILL_NUM; i++){    //Atualiza os valores da skills para a quantidade de pontos escolhida pelo jogador
         this->skill[i] = atributes[i];
+    }
+    for (int i = 0; i < NEEDS_NUM; i++){
+        this->need[i] = 5;
     }
     this->injuries = 0;     //Zera a quantidade de dano
     this->killer = false;
@@ -117,4 +123,24 @@ void Actor::setCostumed(bool wear){
 
 bool Actor::isCostumed(){
     return costumed;
+}
+
+int Actor::getNeed(int need_name){
+    return need[need_name];
+}
+
+void Actor::setNeed(int need_name, int x){
+    need[need_name] = x;
+}
+
+void Actor::addNeed(int need_name, int x){
+    need[need_name] += x;
+}
+
+void Actor::randomSkillLoss(int x){
+    int chosen = Dice::single_die(SKILL_NUM) - 1;
+    skill[chosen] -= x;
+    if (skill[chosen] <= 0){
+        skill[chosen] = 1;
+    }
 }
