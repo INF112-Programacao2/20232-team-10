@@ -1116,7 +1116,6 @@ void Engine::ending_screen(int ending){
         description = "\n Aproveite suas férias e volte bem para o próximo semestre,\n mas cuidado! Nunca se sabe quando o CCPânico poderá ser reiniciado!!  ";
         screen = "endofsemesterend.jpeg";
     }
-    return;
 
     // Imagem de fundo
     auto endingScreenBackground = tgui::Picture::create(screen);
