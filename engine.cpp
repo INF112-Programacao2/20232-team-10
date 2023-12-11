@@ -5,7 +5,7 @@ int triang(int n){
     return (n*n + n) / 2;
 }
 
-void Engine::game(int player_num){
+void Engine::game(int player_num, int turn1_time, int turn2_time){
     for (int i = 0; i < player_num; i++){
         character_creator_screen();
     }
@@ -19,12 +19,12 @@ void Engine::game(int player_num){
     for (int t = 0; t < 6; t++){
         for (int i = 0; i < players.size(); i++){
             pass_screen(players[i]);
-            playerTurn1(players[i]);
+            playerTurn1(players[i], turn1_time);
         }
         for (int i = 0; i < players.size(); i++){
             players[i]->resultsText = "";
             pass_screen(players[i]);
-            playerTurn2(players[i]);
+            playerTurn2(players[i], turn2_time);
         }
         results();
         for (int i = 0; i < players.size(); i++){
@@ -52,7 +52,10 @@ void Engine::game_settings(){
 
     tgui::Theme theme{"./Black.txt"};
     bool stay = true;
+
     int player_num = 3;
+    int turn1_time = 10;
+    int turn2_time = 15;
 
     //Imagem de fundo
     auto picture = tgui::Picture::create("./criacaopersn.png");
@@ -65,7 +68,7 @@ void Engine::game_settings(){
     title->setPosition(230, 20);
     title->setMaximumCharacters(0);
     title->setSize(340, 40);
-    title->setText("Quantidade de Jogadores");
+    title->setText("Configurações de jogo");
     title->setTextSize(23);
     title->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(title);
@@ -76,7 +79,7 @@ void Engine::game_settings(){
     playersButton->setMaximum(8);
     playersButton->setMinimum(3);
     playersButton->setStep(1);
-    playersButton->setPosition(210, 300);
+    playersButton->setPosition(210, 250);
     playersButton->setSize(30, 50);
     playersButton->setTextSize(13);
     playersButton->setValue(player_num);
@@ -84,13 +87,55 @@ void Engine::game_settings(){
 
     auto playersArea = tgui::TextArea::create();
     playersArea->setRenderer(theme.getRenderer("TextArea"));
-    playersArea->setPosition(50, 300);
+    playersArea->setPosition(50, 250);
     playersArea->setMaximumCharacters(0);
     playersArea->setSize(160, 50);
     playersArea->setText(std::to_string(player_num) + " jogadores");
     playersArea->setTextSize(16);
     playersArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gui.add(playersArea);
+
+    auto turn1Button = tgui::SpinButton::create();
+    turn1Button->setRenderer(theme.getRenderer("SpinButton"));
+    turn1Button->setMaximum(30);
+    turn1Button->setMinimum(5);
+    turn1Button->setStep(1);
+    turn1Button->setPosition(210, 350);
+    turn1Button->setSize(30, 50);
+    turn1Button->setTextSize(13);
+    turn1Button->setValue(turn1_time);
+    gui.add(turn1Button);
+    
+    auto turn1Area = tgui::TextArea::create();
+    turn1Area->setRenderer(theme.getRenderer("TextArea"));
+    turn1Area->setPosition(50, 350);
+    turn1Area->setMaximumCharacters(0);
+    turn1Area->setSize(160, 50);
+    turn1Area->setText("Turno 1: " + std::to_string(turn1_time) + " segundos");
+    turn1Area->setTextSize(16);
+    turn1Area->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(turn1Area);
+
+    auto turn2Button = tgui::SpinButton::create();
+    turn2Button->setRenderer(theme.getRenderer("SpinButton"));
+    turn2Button->setMaximum(30);
+    turn2Button->setMinimum(5);
+    turn2Button->setStep(1);
+    turn2Button->setPosition(210, 450);
+    turn2Button->setSize(30, 50);
+    turn2Button->setTextSize(13);
+    turn2Button->setValue(turn2_time);
+    gui.add(turn2Button);
+
+    auto turn2Area = tgui::TextArea::create();
+    turn2Area->setRenderer(theme.getRenderer("TextArea"));
+    turn2Area->setPosition(50, 450);
+    turn2Area->setMaximumCharacters(0);
+    turn2Area->setSize(160, 50);
+    turn2Area->setText("Turno 2: " + std::to_string(turn2_time) + " segundos");
+    turn2Area->setTextSize(16);
+    turn2Area->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(turn2Area);
 
     //Botao de começar o jogo
     auto nextButton = tgui::Button::create();
@@ -100,7 +145,7 @@ void Engine::game_settings(){
     nextButton->setText("Começar");
     nextButton->setTextSize(20);
     nextButton->onClick([&]{
-        game(playersButton->getValue());
+        game(playersButton->getValue(), turn1_time, turn2_time);
         stay = false;
     });
     gui.add(nextButton);
@@ -122,11 +167,16 @@ void Engine::game_settings(){
         while(window.pollEvent(role_screen)) {
             gui.handleEvent(role_screen);
             if(role_screen.type == sf::Event::Closed) {
+                horrorgame.~Music();
                 window.close();
             }
         }
         player_num = playersButton->getValue();
+        turn1_time = turn1Button->getValue();
+        turn2_time = turn2Button->getValue();
         playersArea->setText(std::to_string(player_num) + " jogadores");
+        turn1Area->setText("Turno 1: " + std::to_string(turn1_time) + " segundos");
+        turn2Area->setText("Turno 2: " + std::to_string(turn2_time) + " segundos");
         window.clear();
         gui.draw();
         window.display();
@@ -201,6 +251,7 @@ void Engine::role_screen(Player *player) {
         while(window.pollEvent(role_screen)) {
             gui.handleEvent(role_screen);
             if(role_screen.type == sf::Event::Closed) {
+                horrorgame.~Music();
                 window.close();
             }
         }
@@ -240,6 +291,7 @@ void Engine::pass_screen(Player *player) {
         while(window.pollEvent(pass_screen)) {
             gui.handleEvent(pass_screen);
             if(pass_screen.type == sf::Event::Closed) {
+                horrorgame.~Music();
                 window.close();
             }
         }
@@ -282,16 +334,15 @@ void Engine::main_menu() {
     gui.add(exitButton);
 
     //Geracao do window para o Main Menu
-    sf::Music horrorgame;
     if (!horrorgame.openFromFile("8bit-Syndrome-Horror-audio01-.ogg"))
         return ; // error
-    
+    horrorgame.play();
     while (true) {
         sf::Event main_menu;
         while(window.pollEvent(main_menu)) {
-            horrorgame.play();
             gui.handleEvent(main_menu);
             if(main_menu.type == sf::Event::Closed) {
+                horrorgame.~Music();
                 window.close();
             }
         }
@@ -302,11 +353,11 @@ void Engine::main_menu() {
     gui.removeAllWidgets();
 }
 
-void Engine::playerTurn1(Player *player) {
+void Engine::playerTurn1(Player *player, int turn_time) {
 
     sf::Clock clock;
 
-    int time = 40;
+    int time = 4 * turn_time;
 
     tgui::Theme theme{"./Black.txt"};
 
@@ -353,7 +404,7 @@ void Engine::playerTurn1(Player *player) {
     timeBar->setPosition(600, 570);
     timeBar->setSize(200, 30);
     timeBar->setValue(time);                 //Recebe o valor do clock do turno
-    timeBar->setMaximum(40);
+    timeBar->setMaximum(time);
     timeBar->setMinimum(0);
     timeBar->setText("TEMPO");        
     timeBar->setTextSize(15);
@@ -446,6 +497,7 @@ void Engine::playerTurn1(Player *player) {
         while (window.pollEvent(event)){
             gui.handleEvent(event);
             if (event.type == sf::Event::Closed){
+                horrorgame.~Music();
                 window.close();
             }
         }
@@ -471,12 +523,12 @@ void Engine::playerTurn1(Player *player) {
     
 }
 
-void Engine::playerTurn2(Player *player) {
+void Engine::playerTurn2(Player *player, int turn_time) {
     //***// Interface Game Menu //***//
 
     sf::Clock clock;
 
-    int time = 60;
+    int time = 4 * turn_time;
 
     bool valid_target = false;
 
@@ -529,7 +581,7 @@ void Engine::playerTurn2(Player *player) {
     timeBar->setPosition(600, 570);
     timeBar->setSize(200, 30);
     timeBar->setValue(time);                 //Recebe o valor do clock do turno
-    timeBar->setMaximum(60);
+    timeBar->setMaximum(time);
     timeBar->setMinimum(0);
     timeBar->setText("TEMPO");        
     timeBar->setTextSize(15);
@@ -652,6 +704,7 @@ void Engine::playerTurn2(Player *player) {
         while (window.pollEvent(event)){
             gui.handleEvent(event);
             if (event.type == sf::Event::Closed){
+                horrorgame.~Music();
                 window.close();
             }
         }
@@ -880,6 +933,7 @@ void Engine::character_creator_screen() {
         while (window.pollEvent(event)){
             gui.handleEvent(event);
             if (event.type == sf::Event::Closed){
+                horrorgame.~Music();
                 window.close();
             }
         }
@@ -959,6 +1013,7 @@ void Engine::result_screen(Player *player){
         while(window.pollEvent(pass_screen)) {
             gui.handleEvent(pass_screen);
             if(pass_screen.type == sf::Event::Closed) {
+                horrorgame.~Music();
                 window.close();
             }
         }
@@ -1024,27 +1079,55 @@ void Engine::ending_screen(int ending){
     bool stay = true;
     tgui::String text, description, screen;
 
-    if(KILL_THE_KILLER_ENDING){
+    if (KILL_THE_KILLER_ENDING){
         text = "Parabens, você matou o assassino!";    
         description = " Com o projeto final entregue e nenhum assassino á solta,\n sinta-se livre para aproveitar suas férias da melhor forma possível.";
         screen = "beachcapy.jpeg";
     }
-    else if(KILLER_WIN_ENDING){
-        text = "Parabens, você matou o máximo de alunos da Computação e ainda não foi pego!";    
+    else if (KILLER_WIN_ENDING){
+        text = "Parabens, você matou os alunos da Computação e ainda não foi pego!";    
         description = " Com o fim do semestre e sem nenhum aluno da computação para te infernizar,\n aproveite as suas férias livre de CCP's!";
         screen = "killercapyend.jpeg";
     }
-    else if(EVERYONE_DEAD_ENDING){
+    else if (EVERYONE_DEAD_ENDING){
         text = "Infelizmente, todos os alunos da Computação foram mortos! :(";    
         description = "\n Mas junto com eles, o assassino também se foi! :) ";
         screen = "everyonedies.jpeg";
     }
-    else(END_OF_SEMESTER_ENDING){
-        text = " O semestre acabou, nenhum assassino foi descoberto e nenhum estudante da Computação foi morto.";    
+    else if (END_OF_SEMESTER_ENDING){
+        text = " O semestre acabou, nenhum assassino foi descoberto mas alguns alunos sobreviveram.";    
         description = "\n Aproveite suas férias e volte bem para o próximo semestre,\n mas cuidado! Nunca se sabe quando o CCPânico poderá ser reiniciado!!  ";
         screen = "endofsemesterend.jpeg";
     }
-    return;
+    
+    // Imagem de fundo
+    auto endingScreenBackground = tgui::Picture::create(screen);
+    endingScreenBackground->setSize({"100%", "100%"});
+    gui.add(endingScreenBackground);
+
+    //Mensagem da carga
+    auto endingScreenText = tgui::TextArea::create();
+    endingScreenText->setRenderer(theme.getRenderer("TextArea"));
+    endingScreenText->setMaximumCharacters(0);
+    endingScreenText->setPosition(240,30);
+    endingScreenText->setSize(320, 40);
+    endingScreenText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    endingScreenText->setTextSize(25);
+    endingScreenText->setReadOnly(true);
+    endingScreenText->setText(text);
+    gui.add(endingScreenText);
+
+    //Descricao da carga
+    auto endScreenDescription = tgui::TextArea::create();
+    endScreenDescription->setRenderer(theme.getRenderer("TextArea"));
+    endScreenDescription->setMaximumCharacters(0);
+    endScreenDescription->setPosition(255,400);
+    endScreenDescription->setSize(290, 115);
+    endScreenDescription->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    endScreenDescription->setText(description);
+    endScreenDescription->setTextSize(15);
+    endScreenDescription->setReadOnly(true);
+    gui.add(endScreenDescription);
 }
 
 void Engine::instantiatePlaces(){
@@ -1067,8 +1150,4 @@ void Engine::instantiatePlaces(){
     places.push_back(new Place("BBT", "./fundo1ufv.jpg"));
     places[6]->setBonus(ACTION_WORK_ON_PROJECT, 15);
     places[6]->setBonus(ACTION_STUDY, 25);
-}
-
-void Engine::ending_screen(int ending){
-    return;
 }

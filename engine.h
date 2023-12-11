@@ -34,10 +34,11 @@ class Engine {
     public:
         sf::RenderWindow window{{800, 600}, "CCPanico"};
         tgui::Gui gui{window};
-        void game(int palyer_num);                                    // A FUNÇÃO!!!!!
+        sf::Music horrorgame;
+        void game(int player_num, int turn1_time, int turn2_time);                                    // A FUNÇÃO!!!!!
         void game_settings();
-        void playerTurn1(Player *player);
-        void playerTurn2(Player *player);
+        void playerTurn1(Player *player, int turn_time);
+        void playerTurn2(Player *player, int turn_time);
         //void playerTurn3(Player *player);
         void pass_screen(Player *player);
         void character_creator_screen();
