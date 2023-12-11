@@ -1112,7 +1112,7 @@ void Engine::ending_screen(int ending){
         screen = "everyonedies.jpeg";
     }
     else if (END_OF_SEMESTER_ENDING){
-        text = " O semestre acabou, nenhum assassino foi descoberto e nenhum estudante da Computação foi morto.";    
+        text = " O semestre acabou, nenhum assassino foi descoberto, mas alguns alunos sobreviveram";    
         description = "\n Aproveite suas férias e volte bem para o próximo semestre,\n mas cuidado! Nunca se sabe quando o CCPânico poderá ser reiniciado!!  ";
         screen = "endofsemesterend.jpeg";
     }
