@@ -1090,7 +1090,7 @@ bool Engine::check_for_ending(){
             someone_else_alive = true;
         }
     }
-    if (game_time >=MAX_TIME){
+    if (game_time >= MAX_TIME-1){
         ending_screen(END_OF_SEMESTER_ENDING);
     }
     else if (killer_alive && someone_else_alive){
@@ -1117,12 +1117,12 @@ void Engine::ending_screen(int ending){
 
     if (ending == KILL_THE_KILLER_ENDING){
         text = "Parabens, você matou o assassino!";    
-        description = " Com o projeto final entregue e nenhum assassino á solta,\n sinta-se livre para aproveitar suas férias da melhor forma possível.";
+        description = "\n Com o projeto final entregue e nenhum assassino á solta,\n sinta-se livre para aproveitar suas férias da melhor forma possível.";
         screen = "beachcapy.jpeg";
     }
     else if (ending == KILLER_WIN_ENDING){
         text = "Parabens, você matou os alunos da Computação e ainda não foi pego!";    
-        description = " Com o fim do semestre e sem nenhum aluno da computação para te infernizar,\n aproveite as suas férias livre de CCP's!";
+        description = "\n Com o fim do semestre e sem nenhum aluno da computação para te infernizar,\n aproveite as suas férias livre de CCP's!";
         screen = "killercapyend.jpeg";
     }
     else if (ending == EVERYONE_DEAD_ENDING){
@@ -1132,7 +1132,15 @@ void Engine::ending_screen(int ending){
     }
     else if (ending == END_OF_SEMESTER_ENDING){
         text = " O semestre acabou, nenhum assassino foi descoberto, mas alguns alunos sobreviveram";    
-        description = "\n Aproveite suas férias e volte bem para o próximo semestre,\n mas cuidado! Nunca se sabe quando o CCPânico poderá ser reiniciado!!  ";
+        description = "\n Aproveite suas férias e volte bem para o próximo semestre,\n mas cuidado! \nNunca se sabe quando o CCPânico poderá ser reiniciado!!\n";
+        for (int i = 0; i < players.size(); i++){
+            if (Dice::single_die(200) < players[i]->getProjectBar() + players[i]->getStudyBar()){
+                description += "\n" + players[i]->getName() + " passou de ano!";
+            }
+            else{
+                description += "\n" + players[i]->getName() + " reprovou!";
+            }
+        }
         screen = "endofsemesterend.jpeg";
     }
 
@@ -1146,9 +1154,9 @@ void Engine::ending_screen(int ending){
     endingText->setRenderer(theme.getRenderer("TextArea"));
     endingText->setMaximumCharacters(0);
     endingText->setPosition(240,30);
-    endingText->setSize(320, 40);
+    endingText->setSize(340, 40);
     endingText->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    endingText->setTextSize(25);
+    endingText->setTextSize(15);
     endingText->setReadOnly(true);
     endingText->setText(text);
     gui.add(endingText);

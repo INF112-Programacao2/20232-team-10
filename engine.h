@@ -8,14 +8,11 @@
 #include <SFML/Audio.hpp>
 
 #include "actions.h"
-#include "actor.h"
-#include "place.h"
-#include "player.h"
 
 int triang(int n);
 
 const int PLACE_NUM = 6;
-const int MAX_TIME = 8;
+const int MAX_TIME = 2;
 
 enum endings{
     NO_ENDING,
