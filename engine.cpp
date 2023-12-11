@@ -908,6 +908,17 @@ void Engine::character_creator_screen() {
     EditBox1->setTextSize(15);
     gui.add(EditBox1);
 
+    auto ErrorArea = tgui::TextArea::create();
+    ErrorArea->setRenderer(theme.getRenderer("TextArea"));
+    ErrorArea->setPosition(300, 400);
+    ErrorArea->setMaximumCharacters(0);
+    ErrorArea->setSize(200, 100);
+    ErrorArea->setText("");
+    ErrorArea->setTextSize(16);
+    ErrorArea->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+    gui.add(ErrorArea);
+    ErrorArea->setVisible(false);
+
     //Botao de proximo
     auto NextButton = tgui::Button::create();
     NextButton->setPosition(630, 540);
@@ -915,7 +926,15 @@ void Engine::character_creator_screen() {
     NextButton->setText("PRÓXIMO");
     NextButton->setTextSize(20);
     NextButton->onClick([&]{
-        if (points >= 0){
+        if (EditBox1->getText() == ""){
+            ErrorArea->setVisible(true);
+            ErrorArea->setText("Insira um nome de verdade");
+        }
+        else if (points < 0){
+            ErrorArea->setVisible(true);
+            ErrorArea->setText("Você está gastando " + std::to_string(points * -1) + " a mais do que permitido." );
+        }
+        else{
             createPlayer(EditBox1->getText(), atributes);
             stay = false;
         }
@@ -931,7 +950,7 @@ void Engine::character_creator_screen() {
     RemainingPoints->setText("PONTOS RESTANTES: " + std::to_string(points));
     RemainingPoints->setTextSize(18);
     gui.add(RemainingPoints);
-    
+
 
     while (stay){
         sf::Event event;
@@ -1096,22 +1115,22 @@ void Engine::ending_screen(int ending){
     bool stay = true;
     tgui::String text, description, screen;
 
-    if (KILL_THE_KILLER_ENDING){
+    if (ending == KILL_THE_KILLER_ENDING){
         text = "Parabens, você matou o assassino!";    
         description = " Com o projeto final entregue e nenhum assassino á solta,\n sinta-se livre para aproveitar suas férias da melhor forma possível.";
         screen = "beachcapy.jpeg";
     }
-    else if (KILLER_WIN_ENDING){
+    else if (ending == KILLER_WIN_ENDING){
         text = "Parabens, você matou os alunos da Computação e ainda não foi pego!";    
         description = " Com o fim do semestre e sem nenhum aluno da computação para te infernizar,\n aproveite as suas férias livre de CCP's!";
         screen = "killercapyend.jpeg";
     }
-    else if (EVERYONE_DEAD_ENDING){
+    else if (ending == EVERYONE_DEAD_ENDING){
         text = "Infelizmente, todos os alunos da Computação foram mortos! :(";    
         description = "\n Mas junto com eles, o assassino também se foi! :) ";
         screen = "everyonedies.jpeg";
     }
-    else if (END_OF_SEMESTER_ENDING){
+    else if (ending == END_OF_SEMESTER_ENDING){
         text = " O semestre acabou, nenhum assassino foi descoberto, mas alguns alunos sobreviveram";    
         description = "\n Aproveite suas férias e volte bem para o próximo semestre,\n mas cuidado! Nunca se sabe quando o CCPânico poderá ser reiniciado!!  ";
         screen = "endofsemesterend.jpeg";
