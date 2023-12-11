@@ -1017,6 +1017,36 @@ bool Engine::check_for_ending(){
     return true;
 }
 
+//Tela final do jogo
+void Engine::ending_screen(int ending){
+    
+    tgui::Theme theme{"./Black.txt"};
+    bool stay = true;
+    tgui::String text, description, screen;
+
+    if(KILL_THE_KILLER_ENDING){
+        text = "Parabens, você matou o assassino!";    
+        description = " Com o projeto final entregue e nenhum assassino á solta,\n sinta-se livre para aproveitar suas férias da melhor forma possível.";
+        screen = "beachcapy.jpeg";
+    }
+    else if(KILLER_WIN_ENDING){
+        text = "Parabens, você matou o máximo de alunos da Computação e ainda não foi pego!";    
+        description = " Com o fim do semestre e sem nenhum aluno da computação para te infernizar,\n aproveite as suas férias livre de CCP's!";
+        screen = "killercapyend.jpeg";
+    }
+    else if(EVERYONE_DEAD_ENDING){
+        text = "Infelizmente, todos os alunos da Computação foram mortos! :(";    
+        description = "\n Mas junto com eles, o assassino também se foi! :) ";
+        screen = "everyonedies.jpeg";
+    }
+    else(END_OF_SEMESTER_ENDING){
+        text = " O semestre acabou, nenhum assassino foi descoberto e nenhum estudante da Computação foi morto.";    
+        description = "\n Aproveite suas férias e volte bem para o próximo semestre,\n mas cuidado! Nunca se sabe quando o CCPânico poderá ser reiniciado!!  ";
+        screen = "endofsemesterend.jpeg";
+    }
+    return;
+}
+
 void Engine::instantiatePlaces(){
     places.push_back(new Place("CCE", "./cce.jpg"));
     places[0]->setBonus(ACTION_WORK_ON_PROJECT, 20);
