@@ -221,13 +221,13 @@ Actor* Fight::getTarget(Actor *actor){
     if (hostiles == 0){
         return nullptr;
     }
-    int chosen = Dice::single_die(hostiles);
+    int chosen = Dice::single_die(hostiles)-1;
     for (int i = 0; i < fighters.size(); i++){
+        if (chosen == 0 && alignments[fighters[i]] != alignments[actor]){
+            return fighters[i];
+        }
         if (alignments[fighters[i]] != alignments[actor]){
             chosen--;
-        }
-        if (chosen == 0){
-            return fighters[i];
         }
     }
     return nullptr;
@@ -249,7 +249,7 @@ bool Fight::getAction(Actor *actor){
         }
         delete fight_action;
     }
-    int chosen = Dice::single_die(total_weight);
+    int chosen = Dice::single_die(total_weight)-1;
     for (int i = 0; i < possible; i++){
         fight_action = FightAction::FightActionByID(i, this, actor, target);
         if (fight_action->possible()){

@@ -166,6 +166,7 @@ void Engine::game_settings(){
             if(role_screen.type == sf::Event::Closed) {
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
         player_num = playersButton->getValue();
@@ -250,6 +251,7 @@ void Engine::role_screen(Player *player) {
             if(role_screen.type == sf::Event::Closed) {
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
         window.clear();
@@ -290,6 +292,7 @@ void Engine::pass_screen(Player *player) {
             if(pass_screen.type == sf::Event::Closed) {
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
         window.clear();
@@ -328,6 +331,11 @@ void Engine::main_menu() {
     exitButton->setSize(200, 70);
     exitButton->setText("SAIR");
     exitButton->setTextSize(19);
+    exitButton->onClick([&]{
+                horrorgame.~Music();
+                window.close();
+                exit(0);
+    });
     gui.add(exitButton);
 
     //Geracao do window para o Main Menu
@@ -341,6 +349,7 @@ void Engine::main_menu() {
             if(main_menu.type == sf::Event::Closed) {
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
         window.clear();
@@ -499,6 +508,7 @@ void Engine::playerTurn1(Player *player, int turn_time) {
             if (event.type == sf::Event::Closed){
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
         if (clock.getElapsedTime() > sf::seconds(0.25)){
@@ -711,6 +721,7 @@ void Engine::playerTurn2(Player *player, int turn_time) {
             if (event.type == sf::Event::Closed){
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
         if (clock.getElapsedTime() > sf::seconds(0.25)){
@@ -959,6 +970,7 @@ void Engine::character_creator_screen() {
             if (event.type == sf::Event::Closed){
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
 
@@ -1039,6 +1051,7 @@ void Engine::result_screen(Player *player){
             if(pass_screen.type == sf::Event::Closed) {
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
         window.clear();
@@ -1180,6 +1193,7 @@ void Engine::ending_screen(int ending){
             if(final_screen.type == sf::Event::Closed) {
                 horrorgame.~Music();
                 window.close();
+                exit(0);
             }
         }
         window.clear();
