@@ -1207,6 +1207,7 @@ int Engine::getTime(){
 }
 
 void Engine::quit_game(){
+    gui.removeAllWidgets();
     horrorgame.~Music();
     window.close();
     for (int i = players.size()-1; i >= 0; i++){
