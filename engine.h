@@ -51,6 +51,7 @@ class Engine {
         bool check_for_ending();
         void ending_screen(int ending);
         int getTime();
+        void quit_game();
 };
 
 #endif

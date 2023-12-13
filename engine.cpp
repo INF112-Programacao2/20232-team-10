@@ -164,9 +164,7 @@ void Engine::game_settings(){
         while(window.pollEvent(role_screen)) {
             gui.handleEvent(role_screen);
             if(role_screen.type == sf::Event::Closed) {
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
             }
         }
         player_num = playersButton->getValue();
@@ -249,9 +247,7 @@ void Engine::role_screen(Player *player) {
         while(window.pollEvent(role_screen)) {
             gui.handleEvent(role_screen);
             if(role_screen.type == sf::Event::Closed) {
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
             }
         }
         window.clear();
@@ -290,9 +286,7 @@ void Engine::pass_screen(Player *player) {
         while(window.pollEvent(pass_screen)) {
             gui.handleEvent(pass_screen);
             if(pass_screen.type == sf::Event::Closed) {
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
             }
         }
         window.clear();
@@ -332,9 +326,7 @@ void Engine::main_menu() {
     exitButton->setText("SAIR");
     exitButton->setTextSize(19);
     exitButton->onClick([&]{
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
     });
     gui.add(exitButton);
 
@@ -347,9 +339,7 @@ void Engine::main_menu() {
         while(window.pollEvent(main_menu)) {
             gui.handleEvent(main_menu);
             if(main_menu.type == sf::Event::Closed) {
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
             }
         }
         window.clear();
@@ -506,9 +496,7 @@ void Engine::playerTurn1(Player *player, int turn_time) {
         while (window.pollEvent(event)){
             gui.handleEvent(event);
             if (event.type == sf::Event::Closed){
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
             }
         }
         if (clock.getElapsedTime() > sf::seconds(0.25)){
@@ -719,9 +707,7 @@ void Engine::playerTurn2(Player *player, int turn_time) {
         while (window.pollEvent(event)){
             gui.handleEvent(event);
             if (event.type == sf::Event::Closed){
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
             }
         }
         if (clock.getElapsedTime() > sf::seconds(0.25)){
@@ -968,9 +954,7 @@ void Engine::character_creator_screen() {
         while (window.pollEvent(event)){
             gui.handleEvent(event);
             if (event.type == sf::Event::Closed){
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
             }
         }
 
@@ -1049,9 +1033,7 @@ void Engine::result_screen(Player *player){
         while(window.pollEvent(pass_screen)) {
             gui.handleEvent(pass_screen);
             if(pass_screen.type == sf::Event::Closed) {
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                 quit_game();
             }
         }
         window.clear();
@@ -1191,9 +1173,7 @@ void Engine::ending_screen(int ending){
         while(window.pollEvent(final_screen)) {
             gui.handleEvent(final_screen);
             if(final_screen.type == sf::Event::Closed) {
-                horrorgame.~Music();
-                window.close();
-                exit(0);
+                quit_game();
             }
         }
         window.clear();
@@ -1224,4 +1204,20 @@ void Engine::instantiatePlaces(){
 
 int Engine::getTime(){
     return game_time;
+}
+
+void Engine::quit_game(){
+    horrorgame.~Music();
+    window.close();
+    for (int i = players.size()-1; i >= 0; i++){
+        delete players[i];
+    }
+    for (int i = places.size()-1; i >= 0; i++){
+        delete places[i];
+    }
+    while (!turn_actions.empty()){
+        delete turn_actions.front();
+        turn_actions.pop();
+    }
+    exit(0);
 }
