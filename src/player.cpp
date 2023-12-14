@@ -1,4 +1,4 @@
-#include "player.h"
+#include "../include/player.h"
 
 unsigned int Player::player_count = 0;
 

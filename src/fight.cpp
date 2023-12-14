@@ -1,5 +1,5 @@
-#include "fight.h"
-#include "dice.h"
+#include "../include/fight.h"
+#include "../include/dice.h"
 
 FightAction::FightAction(Fight* fight, Actor *actor, Actor *target) : fight(fight), actor(actor), target(target){
     actionText = "Ação base";

@@ -1,4 +1,4 @@
-#include "dice.h"
+#include "../include/dice.h"
 
 std::random_device Dice::rng;
 std::mt19937 gen(Dice::rng());

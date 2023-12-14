@@ -1,5 +1,5 @@
-#include "engine.h"
-#include "dice.h"
+#include "../include/engine.h"
+#include "../include/dice.h"
 
 int triang(int n){
     return (n*n + n) / 2;

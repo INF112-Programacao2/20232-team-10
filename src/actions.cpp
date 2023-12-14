@@ -1,6 +1,6 @@
-#include "actions.h"
-#include "dice.h"
-#include "fight.h"
+#include "../include/actions.h"
+#include "../include/dice.h"
+#include "../include/fight.h"
 
 //Construtores para as classes de acoes
 

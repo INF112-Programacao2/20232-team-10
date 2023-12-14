@@ -1,4 +1,4 @@
-#include "place.h"
+#include "../include/place.h"
 
 int Place::next_id = 0;
 

@@ -1,5 +1,5 @@
-#include "actor.h"
-#include "dice.h"
+#include "../include/actor.h"
+#include "../include/dice.h"
 
 Actor::Actor(tgui::String name){                 //Construtor
     this->name = name;
